@@ -8,7 +8,6 @@ import {appColor} from '../constants/appColor';
 import HomeScreen from '../Screens/Shipper/HomeScreen';
 import RevenueScreen from '../Screens/Shipper/RevenueScreen';
 import Account from '../Screens/Shipper/Account';
-import CameraComponent from '../Screens/Shipper/ComposenentShipper/CameraComponent';
 import ProfileScreen from '../Screens/Shipper/ProfileScreen';
 import Message from '../Screens/Shipper/Message';
 
@@ -19,7 +18,6 @@ const MainNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Tab" component={TabNavigation} />
-      <Stack.Screen name="Camera" component={CameraComponent} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Message" component={Message} />
     </Stack.Navigator>

@@ -2,14 +2,13 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingScreen from '../Screens/Auth/OnboardingScreen';
-import LoginScreen from '../Screens/Auth/LoginScreen';
 import RegisterScreen from '../Screens/Auth/RegisterScreen';
 import ForgotPassword from '../Screens/Auth/ForgotPassword';
 import VerifyScreen from '../Screens/Auth/VerifyScreen';
 import ResetPasswordScreen from '../Screens/Auth/ResetPasswordScreen';
 import AddPhoneScreen from '../Screens/Auth/AddPhoneScreen';
-import Message from '../Screens/Shipper/Message';
 import MainNavigation from './MainNavigation';
+
 
 
 

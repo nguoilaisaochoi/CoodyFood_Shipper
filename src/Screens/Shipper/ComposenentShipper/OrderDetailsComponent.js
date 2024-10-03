@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -14,12 +15,12 @@ import {fontFamilies} from '../../../constants/fontFamilies';
 import SlideButton from 'rn-slide-button-updated';
 import Check from './CheckComponent';
 import Info4txt from './Info4txtComponent';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {launchCamera} from 'react-native-image-picker';
 
 const OrderDetailsComponent = () => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const imagePath = route.params?.imagePath || null;
+  const [imagePath, setImagePath] = useState();
   const sheetRef = useRef(null);
   const snapPoints = ['20%', '90%'];
   const [item1, setItem1] = useState(false);
@@ -27,6 +28,54 @@ const OrderDetailsComponent = () => {
   const [item3, setItem3] = useState(false);
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
+  //setting máy ảnh
+  const cameraOptions = {
+    cameraType: 'front',
+    saveToPhotos: true,
+  };
+  //yêu cầu quyền
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  };
+  //kiểm tra quyền
+  const checkCameraPermission = async () => {
+    const permissionStatus = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+    return permissionStatus;
+  };
+  //mở camera
+  const onOpenCamera = async () => {
+    //check quyền
+    const hasPermission = await checkCameraPermission();
+    if (!hasPermission) {
+      const granted = await requestCameraPermission();
+      if (!granted) {
+        Alert.alert('Quyền camera bị từ chối');
+        return;
+      }
+    }
+    try {
+      //mở camera&chụp ảnh
+      const response = await launchCamera(cameraOptions);
+      if (response?.assets) {
+        setImagePath(response.assets[0].uri);
+        console.log(response.assets);
+      } else {
+        console.log('Có lỗi xảy ra', response.errorMessage);
+      }
+    } catch (error) {
+      console.log('Có lỗi xảy ra', error.message);
+    }
+  };
   //hiện các status khi đang ship
   const handleReachedToEnd = () => {
     if (!item1) {
@@ -202,7 +251,7 @@ const OrderDetailsComponent = () => {
               <TouchableOpacity
                 style={[styles.button, {backgroundColor: appColor.primary}]}
                 onPress={() => {
-                  gotoscreen('Camera');
+                  onOpenCamera();
                 }}>
                 <TextComponent
                   text={'Chụp ảnh'}
@@ -221,10 +270,7 @@ const OrderDetailsComponent = () => {
                   fontsize={20}
                   fontFamily={fontFamilies.semiBold}
                 />
-                <Image
-                  style={styles.verified}
-                  source={{uri: `file://${imagePath}`}}
-                />
+                <Image style={styles.verified} source={{uri: imagePath}} />
               </View>
             )}
             {/*view thông tin khách hàng*/}
