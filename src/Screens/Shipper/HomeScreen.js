@@ -21,7 +21,7 @@ const HomeScreen = () => {
           setOrder={setOrder}
         />
       )}
-      {order && <OrderDetailsComponent />}
+      {order && <OrderDetailsComponent setOrder={setOrder} />}
       {/*để tạm-sau này thay thế bằng maps */}
       <Image
         style={styles.img}

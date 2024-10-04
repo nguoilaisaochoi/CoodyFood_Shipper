@@ -19,7 +19,8 @@ import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
 
-const OrderDetailsComponent = () => {
+
+const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef(null);
@@ -28,6 +29,7 @@ const OrderDetailsComponent = () => {
   const [item1, setItem1] = useState(false);
   const [item2, setItem2] = useState(false);
   const [item3, setItem3] = useState(false);
+  const [item4, setItem4] = useState(false);
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
   //chuyển sdt qua cuộc gọi
@@ -87,7 +89,7 @@ const OrderDetailsComponent = () => {
     if (!item1) {
       setItem1(true);
       setTitle('Đã lấy món ăn');
-    } else if (item2 == false) {
+    } else if (!item2) {
       if (imagePath) {
         setItem2(true);
         setTitle('Đã đến nơi giao');
@@ -97,7 +99,17 @@ const OrderDetailsComponent = () => {
     } else if (!item3) {
       setItem3(true);
       setTitle('Hoàn tất đơn hàng');
+    } else if (!item4) {
+      setItem4(true);
+      setTitle('Hoàn tất,Chuẩn bị đóng lại!');
+      setTimeout(() => {
+        sheetRef.current.close();
+      }, 2200);
     }
+  };
+  //hiện màn chụp ảnh
+  const gotoscreen = screen => {
+    navigation.navigate(screen);
   };
   //render item
   const renderitem = ({item}) => {
@@ -131,10 +143,7 @@ const OrderDetailsComponent = () => {
       </View>
     );
   };
-  //hiện màn chụp ảnh
-  const gotoscreen = screen => {
-    navigation.navigate(screen);
-  };
+
   return (
     <View style={styles.container}>
       {/*bottom sheet */}
@@ -212,8 +221,8 @@ const OrderDetailsComponent = () => {
                 checked={item3 ? true : false}
               />
               <Check
-                start={item2 ? true : false}
-                checked={item3 ? true : false}
+                start={item3 ? true : false}
+                checked={item4 ? true : false}
               />
             </View>
           </View>
@@ -465,6 +474,21 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'contain',
     marginTop: '5%',
+  },
+  detail: {
+    width: '76%',
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: '6%',
+    alignItems: 'center',
+    elevation: 20,
+    justifyContent: 'space-between',
+  },
+  modal: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
 });
 const data = [
