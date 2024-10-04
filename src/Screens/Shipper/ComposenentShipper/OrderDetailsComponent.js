@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -23,11 +24,16 @@ const OrderDetailsComponent = () => {
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef(null);
   const snapPoints = ['20%', '90%'];
+  const [phoneNumber] = useState('0123456');
   const [item1, setItem1] = useState(false);
   const [item2, setItem2] = useState(false);
   const [item3, setItem3] = useState(false);
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
+  //chuyển sdt qua cuộc gọi
+  const call = () => {
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
   //setting máy ảnh
   const cameraOptions = {
     cameraType: 'front',
@@ -290,7 +296,10 @@ const OrderDetailsComponent = () => {
               <View style={styles.callandmessboder}>
                 <TouchableOpacity
                   style={styles.callandmess}
-                  activeOpacity={0.7}>
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    call();
+                  }}>
                   <Image
                     style={{width: '100%', height: '100%'}}
                     source={require('../../../assets/images/shipper/call.png')}
