@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Alert,
   PermissionsAndroid,
-  Linking,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -18,7 +17,7 @@ import Check from './CheckComponent';
 import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
-
+import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 
 const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
@@ -34,7 +33,8 @@ const OrderDetailsComponent = ({setOrder}) => {
   const Data = data;
   //chuyển sdt qua cuộc gọi
   const call = () => {
-    Linking.openURL(`tel:${phoneNumber}`);
+    //Linking.openURL(`tel:${phoneNumber}`);
+    RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
   //setting máy ảnh
   const cameraOptions = {

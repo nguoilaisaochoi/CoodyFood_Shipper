@@ -30,6 +30,7 @@ const ProfileScreen = () => {
   const [date, setDate] = useState(null);
   const [showPicker, setshowPicker] = useState(false);
   const [value, setValue] = useState(null);
+
   //hàm xử lí khi DateTimePicker đc bật
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
@@ -69,6 +70,7 @@ const ProfileScreen = () => {
             />
           </View>
         </View>
+         {/*text input*/}
         <TextInputComponent text={'HỌ VÀ TÊN'} placeholder={'Tên Tài Xế'} />
         <TextInputComponent text={'EMAIL'} placeholder={'abc123@gmail.com'} />
         <TextInputComponent text={'SỐ ĐIỆN THOẠI'} placeholder={'0123456789'} />
