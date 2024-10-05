@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingScreen from '../Screens/Auth/OnboardingScreen';
@@ -8,9 +8,6 @@ import VerifyScreen from '../Screens/Auth/VerifyScreen';
 import ResetPasswordScreen from '../Screens/Auth/ResetPasswordScreen';
 import AddPhoneScreen from '../Screens/Auth/AddPhoneScreen';
 import MainNavigation from './MainNavigation';
-
-
-
 
 const Stack = createStackNavigator();
 

@@ -15,6 +15,7 @@ import TextComponent from './ComposenentShipper/TextComponent';
 const Message = () => {
   const Data = data;
   const shipper = Data[0].name;
+  //item flatlist
   const renderItem = ({item}) => {
     const {id, text, time, name} = item;
     return (
@@ -51,7 +52,7 @@ const Message = () => {
       </View>
     );
   };
-
+  //
   return (
     <View style={styles.container}>
       <HeaderComponent text={'Tên khách hàng'} isback={true} />
