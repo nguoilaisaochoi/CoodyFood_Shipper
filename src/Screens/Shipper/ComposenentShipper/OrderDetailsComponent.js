@@ -33,7 +33,6 @@ const OrderDetailsComponent = ({setOrder}) => {
   const Data = data;
   //chuyển sdt qua cuộc gọi
   const call = () => {
-    //Linking.openURL(`tel:${phoneNumber}`);
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
   //setting máy ảnh
