@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import HeaderComponent from '../../components/HeaderComponent';
 import {appColor} from '../../constants/appColor';
@@ -16,6 +16,10 @@ import ButtonComponent from '../../components/ButtonComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {useSelector} from 'react-redux';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
+import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('ABC');
@@ -30,7 +34,10 @@ const ProfileScreen = () => {
   const [date, setDate] = useState(null);
   const [showPicker, setshowPicker] = useState(false);
   const [value, setValue] = useState(null);
-
+  const {user, state} = useSelector(state => state.login);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [imagePath, setImagePath] = useState();
+  const sheetRef = useRef(null);
   //hàm xử lí khi DateTimePicker đc bật
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
@@ -40,19 +47,36 @@ const ProfileScreen = () => {
     }
     setshowPicker(false);
   };
-
+  // Mở Bottom Sheet
+  const openSheet = () => {
+    sheetRef.current.snapToIndex(0);
+    setIsSheetOpen(true);
+  };
+  // Đóng Bottom Sheet
+  const closeSheet = () => {
+    sheetRef.current.close();
+    setIsSheetOpen(false);
+  };
+  console.log(user);
   return (
     <View style={styles.container}>
       <HeaderComponent text={'Thông tin cá nhân'} isback={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{alignItems: 'center'}}>
           {/*avatar*/}
-          <TouchableOpacity style={styles.body1} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={styles.body1}
+            activeOpacity={0.85}
+            onPress={() => {
+              openSheet();
+            }}>
             <View style={styles.boximg}>
               <Image
                 style={{width: 99, height: 99}}
                 source={{
-                  uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
+                  uri: imagePath
+                    ? imagePath
+                    : 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
                 }}
               />
             </View>
@@ -70,9 +94,17 @@ const ProfileScreen = () => {
             />
           </View>
         </View>
-         {/*text input*/}
-        <TextInputComponent text={'HỌ VÀ TÊN'} placeholder={'Tên Tài Xế'} />
-        <TextInputComponent text={'EMAIL'} placeholder={'abc123@gmail.com'} />
+        {/*text input*/}
+        <TextInputComponent
+          text={'HỌ VÀ TÊN'}
+          value={''}
+          placeholder={'Tên Tài Xế'}
+        />
+        <TextInputComponent
+          text={'EMAIL'}
+          value={user.email}
+          placeholder={'abc123@gmail.com'}
+        />
         <TextInputComponent text={'SỐ ĐIỆN THOẠI'} placeholder={'0123456789'} />
         <TextComponent text={'GIỚI TÍNH'} />
         <Dropdown
@@ -125,6 +157,44 @@ const ProfileScreen = () => {
           />
         </View>
       </ScrollView>
+      {isSheetOpen && (
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.bg}
+          onPress={() => {
+            closeSheet();
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        handleComponent={null}
+        snapPoints={['20%']}
+        index={-1}
+        containerStyle={{flex: 1, zIndex: 2}}>
+        <BottomSheetView style={styles.optionavatar}>
+          <ButtonComponent
+            text={'Chụp ảnh'}
+            width={'40%'}
+            color={appColor.white}
+            height={51}
+            onPress={() => {
+              onOpenCamera(setImagePath);
+              closeSheet();
+            }}
+          />
+          <ButtonComponent
+            text={'Thư viện'}
+            width={'40%'}
+            color={appColor.white}
+            height={51}
+            onPress={() => {
+              onImageLibrary(setImagePath);
+              closeSheet();
+            }}
+          />
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 };
@@ -138,6 +208,22 @@ const styles = StyleSheet.create({
     paddingTop: '10%',
     paddingLeft: '5%',
     paddingRight: '5%',
+  },
+  bg: {
+    backgroundColor: 'rgba(217.81, 217.81, 217.81, 0.50)',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  optionavatar: {
+    flex: 1,
+    zIndex: 2,
+    backgroundColor: appColor.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   body1: {
     width: 97,

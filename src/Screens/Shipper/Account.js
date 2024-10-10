@@ -6,11 +6,13 @@ import BtnComponent from './ComposenentShipper/BtnComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import ItemAccount from './ComposenentShipper/ItemAccount';
 import {useNavigation} from '@react-navigation/native';
+import {logout} from '../../Redux/Reducers/LoginSlice';
+import { useDispatch } from 'react-redux';
 
 const Account = () => {
   const navigation = useNavigation();
-
-  const gotoProfile = screen => {
+  const dispatch = useDispatch();
+  const gotoScreen = screen => {
     navigation.navigate(screen);
   };
   return (
@@ -50,14 +52,19 @@ const Account = () => {
       <View style={styles.body}>
         <ItemAccount
           screen={() => {
-            gotoProfile('Profile');
+            gotoScreen('Profile');
           }}
           text={'Thông tin cá nhân của bạn'}
           icon={'user'}
         />
         <ItemAccount text={' Lịch sử nạp rút tiền'} icon={'setting'} />
         <ItemAccount text={'Đổi mật khẩu'} icon={'padlock'} />
-        <ItemAccount text={'Đăng xuất'} />
+        <ItemAccount
+          text={'Đăng xuất'}
+          screen={() => {
+            dispatch(logout())
+          }}
+        />
       </View>
     </View>
   );

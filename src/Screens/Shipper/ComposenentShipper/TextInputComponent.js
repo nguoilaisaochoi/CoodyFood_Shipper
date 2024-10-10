@@ -3,11 +3,11 @@ import React from 'react';
 import {appColor} from '../../../constants/appColor';
 import TextComponent from '../../../components/TextComponent';
 
-const TextInputComponent = ({text, placeholder}) => {
+const TextInputComponent = ({text, placeholder,value}) => {
   return (
     <View>
-      <TextComponent text={text} />
-      <TextInput style={styles.textinput} placeholder={placeholder} />
+      <TextComponent text={text}/>
+      <TextInput style={styles.textinput} value={value} placeholder={placeholder} />
     </View>
   );
 };
@@ -23,5 +23,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 18,
     height: 58,
+    color:appColor.text
   },
 });
