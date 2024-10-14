@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Button, Alert, StyleSheet} from 'react-native';
+import {View, TextInput, Button, Alert, StyleSheet, Image} from 'react-native';
 import ZegoUIKitPrebuiltCallService, {
   ZegoCallInvitationDialog,
   ZegoUIKitPrebuiltCallWaitingScreen,
@@ -8,22 +8,22 @@ import ZegoUIKitPrebuiltCallService, {
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
+import {appColor} from '../constants/appColor';
 const CallScreen = () => {
-
-
   // Chọn một tên ngẫu nhiên từ danh sách
-  const userID = String(Math.floor(Math.random() * 1000000)); // Tạo số ngẫu nhiên từ 0 đến 999999
+
+  const userID = String(Math.floor(Math.random() * 1000000));
   useEffect(() => {
     onUserLogin(userID, 'user' + userID);
   }, []);
-  
+
   //call config
   const onUserLogin = async (userID, userName) => {
     try {
       const result = await ZegoUIKitPrebuiltCallService.init(
-        785543570, // Bạn có thể lấy từ bảng điều khiển ZEGOCLOUD
-        'c3d0338ceef0dd5036a0aefc0a2d31818597e77598a1d3c60bed8d7d912e0b5e', 
-        userID, // Nó có thể là bất kỳ ký tự hợp lệ nào, nhưng chúng tôi khuyên bạn nên sử dụng số điện thoại.
+        785543570, 
+        'c3d0338ceef0dd5036a0aefc0a2d31818597e77598a1d3c60bed8d7d912e0b5e',
+        userID, 
         userName,
         [ZIM, ZPNs],
         {
@@ -34,6 +34,22 @@ const CallScreen = () => {
           androidNotificationConfig: {
             channelID: 'ZegoUIKit',
             channelName: 'ZegoUIKit',
+          },
+          waitingPageConfig: {
+            //backgroundColor: appColor.gray,
+            avatarBuilder: invitee => {
+              return (
+                <View style={{width: 100, height: 100}}>
+                  <Image
+                    style={{width: '100%', height: '100%', borderRadius: 99}}
+                    resizeMode="cover"
+                    source={{
+                      uri: `https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg`,
+                    }}
+                  />
+                </View>
+              );
+            },
           },
         },
       );

@@ -24,6 +24,7 @@ const MainNavigation = () => {
       <Stack.Screen name="Tab" component={TabNavigation} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Message" component={Message} />
+      <Stack.Screen name="CallScreen" component={CallScreen} />
       <Stack.Screen
         options={{headerShown: false}}
         // DO NOT change the name

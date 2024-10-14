@@ -258,7 +258,7 @@ const OrderDetailsComponent = ({setOrder}) => {
                   style={styles.callandmess}
                   activeOpacity={0.7}
                   onPress={() => {
-                    call();
+                    gotoscreen("CallScreen")
                   }}>
                   <Image
                     style={{width: '100%', height: '100%'}}
