@@ -50,6 +50,7 @@
     "react-redux": "^9.1.2",
     "redux-persist": "^6.0.0",
     "rn-slide-button-updated": "^1.0.4",
+    "socket.io-client": "^4.8.0",
     "zego-callkit-react-native": "^1.0.6",
     "zego-express-engine-reactnative": "^3.14.5",
     "zego-zim-react-native": "^2.16.0",

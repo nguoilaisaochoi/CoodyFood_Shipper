@@ -258,7 +258,7 @@ const OrderDetailsComponent = ({setOrder}) => {
                   style={styles.callandmess}
                   activeOpacity={0.7}
                   onPress={() => {
-                    gotoscreen("CallScreen")
+                    gotoscreen('CallScreen');
                   }}>
                   <Image
                     style={{width: '100%', height: '100%'}}
@@ -289,8 +289,9 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 1,
+    zIndex: 3,
   },
+
   info1: {
     width: '86%',
     minHeight: 123,
