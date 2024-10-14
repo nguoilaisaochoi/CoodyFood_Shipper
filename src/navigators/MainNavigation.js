@@ -15,7 +15,6 @@ import {
   ZegoUIKitPrebuiltCallInCallScreen,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import CallScreen from '../Screens/CallScreen';
-import AuthNavigation from './AuthNavigation';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 

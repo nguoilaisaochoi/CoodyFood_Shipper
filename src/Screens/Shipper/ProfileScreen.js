@@ -20,24 +20,30 @@ import {useSelector} from 'react-redux';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
 import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
+import {validateEmail, validatePhone} from '../../utils/Validators';
 
 const ProfileScreen = () => {
-  const [name, setName] = useState('ABC');
-  const [errorName, setErrorName] = useState('Email không được để trống');
-  const [email, setEmail] = useState('abc@gmail.com');
-  const [errorEmail, setErrorEmail] = useState('');
-  const [phone, setPhone] = useState('0123456789');
-  const [errorPhone, setErrorPhone] = useState('');
-  const [address, setAddress] = useState('ABCDEF');
-  const [errorAddress, setErrorAddress] = useState('');
-  const [correct, setCorrect] = useState(true);
-  const [date, setDate] = useState(null);
-  const [showPicker, setshowPicker] = useState(false);
-  const [value, setValue] = useState(null);
   const {user, state} = useSelector(state => state.login);
+  const [name, setName] = useState(user.name ?? null);
+  const [email, setEmail] = useState(user.email ?? null);
+  const [phone, setPhone] = useState(user.phone ?? null);
+  const [carcompany, setCarcompany] = useState(user.carcompany ?? null);
+  const [licenseplate, setLicenseplate] = useState(user.licenseplate ?? null);
+  const [date, setDate] = useState(user.data ?? null);
+  const [gender, setGender] = useState(user.gender ?? null);
+  const [imagePath, setImagePath] = useState(user.image ?? null);
+  const [showPicker, setshowPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [imagePath, setImagePath] = useState();
   const sheetRef = useRef(null);
+
+  //check phone
+  const checkPhone = data => {
+    return validatePhone(data) ? null : 'Số điện thoại không hợp lệ';
+  };
+  //check email
+  const checkEmail = data => {
+    return validateEmail(data) ? null : 'Email không hợp lệ';
+  };
   //hàm xử lí khi DateTimePicker đc bật
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
@@ -57,7 +63,6 @@ const ProfileScreen = () => {
     sheetRef.current.close();
     setIsSheetOpen(false);
   };
-  console.log(user);
   return (
     <View style={styles.container}>
       <HeaderComponent text={'Thông tin cá nhân'} isback={true} />
@@ -97,15 +102,22 @@ const ProfileScreen = () => {
         {/*text input*/}
         <TextInputComponent
           text={'HỌ VÀ TÊN'}
-          value={''}
-          placeholder={'Tên Tài Xế'}
+          value={name}
+          onChangeText={text => setName(text)}
+          error={name ? null : 'Đây là thông tin bắt buộc'}
         />
         <TextInputComponent
           text={'EMAIL'}
-          value={user.email}
-          placeholder={'abc123@gmail.com'}
+          value={email}
+          onChangeText={text => setEmail(text)}
+          error={email ? checkEmail(email) : 'Đây là thông tin bắt buộc'}
         />
-        <TextInputComponent text={'SỐ ĐIỆN THOẠI'} placeholder={'0123456789'} />
+        <TextInputComponent
+          text={'SỐ ĐIỆN THOẠI'}
+          value={user.phone}
+          onChangeText={text => setPhone(text)}
+          error={phone ? checkPhone(phone) : 'Đây là thông tin bắt buộc'}
+        />
         <TextComponent text={'GIỚI TÍNH'} />
         <Dropdown
           style={styles.dropdown}
@@ -117,10 +129,10 @@ const ProfileScreen = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={data[0].label}
-          value={value}
+          placeholder={'Không công khai'}
+          value={gender}
           onChange={item => {
-            setValue(item.value);
+            setGender(item.value);
           }}
         />
         <TextComponent text={'NGÀY SINH'} fontFamily={fontFamilies.bold} />
@@ -146,14 +158,22 @@ const ProfileScreen = () => {
             />
           )}
         </View>
-        <TextInputComponent text={'HÃNG XE'} placeholder={'Future(đen bóng)'} />
-        <TextInputComponent text={'BIỂN SỐ XE'} placeholder={'43E-567-89'} />
+        <TextInputComponent
+          text={'HÃNG XE'}
+          onChangeText={text => setCarcompany(text)}
+          error={carcompany ? null : 'Đây là thông tin bắt buộc'}
+        />
+        <TextInputComponent
+          text={'BIỂN SỐ XE'}
+          onChangeText={text => setLicenseplate(text)}
+          error={licenseplate ? null : 'Đây là thông tin bắt buộc'}
+        />
         <View style={styles.footer}>
           <ButtonComponent
             text={'Cập nhật'}
             color={appColor.white}
             height={51}
-            styles={{opacity: correct ? 1 : 0.5, marginBottom: '5%'}}
+            styles={{marginBottom: '5%'}}
           />
         </View>
       </ScrollView>
@@ -169,7 +189,7 @@ const ProfileScreen = () => {
       <BottomSheet
         ref={sheetRef}
         handleComponent={null}
-        snapPoints={['20%']}
+        snapPoints={['18%']}
         index={-1}
         containerStyle={{flex: 1, zIndex: 2}}>
         <BottomSheetView style={styles.optionavatar}>

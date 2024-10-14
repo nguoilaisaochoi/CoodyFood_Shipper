@@ -8,10 +8,8 @@ import ZegoUIKitPrebuiltCallService, {
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
-import {teal100} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 const CallScreen = () => {
-  //const userid = Math.floor(Math.random() * 1000000); // Tạo số ngẫu nhiên từ 0 đến 999999
-  const names = ['A', 'B', 'C', 'D', 'E'];
+
 
   // Chọn một tên ngẫu nhiên từ danh sách
   const userID = String(Math.floor(Math.random() * 1000000)); // Tạo số ngẫu nhiên từ 0 đến 999999
@@ -24,14 +22,14 @@ const CallScreen = () => {
     try {
       const result = await ZegoUIKitPrebuiltCallService.init(
         785543570, // Bạn có thể lấy từ bảng điều khiển ZEGOCLOUD
-        'c3d0338ceef0dd5036a0aefc0a2d31818597e77598a1d3c60bed8d7d912e0b5e', // Bạn có thể lấy từ bảng điều khiển ZEGOCLOUD
+        'c3d0338ceef0dd5036a0aefc0a2d31818597e77598a1d3c60bed8d7d912e0b5e', 
         userID, // Nó có thể là bất kỳ ký tự hợp lệ nào, nhưng chúng tôi khuyên bạn nên sử dụng số điện thoại.
         userName,
         [ZIM, ZPNs],
         {
           ringtoneConfig: {
             incomingCallFileName: 'zego_incoming.mp3',
-            outgoingCallFileName: 'zego_outgoing.mp3',
+            outgoingCallFileName: 'zego_incoming.mp3',
           },
           androidNotificationConfig: {
             channelID: 'ZegoUIKit',
@@ -41,10 +39,8 @@ const CallScreen = () => {
       );
 
       // Nếu init thành công, bạn có thể thực hiện các hành động khác
-      console.log('Khởi tạo thành công:', result);
+      console.log('Khởi tạo thành công:');
     } catch (error) {
-      // Nếu có lỗi, bạn có thể hiển thị thông báo lỗi hoặc ghi lại thông tin
-      console.error('Khởi tạo không thành công:', error);
       Alert.alert('Lỗi', 'Khởi tạo không thành công: ' + error.message);
     }
   };
@@ -79,7 +75,7 @@ const CallScreen = () => {
       <ZegoSendCallInvitationButton
         invitees={[{userID: inputValue, userName: inputValue2}]}
         isVideoCall={true}
-        resourceID={'zego_call'} // Please fill in the resource ID name that has been configured in the ZEGOCLOUD's console here.
+        resourceID={'zego_call'}
       />
     </View>
   );
