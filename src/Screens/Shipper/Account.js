@@ -1,5 +1,5 @@
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {appColor} from '../../constants/appColor';
 import TextComponent from './ComposenentShipper/TextComponent';
 import BtnComponent from './ComposenentShipper/BtnComponent';
@@ -7,14 +7,24 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import ItemAccount from './ComposenentShipper/ItemAccount';
 import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../Redux/Reducers/LoginSlice';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 
 const Account = () => {
   const navigation = useNavigation();
+  const {user, state} = useSelector(state => state.login);
+  const {getData, getStatus} = useSelector(state => state.shipper);
   const dispatch = useDispatch();
   const gotoScreen = screen => {
     navigation.navigate(screen);
   };
+  useEffect(() => {
+    dispatch(GetShipper(user._id));
+  }, []);
+
+  useEffect(() => {
+    //getStatus == 'succeeded' && console.log(getData);
+  }, [getStatus]);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -62,7 +72,7 @@ const Account = () => {
         <ItemAccount
           text={'Đăng xuất'}
           screen={() => {
-            dispatch(logout())
+            dispatch(logout());
           }}
         />
       </View>

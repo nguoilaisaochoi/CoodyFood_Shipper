@@ -1,10 +1,10 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 
@@ -16,26 +16,33 @@ import ButtonComponent from '../../components/ButtonComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
 import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
 import {validateEmail, validatePhone} from '../../utils/Validators';
+import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 
 const ProfileScreen = () => {
   const {user, state} = useSelector(state => state.login);
-  const [name, setName] = useState(user.name ?? null);
-  const [email, setEmail] = useState(user.email ?? null);
-  const [phone, setPhone] = useState(user.phone ?? null);
-  const [carcompany, setCarcompany] = useState(user.carcompany ?? null);
-  const [licenseplate, setLicenseplate] = useState(user.licenseplate ?? null);
-  const [date, setDate] = useState(user.data ?? null);
-  const [gender, setGender] = useState(user.gender ?? null);
-  const [imagePath, setImagePath] = useState(user.image ?? null);
+  const {updateData, updateStatus, getData} = useSelector(
+    state => state.shipper,
+  );
+  const [name, setName] = useState(getData.name ?? null);
+  const [email, setEmail] = useState(getData.email ?? null);
+  const [phone, setPhone] = useState(getData.phone ?? null);
+  const [carcompany, setCarcompany] = useState(getData.carcompany ?? null);
+  const [licenseplate, setLicenseplate] = useState(
+    getData.licenseplate ?? null,
+  );
+  const [date, setDate] = useState(getData.date ?? null);
+  const [gender, setGender] = useState(getData.gender ?? null);
+  const [imagePath, setImagePath] = useState(null);
   const [showPicker, setshowPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const sheetRef = useRef(null);
-
+  const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
+  const clickRef = useRef(false);
+  const dispath = useDispatch();
   //check phone
   const checkPhone = data => {
     return validatePhone(data) ? null : 'Số điện thoại không hợp lệ';
@@ -44,6 +51,24 @@ const ProfileScreen = () => {
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
+  //cập nhật shipper
+  const update = () => {
+    const body = {
+      name: name,
+      phone: phone,
+      email: email,
+    };
+    console.log(body);
+    dispath(UpdateShipper({id: user._id, data: body}));
+  };
+
+  useEffect(() => {
+    if (updateStatus == 'succeeded' && clickRef.current == true) {
+      ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+      dispath(GetShipper(user._id));
+      clickRef.current = false;
+    }
+  }, [updateStatus]);
   //hàm xử lí khi DateTimePicker đc bật
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
@@ -114,7 +139,7 @@ const ProfileScreen = () => {
         />
         <TextInputComponent
           text={'SỐ ĐIỆN THOẠI'}
-          value={user.phone}
+          value={phone}
           onChangeText={text => setPhone(text)}
           error={phone ? checkPhone(phone) : 'Đây là thông tin bắt buộc'}
         />
@@ -174,6 +199,10 @@ const ProfileScreen = () => {
             color={appColor.white}
             height={51}
             styles={{marginBottom: '5%'}}
+            onPress={() => {
+              update();
+              clickRef.current = true;
+            }}
           />
         </View>
       </ScrollView>

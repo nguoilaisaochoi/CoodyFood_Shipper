@@ -87,11 +87,13 @@ const RegisterScreen = ({navigation}) => {
     }
     setIsLoading(true);
     try {
-      const response = await AxiosInstance().post('/users/register', {
+      const response = await AxiosInstance().post('/shipper/add', {
         email,
         password,
         phone,
-        role: 'shipper',
+        address: 'none',
+        rating: '0',
+        name: 'none',
       });
       if (response.status == true) {
         ToastAndroid.show('Đăng ký thành công', ToastAndroid.SHORT);

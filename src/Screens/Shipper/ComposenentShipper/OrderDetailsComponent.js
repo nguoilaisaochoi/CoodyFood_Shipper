@@ -21,13 +21,15 @@ import {onOpenCamera} from './CameraOpenComponent';
 const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
-  const sheetRef = useRef(null);
+  const sheetRef = useRef();
   const snapPoints = ['20%', '90%'];
   const [phoneNumber] = useState('0123456');
-  const [item1, setItem1] = useState(false);
-  const [item2, setItem2] = useState(false);
-  const [item3, setItem3] = useState(false);
-  const [item4, setItem4] = useState(false);
+  const [status, setStatus] = useState({
+    item1: false,
+    item2: false,
+    item3: false,
+    item4: false,
+  });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
   //chuyển sdt qua cuộc gọi
@@ -37,24 +39,25 @@ const OrderDetailsComponent = ({setOrder}) => {
 
   //hiện các status khi đang ship
   const handleReachedToEnd = () => {
-    if (!item1) {
-      setItem1(true);
+    if (!status.item1) {
+      setStatus({...status, item1: true});
       setTitle('Đã lấy món ăn');
-    } else if (!item2) {
+    } else if (!status.item2) {
       if (imagePath) {
-        setItem2(true);
+        setStatus({...status, item2: true});
         setTitle('Đã đến nơi giao');
       } else {
         Alert.alert('Thông báo', 'Bạn cần phải chụp hình');
       }
-    } else if (!item3) {
-      setItem3(true);
+    } else if (!status.item3) {
+      setStatus({...status, item3: true});
       setTitle('Hoàn tất đơn hàng');
-    } else if (!item4) {
-      setItem4(true);
-      setTitle('Hoàn tất,Chuẩn bị đóng lại!');
+    } else if (!status.item4) {
+      setStatus({...status, item4: true});
+      setTitle('Hoàn tất,Chuẩn bị đóng!');
       setTimeout(() => {
         sheetRef.current.close();
+        setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }
   };
@@ -162,18 +165,18 @@ const OrderDetailsComponent = ({setOrder}) => {
             </View>
             {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
             <View style={styles.check}>
-              <Check start={true} checked={item1 ? true : false} />
+              <Check start={true} checked={status.item1 ? true : false} />
               <Check
-                start={item1 ? true : false}
-                checked={item2 ? true : false}
+                start={status.item1 ? true : false}
+                checked={status.item2 ? true : false}
               />
               <Check
-                start={item2 ? true : false}
-                checked={item3 ? true : false}
+                start={status.item2 ? true : false}
+                checked={status.item3 ? true : false}
               />
               <Check
-                start={item3 ? true : false}
-                checked={item4 ? true : false}
+                start={status.item3 ? true : false}
+                checked={status.item4 ? true : false}
               />
             </View>
           </View>
@@ -213,7 +216,7 @@ const OrderDetailsComponent = ({setOrder}) => {
               thumbStyle={{borderRadius: 25}}
             />
             {/*nút chụp ảnh chỉ hiện khi ở `shiper đẫ lấy món ăn`*/}
-            {item1 && !item2 && (
+            {status.item1 && !status.item2 && (
               <TouchableOpacity
                 style={[styles.button, {backgroundColor: appColor.primary}]}
                 onPress={() => {

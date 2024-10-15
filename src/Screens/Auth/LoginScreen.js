@@ -26,8 +26,8 @@ GoogleSignin.configure({
 Settings.setAppID('825915416410531');
 
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('a@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorPass, setErrorPass] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
