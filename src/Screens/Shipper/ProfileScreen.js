@@ -25,21 +25,20 @@ import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 
 const ProfileScreen = () => {
   const {user, state} = useSelector(state => state.login);
-  const {updateData, updateStatus, getData} = useSelector(
-    state => state.shipper,
-  );
-  const [name, setName] = useState(getData.name ?? null);
-  const [email, setEmail] = useState(getData.email ?? null);
-  const [phone, setPhone] = useState(getData.phone ?? null);
-  const [carcompany, setCarcompany] = useState(getData.carcompany ?? null);
+  const {updateStatus, getData} = useSelector(state => state.shipper);
+  const [name, setName] = useState(getData?.name ?? null);
+  const [email, setEmail] = useState(getData?.email ?? null);
+  const [phone, setPhone] = useState(getData?.phone ?? null);
+  const [carcompany, setCarcompany] = useState(getData?.carcompany ?? null);
   const [licenseplate, setLicenseplate] = useState(
-    getData.licenseplate ?? null,
+    getData?.licenseplate ?? null,
   );
-  const [date, setDate] = useState(getData.date ?? null);
-  const [gender, setGender] = useState(getData.gender ?? null);
+  const [date, setDate] = useState(getData?.date ?? null);
+  const [gender, setGender] = useState(getData?.gender ?? null);
   const [imagePath, setImagePath] = useState(null);
   const [showPicker, setshowPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [conrrect, setConrrect] = useState(false);
   const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
   const clickRef = useRef(false);
   const dispath = useDispatch();
@@ -61,11 +60,19 @@ const ProfileScreen = () => {
     console.log(body);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
-
+  useEffect(() => {
+    name || phone || email || carcompany || licenseplate
+      ? setConrrect(true)
+      : setConrrect(false);
+  }, [name, phone, email, carcompany, licenseplate]);
+  //thông báo cập nhật
   useEffect(() => {
     if (updateStatus == 'succeeded' && clickRef.current == true) {
       ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
       dispath(GetShipper(user._id));
+      clickRef.current = false;
+    } else if (clickRef.current == true) {
+      ToastAndroid.show('Cập nhật thất bại', ToastAndroid.SHORT);
       clickRef.current = false;
     }
   }, [updateStatus]);
@@ -154,7 +161,7 @@ const ProfileScreen = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={'Không công khai'}
+          placeholder={'Chưa chọn'}
           value={gender}
           onChange={item => {
             setGender(item.value);
@@ -198,10 +205,12 @@ const ProfileScreen = () => {
             text={'Cập nhật'}
             color={appColor.white}
             height={51}
-            styles={{marginBottom: '5%'}}
+            styles={{marginBottom: '5%', opacity: conrrect ? 1 : 0.5}}
             onPress={() => {
-              update();
-              clickRef.current = true;
+              if (conrrect) {
+                update();
+                clickRef.current = true;
+              }
             }}
           />
         </View>
@@ -254,7 +263,7 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: '10%',
+    paddingTop: '12%',
     paddingLeft: '5%',
     paddingRight: '5%',
   },

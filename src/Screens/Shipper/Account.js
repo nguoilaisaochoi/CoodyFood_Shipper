@@ -23,7 +23,7 @@ const Account = () => {
   }, []);
 
   useEffect(() => {
-    //getStatus == 'succeeded' && console.log(getData);
+    getStatus == 'succeeded' && console.log(getData);
   }, [getStatus]);
   return (
     <View style={styles.container}>
