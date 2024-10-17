@@ -15,6 +15,9 @@ import {
   ZegoUIKitPrebuiltCallInCallScreen,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import CallScreen from '../Screens/CallScreen';
+import VerifyShipper from '../Screens/Shipper/VerifyShipper';
+import {useSelector} from 'react-redux';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +25,7 @@ const MainNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Tab" component={TabNavigation} />
+      <Stack.Screen name="VerifyShipper" component={VerifyShipper} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Message" component={Message} />
       <Stack.Screen name="CallScreen" component={CallScreen} />

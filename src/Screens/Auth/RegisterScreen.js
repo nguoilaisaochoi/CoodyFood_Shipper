@@ -91,9 +91,14 @@ const RegisterScreen = ({navigation}) => {
         email,
         password,
         phone,
-        address: 'none',
+        address: 'trống',
         rating: '0',
-        name: 'none',
+        name: 'trống',
+        gender: 'male',
+        birthDate: new Date('2000-01-01'),
+        vehicleBrand: 'trống',
+        vehiclePlate: 'trống',
+        status: 'inactive',
       });
       if (response.status == true) {
         ToastAndroid.show('Đăng ký thành công', ToastAndroid.SHORT);

@@ -26,15 +26,21 @@ import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 const ProfileScreen = () => {
   const {user, state} = useSelector(state => state.login);
   const {updateStatus, getData} = useSelector(state => state.shipper);
-  const [name, setName] = useState(getData?.name ?? null);
+  const [name, setName] = useState(
+    getData.name == 'trống' ? null : getData.name,
+  );
   const [email, setEmail] = useState(getData?.email ?? null);
   const [phone, setPhone] = useState(getData?.phone ?? null);
-  const [carcompany, setCarcompany] = useState(getData?.carcompany ?? null);
-  const [licenseplate, setLicenseplate] = useState(
-    getData?.licenseplate ?? null,
+  const [vehicleBrand, setvehicleBrand] = useState(
+    getData.vehicleBrand == 'trống' ? null : getData.vehicleBrand,
   );
-  const [date, setDate] = useState(getData?.date ?? null);
-  const [gender, setGender] = useState(getData?.gender ?? null);
+  const [vehiclePlate, setvehiclePlate] = useState(
+    getData.vehiclePlate == 'trống' ? null : getData.vehiclePlate,
+  );
+  const [birthDate, setbirthDate] = useState(
+    getData.birthDate ? new Date(getData.birthDate) : null,
+  );
+  const [gender, setGender] = useState(getData.gender == 'male' ? 'Nam' : 'Nữ');
   const [imagePath, setImagePath] = useState(null);
   const [showPicker, setshowPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -56,22 +62,27 @@ const ProfileScreen = () => {
       name: name,
       phone: phone,
       email: email,
+      birthDate: new Date(birthDate),
+      vehicleBrand: vehicleBrand,
+      vehiclePlate: vehiclePlate,
+      gender: gender == 'Nam' ? 'male' : 'female',
     };
-    console.log(body);
+    console.log(user);
+    console.log(gender);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
   useEffect(() => {
-    name || phone || email || carcompany || licenseplate
+    name || phone || email || vehicleBrand || vehiclePlate
       ? setConrrect(true)
       : setConrrect(false);
-  }, [name, phone, email, carcompany, licenseplate]);
+  }, [name, phone, email, vehicleBrand, vehiclePlate]);
   //thông báo cập nhật
   useEffect(() => {
     if (updateStatus == 'succeeded' && clickRef.current == true) {
       ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
       dispath(GetShipper(user._id));
       clickRef.current = false;
-    } else if (clickRef.current == true) {
+    } else if (updateStatus == 'failed' && clickRef.current == true) {
       ToastAndroid.show('Cập nhật thất bại', ToastAndroid.SHORT);
       clickRef.current = false;
     }
@@ -80,7 +91,8 @@ const ProfileScreen = () => {
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
       const currentDate = selectedDate;
-      setDate(currentDate);
+      setbirthDate(currentDate);
+      setshowPicker(false);
       console.log('date ' + date);
     }
     setshowPicker(false);
@@ -161,7 +173,7 @@ const ProfileScreen = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={'Chưa chọn'}
+          placeholder={gender}
           value={gender}
           onChange={item => {
             setGender(item.value);
@@ -178,27 +190,31 @@ const ProfileScreen = () => {
             <TextComponent
               fontFamily={fontFamilies.regular}
               fontsize={14}
-              text={date ? date.toLocaleDateString('vi-VN') : '--/--/----'}
+              text={
+                birthDate ? birthDate.toLocaleDateString('vi-VN') : '--/--/----'
+              }
               styles={{opacity: 0.5}}
             />
           </TouchableOpacity>
           {showPicker && (
             <DateTimePicker
               mode={'date'}
-              value={date || new Date()}
+              value={birthDate || new Date()}
               onChange={handleDateChange}
             />
           )}
         </View>
         <TextInputComponent
           text={'HÃNG XE'}
-          onChangeText={text => setCarcompany(text)}
-          error={carcompany ? null : 'Đây là thông tin bắt buộc'}
+          onChangeText={text => setvehicleBrand(text)}
+          value={vehicleBrand}
+          error={vehicleBrand ? null : 'Đây là thông tin bắt buộc'}
         />
         <TextInputComponent
           text={'BIỂN SỐ XE'}
-          onChangeText={text => setLicenseplate(text)}
-          error={licenseplate ? null : 'Đây là thông tin bắt buộc'}
+          onChangeText={text => setvehiclePlate(text)}
+          value={vehiclePlate}
+          error={vehiclePlate ? null : 'Đây là thông tin bắt buộc'}
         />
         <View style={styles.footer}>
           <ButtonComponent
@@ -207,10 +223,8 @@ const ProfileScreen = () => {
             height={51}
             styles={{marginBottom: '5%', opacity: conrrect ? 1 : 0.5}}
             onPress={() => {
-              if (conrrect) {
-                update();
-                clickRef.current = true;
-              }
+              update();
+              clickRef.current = true;
             }}
           />
         </View>
@@ -331,6 +345,6 @@ const styles = StyleSheet.create({
 });
 //data cho dropdown
 const data = [
-  {label: 'Nam', value: '1'},
-  {label: 'Nữ', value: '2'},
+  {label: 'Nam', value: 'Nam'},
+  {label: 'Nữ', value: 'Nữ'},
 ];
