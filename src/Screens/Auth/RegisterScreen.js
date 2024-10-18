@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ContainerComponent from '../../components/ContainerComponent';
 import SpaceComponent from '../../components/SpaceComponent';
 import RowComponent from '../../components/RowComponent';
@@ -23,85 +23,52 @@ const RegisterScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [errorEmail, setErrorEmail] = useState(null);
-  const [errorPass, setErrorPass] = useState(null);
-  const [errorRePass, setErrorRePass] = useState(null);
-  const [errorPhone, setErrorPhone] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [correct, setCorrect] = useState(false);
 
-  const changeEmail = data => {
-    setEmail(data);
-    setErrorEmail('');
+  useEffect(() => {
+    const emailcheck = validateEmail(email);
+    const phonecheck = validatePhone(phone);
+    const passcheck = checkpass(password);
+    !email ||
+    !phone ||
+    !rePassword ||
+    !phone ||
+    !password ||
+    !emailcheck ||
+    !phonecheck ||
+    passcheck
+      ? setCorrect(false)
+      : setCorrect(true);
+  }, [email, password, phone, rePassword]);
+  const checkEmail = data => {
+    return validateEmail(data) ? null : 'Email không đúng định dạng';
   };
 
-  const changePass = data => {
-    setPassword(data);
-    setErrorPass('');
+  const checkPhone = data => {
+    return validatePhone(data) ? null : 'Số điện thoại không đúng định dạng';
+  };
+  const checkpass = pass => {
+    return pass.length >= 6 ? null : 'Mật khẩu phải 6 ký tự trở lên';
   };
 
-  const changePhone = data => {
-    setPhone(data);
-    setErrorPhone('');
-  };
-
-  const changeRePass = data => {
-    setRePassword(data);
-    setErrorRePass('');
+  const checkrepass = (pass, repass) => {
+    return pass == repass ? null : 'Mật khẩu không khớp';
   };
 
   const handleRegister = async () => {
-    if (!email && !password && !name) {
-      setErrorEmail('Email không được để trống');
-      setErrorPass('Password không được để trống');
-      setErrorPhone('Số điện thoại không được để trống');
-      return;
-    }
-    if (!email) {
-      setErrorEmail('Email không được để trống');
-      return;
-    }
-    if (!password) {
-      setErrorPass('Password không được để trống');
-      return;
-    }
-    if (!phone) {
-      setErrorPhone('Name không được để trống');
-      return;
-    }
-    if (!validateEmail(email)) {
-      setErrorEmail('Email không phù hợp');
-      return;
-    }
-    if (!validatePhone(phone)) {
-      setErrorPhone('Số điện thoại không hợp lệ');
-      return;
-    }
-    if (!validatePass(password)) {
-      setErrorPass('Password phải có trên 6 kí tự');
-      return;
-    }
-    if (password != rePassword) {
-      setErrorRePass('Mật khẩu không khớp');
-      setErrorPass('Mật khẩu không khớp');
-      return;
-    }
     setIsLoading(true);
     try {
       const response = await AxiosInstance().post('/shipper/add', {
         email,
         password,
         phone,
-        address: 'trống',
-        rating: '0',
-        name: 'trống',
         gender: 'male',
-        birthDate: new Date('2000-01-01'),
-        vehicleBrand: 'trống',
-        vehiclePlate: 'trống',
         status: 'inactive',
+        birthDate: new Date('2000-01-01'),
       });
       if (response.status == true) {
-        ToastAndroid.show('Đăng ký thành công', ToastAndroid.SHORT);
+        ToastAndroid.show('Thành công', ToastAndroid.SHORT);
         setIsLoading(false);
         navigation.navigate('Login');
         return response.data;
@@ -143,102 +110,52 @@ const RegisterScreen = ({navigation}) => {
         label={'Email'}
         placeholder={'Nhập email'}
         value={email}
-        onChangeText={text => changeEmail(text)}
-        error={errorEmail}
+        onChangeText={text => setEmail(text)}
+        error={email ? checkEmail(email) : 'Thiếu thông tin!'}
       />
-      {errorEmail && (
-        <View style={{marginTop: 5}}>
-          <TextComponent text={errorEmail} color={'red'} fontsize={11} />
-        </View>
-      )}
       <SpaceComponent height={20} />
       <InputComponent
         label={'Số điện thoại'}
         placeholder={'Nhập số điện thoại'}
         value={phone}
-        onChangeText={text => changePhone(text)}
-        error={errorPhone}
+        onChangeText={text => setPhone(text)}
+        error={phone ? checkPhone(phone) : 'Thiếu thông tin!'}
       />
-      {errorPhone && (
-        <View style={{marginTop: 5}}>
-          <TextComponent text={errorPhone} color={'red'} fontsize={11} />
-        </View>
-      )}
       <SpaceComponent height={20} />
       <InputComponent
         label={'Mật khẩu'}
         placeholder={'Nhập mật khẩu'}
         value={password}
-        onChangeText={text => changePass(text)}
-        error={errorPass}
+        onChangeText={text => setPassword(text)}
+        error={password ? checkpass(password) : 'Thiếu thông tin!'}
         isPassword
       />
-      {errorPass && (
-        <View style={{marginTop: 5}}>
-          <TextComponent text={errorPass} color={'red'} fontsize={11} />
-        </View>
-      )}
       <SpaceComponent height={20} />
       <InputComponent
         label={'Xác nhận mật khẩu'}
         placeholder={'Nhập lại mật khẩu'}
         value={rePassword}
-        error={errorRePass}
-        onChangeText={text => changeRePass(text)}
+        onChangeText={text => setRePassword(text)}
+        error={
+          password ? checkrepass(password, rePassword) : 'Thiếu thông tin!'
+        }
         isPassword
+        isRePassword
       />
-      {errorRePass && (
-        <View style={{marginTop: 5}}>
-          <TextComponent text={errorRePass} color={'red'} fontsize={11} />
-        </View>
-      )}
       <SpaceComponent height={30} />
       <ButtonComponent
-        text={'Đăng ký'}
+        text={'Tạo tài khoản'}
         color={appColor.white}
-        onPress={handleRegister}
+        onPress={correct ? handleRegister : null}
+        styles={{opacity: correct ? 1 : 0.5}}
       />
       <SpaceComponent height={20} />
       <ButtonComponent
-        text={'Đăng nhập'}
+        text={'Trở về đăng nhập'}
         color={appColor.primary}
         backgroundColor={appColor.white}
         onPress={() => navigation.navigate('Login')}
       />
-      <SpaceComponent height={30} />
-      <TextComponent
-        text={'Hoặc đăng nhập bằng'}
-        color={appColor.subText}
-        textAlign="center"
-      />
-      <SpaceComponent height={30} />
-      <RowComponent justifyContent="space-between">
-        <ButtonComponent
-          width={appInfor.sizes.width * 0.37}
-          height={51}
-          icon={
-            <Image
-              source={require('../../assets/images/auth/login-regis/gg.png')}
-            />
-          }
-          text={'Google'}
-          backgroundColor={appColor.white}
-          borderColor={appColor.subText}
-        />
-        <ButtonComponent
-          width={appInfor.sizes.width * 0.37}
-          height={51}
-          icon={
-            <Image
-              source={require('../../assets/images/auth/login-regis/fb.png')}
-            />
-          }
-          text={'Facebook'}
-          backgroundColor={appColor.white}
-          borderColor={appColor.subText}
-        />
-      </RowComponent>
-      <SpaceComponent height={50} />
       <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );

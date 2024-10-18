@@ -12,19 +12,26 @@ import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 
 const Account = () => {
   const navigation = useNavigation();
-  const {user, state} = useSelector(state => state.login);
+  const {user} = useSelector(state => state.login);
   const {getData, getStatus} = useSelector(state => state.shipper);
   const dispatch = useDispatch();
+
+  //navigation
   const gotoScreen = screen => {
     navigation.navigate(screen);
   };
+
+  //lay thông tin shipper trước khi vào thông tin tài khoản
   useEffect(() => {
     dispatch(GetShipper(user._id));
   }, []);
 
+  // log  thông tin shipper
   useEffect(() => {
-    getStatus == 'succeeded' && console.log(getData);
+    getStatus == 'succeeded' && console.log(`Account.js: \n           v`),
+      console.log(getData);
   }, [getStatus]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

@@ -12,16 +12,15 @@ const VerifyShipper = ({navigation}) => {
   const {getStatus, getData} = useSelector(state => state.shipper);
   const [navigated, setNavigated] = useState(false);
   useEffect(() => {
-    if (getData.name !== 'trống' && !navigated) {
+    if (getData.name && !navigated) {
       setNavigated(true);
       navigation.replace('Tab');
-      console.log('hi');
     }
   }, [getData]);
   return (
     <View style={styles.container}>
       <TextComponent
-        text={`Để hoàn tất quy trình đăng ký tài xế, chúng tôi cần bổ sung một số thông tin từ tài khoản ${getData.email}.`}
+        text={`Để hoàn tất quy trình đăng ký tài xế, chúng tôi cần bạn bổ sung một số thông tin từ tài khoản ${getData.email}.`}
         fontsize={30}
         fontfamily={fontFamilies.bold}
       />

@@ -1,5 +1,5 @@
-import {Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
-import React, {useState} from 'react';
+import {Alert, Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import TextComponent from '../../components/TextComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {appColor} from '../../constants/appColor';
@@ -10,14 +10,12 @@ import ButtonComponent from '../../components/ButtonComponent';
 import {appInfor} from '../../constants/appInfor';
 import {globalStyle} from '../../styles/globalStyle';
 import ContainerComponent from '../../components/ContainerComponent';
-import {validateEmail, validatePass} from '../../utils/Validators';
 import {useDispatch, useSelector} from 'react-redux';
 import {login, loginWithSocial} from '../../Redux/API/UserAPI';
 import LoadingModal from '../../modal/LoadingModal';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {LoginManager, Profile, Settings} from 'react-native-fbsdk-next';
 import AxiosInstance from '../../helpers/AxiosInstance';
-import {logout} from '../../Redux/Reducers/LoginSlice';
 
 GoogleSignin.configure({
   webClientId:
@@ -32,8 +30,8 @@ const LoginScreen = ({navigation}) => {
   const [errorPass, setErrorPass] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const {user, status} = useSelector(state => state.login);
-  console.log('user', user);
+  const {user, status, error} = useSelector(state => state.login);
+  const [signbtn, setsignbtn] = useState(false);
   // console.log('status', status);
   // console.log('isLoading', isLoading);
 
@@ -46,29 +44,9 @@ const LoginScreen = ({navigation}) => {
     setErrorPass('');
   };
   const handleLogin = async () => {
-    if (!email && !password) {
-      setErrorEmail('Email không được để trống');
-      setErrorPass('Password không được để trống');
-      return;
-    }
-    if (!email) {
-      setErrorEmail('Email không được để trống');
-      return;
-    }
-    if (!password) {
-      setErrorPass('Password không được để trống');
-      return;
-    }
-    if (!validateEmail(email)) {
-      setErrorEmail('Email không phù hợp');
-      return;
-    }
-    if (!validatePass(password)) {
-      setErrorPass('Password phải có trên 6 kí tự');
-      return;
-    }
-    // setIsLoading(true)
     try {
+      setsignbtn(true);
+      setIsLoading(true);
       dispatch(login({identifier: email, password}));
       // if (status == 'loading') {
       //     setIsLoading(true)
@@ -79,6 +57,18 @@ const LoginScreen = ({navigation}) => {
       // }
     } catch (error) {}
   };
+
+  //quản lí đăng nhập
+  useEffect(() => {
+    if (status == 'failed' && signbtn == true) {
+      setIsLoading(false);
+      setTimeout(() => {
+        Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
+        setsignbtn(true);
+      }, 200);
+    }
+    console.log(signbtn);
+  }, [status]);
 
   const handleLoginWithGG = async () => {
     await GoogleSignin.hasPlayServices({
@@ -141,7 +131,7 @@ const LoginScreen = ({navigation}) => {
       <SpaceComponent height={30} />
       <RowComponent>
         <TextComponent
-          text={'Coody '}
+          text={'Coody Shipper '}
           fontsize={28}
           fontFamily={fontFamilies.bold}
           color={appColor.primary}
@@ -206,11 +196,13 @@ const LoginScreen = ({navigation}) => {
       <ButtonComponent
         text={'Đăng nhập'}
         color={appColor.white}
-        onPress={handleLogin}
+        onPress={() => {
+          handleLogin();
+        }}
       />
       <SpaceComponent height={20} />
       <ButtonComponent
-        text={'Đăng ký'}
+        text={'Tạo tài khoản'}
         color={appColor.primary}
         backgroundColor={appColor.white}
         onPress={() => navigation.navigate('Register')}

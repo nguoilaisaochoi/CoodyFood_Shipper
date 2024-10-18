@@ -1,7 +1,7 @@
 // socket.js
 import socketIOClient from 'socket.io-client';
 
-const host = 'https://apiproject-ylai.onrender.com/';
+const host = 'https://apiproject-1dk4.onrender.com/';
 let socket;
 
 export const connectSocket = () => {
@@ -11,7 +11,7 @@ export const connectSocket = () => {
   });
 
   socket.on('connect_error', error => {
-    console.error('Kết nối socket không thành công:', error);
+    console.log('Kết nối socket không thành công:', error);
   });
 
   socket.on('disconnect', () => {

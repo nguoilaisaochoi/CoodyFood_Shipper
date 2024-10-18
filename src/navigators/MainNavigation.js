@@ -14,9 +14,10 @@ import {
   ZegoUIKitPrebuiltCallWaitingScreen,
   ZegoUIKitPrebuiltCallInCallScreen,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
-import CallScreen from '../Screens/CallScreen';
+
 import VerifyShipper from '../Screens/Shipper/VerifyShipper';
-import {useSelector} from 'react-redux';
+import CallScreen from '../Screens/Shipper/CallScreen';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

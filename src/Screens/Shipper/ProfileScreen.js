@@ -22,31 +22,29 @@ import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
 import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
 import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
+import LoadingModal from '../../modal/LoadingModal';
 
 const ProfileScreen = () => {
-  const {user, state} = useSelector(state => state.login);
+  const {user} = useSelector(state => state.login);
   const {updateStatus, getData} = useSelector(state => state.shipper);
-  const [name, setName] = useState(
-    getData.name == 'trống' ? null : getData.name,
-  );
-  const [email, setEmail] = useState(getData?.email ?? null);
-  const [phone, setPhone] = useState(getData?.phone ?? null);
-  const [vehicleBrand, setvehicleBrand] = useState(
-    getData.vehicleBrand == 'trống' ? null : getData.vehicleBrand,
-  );
-  const [vehiclePlate, setvehiclePlate] = useState(
-    getData.vehiclePlate == 'trống' ? null : getData.vehiclePlate,
-  );
-  const [birthDate, setbirthDate] = useState(
-    getData.birthDate ? new Date(getData.birthDate) : null,
-  );
+  const [name, setName] = useState(getData.name ?? null);
+  const [email, setEmail] = useState(getData.email ?? null);
+  const [phone, setPhone] = useState(getData.phone ?? null);
+  const [birthDate, setbirthDate] = useState(getData.birthDate ?? null);
   const [gender, setGender] = useState(getData.gender == 'male' ? 'Nam' : 'Nữ');
   const [imagePath, setImagePath] = useState(null);
+  const [vehicleBrand, setvehicleBrand] = useState(
+    getData.vehicleBrand ?? null,
+  );
+  const [vehiclePlate, setvehiclePlate] = useState(
+    getData.vehiclePlate ?? null,
+  );
   const [showPicker, setshowPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [conrrect, setConrrect] = useState(false);
+  const [correct, setCorrect] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isclick, setisClick] = useState(false);
   const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
-  const clickRef = useRef(false);
   const dispath = useDispatch();
   //check phone
   const checkPhone = data => {
@@ -56,7 +54,7 @@ const ProfileScreen = () => {
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
-  //cập nhật shipper
+  //cập nhật shipper lên api
   const update = () => {
     const body = {
       name: name,
@@ -66,25 +64,36 @@ const ProfileScreen = () => {
       vehicleBrand: vehicleBrand,
       vehiclePlate: vehiclePlate,
       gender: gender == 'Nam' ? 'male' : 'female',
+      status: 'active',
     };
-    console.log(user);
-    console.log(gender);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
+  //quản lí state correct
   useEffect(() => {
-    name || phone || email || vehicleBrand || vehiclePlate
-      ? setConrrect(true)
-      : setConrrect(false);
+    const checkphone = checkPhone(phone);
+    const checkemail = checkEmail(email);
+    !name ||
+    !phone ||
+    !email ||
+    !vehicleBrand ||
+    !vehiclePlate ||
+    checkemail ||
+    checkphone
+      ? setCorrect(false)
+      : setCorrect(true);
   }, [name, phone, email, vehicleBrand, vehiclePlate]);
+
   //thông báo cập nhật
   useEffect(() => {
-    if (updateStatus == 'succeeded' && clickRef.current == true) {
+    if (updateStatus == 'succeeded' && isclick) {
       ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+      setIsLoading(false);
       dispath(GetShipper(user._id));
-      clickRef.current = false;
-    } else if (updateStatus == 'failed' && clickRef.current == true) {
+      setisClick(false);
+    } else if (updateStatus == 'failed' && isclick) {
       ToastAndroid.show('Cập nhật thất bại', ToastAndroid.SHORT);
-      clickRef.current = false;
+      setIsLoading(false);
+      setisClick(false);
     }
   }, [updateStatus]);
   //hàm xử lí khi DateTimePicker đc bật
@@ -92,8 +101,6 @@ const ProfileScreen = () => {
     if (event.type == 'set') {
       const currentDate = selectedDate;
       setbirthDate(currentDate);
-      setshowPicker(false);
-      console.log('date ' + date);
     }
     setshowPicker(false);
   };
@@ -107,6 +114,7 @@ const ProfileScreen = () => {
     sheetRef.current.close();
     setIsSheetOpen(false);
   };
+  //
   return (
     <View style={styles.container}>
       <HeaderComponent text={'Thông tin cá nhân'} isback={true} />
@@ -191,7 +199,9 @@ const ProfileScreen = () => {
               fontFamily={fontFamilies.regular}
               fontsize={14}
               text={
-                birthDate ? birthDate.toLocaleDateString('vi-VN') : '--/--/----'
+                birthDate
+                  ? new Date(birthDate).toLocaleDateString('vi-VN')
+                  : '--/--/----'
               }
               styles={{opacity: 0.5}}
             />
@@ -199,7 +209,7 @@ const ProfileScreen = () => {
           {showPicker && (
             <DateTimePicker
               mode={'date'}
-              value={birthDate || new Date()}
+              value={new Date(birthDate) || new Date()}
               onChange={handleDateChange}
             />
           )}
@@ -221,11 +231,16 @@ const ProfileScreen = () => {
             text={'Cập nhật'}
             color={appColor.white}
             height={51}
-            styles={{marginBottom: '5%', opacity: conrrect ? 1 : 0.5}}
-            onPress={() => {
-              update();
-              clickRef.current = true;
-            }}
+            styles={{opacity: correct ? 1 : 0.5, marginBottom: '5%'}}
+            onPress={
+              correct
+                ? () => {
+                    update();
+                    setIsLoading(true);
+                    setisClick(true);
+                  }
+                : null
+            }
           />
         </View>
       </ScrollView>
@@ -267,6 +282,7 @@ const ProfileScreen = () => {
           />
         </BottomSheetView>
       </BottomSheet>
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };

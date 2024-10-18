@@ -14,32 +14,33 @@ const HomeScreen = ({navigation}) => {
   const {user, state} = useSelector(state => state.login);
   const {getStatus, getData} = useSelector(state => state.shipper);
   const dispath = useDispatch();
-  const host = 'https://apiproject-ylai.onrender.com/';
   const [modalVisible, setModalVisible] = useState(false); //modal nhận đơn hiện và tắt
   const [order, setOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
-  const [verify, setVerify] = useState(false); //verify==true - cần xác thực false - không cần xác thực
-
+  const [verify, setverify] = useState(false);
   useEffect(() => {
-    if (getStatus == 'succeeded' && getData.name == 'trống') {
+    if (getStatus == 'succeeded' && !getData.name) {
       navigation.replace('VerifyShipper');
+    } else if (getData.name) {
+      setverify(true);
+      console.log(verify);
     }
   }, [getStatus]);
   //giả lập sau 2s sẽ có đơn
   useEffect(() => {
     //lay id shipper
     dispath(GetShipper(user._id));
-
-    //kết nối socket
-    connectSocket();
-    setTimeout(() => {
-      setModalVisible(verify ? true : false);
-    }, 2000);
-
-    // Ngắt kết nối khi component unmount
+    if (verify) {
+      //kết nối socket
+      connectSocket();
+      setTimeout(() => {
+        setModalVisible(true);
+      }, 2000);
+    }
+    // Ngắt kết nối socket khi component unmount
     return () => {
       disconnectSocket();
     };
-  }, []);
+  }, [verify]);
 
   return (
     <View style={{flex: 1}}>

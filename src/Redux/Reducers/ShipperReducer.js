@@ -42,7 +42,7 @@ export const ShipperSlice = createSlice({
       })
       .addCase(GetShipper.rejected, (state, action) => {
         state.getStatus = 'failed';
-        console.error(action.error.message);
+        console.error('K lấy đc shipper: ' + action.error.message);
       });
   },
 });
