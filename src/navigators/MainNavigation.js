@@ -10,6 +10,14 @@ import RevenueScreen from '../Screens/Shipper/RevenueScreen';
 import Account from '../Screens/Shipper/Account';
 import ProfileScreen from '../Screens/Shipper/ProfileScreen';
 import Message from '../Screens/Shipper/Message';
+import {
+  ZegoUIKitPrebuiltCallWaitingScreen,
+  ZegoUIKitPrebuiltCallInCallScreen,
+} from '@zegocloud/zego-uikit-prebuilt-call-rn';
+
+import VerifyShipper from '../Screens/Shipper/VerifyShipper';
+import CallScreen from '../Screens/Shipper/CallScreen';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -18,8 +26,22 @@ const MainNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Tab" component={TabNavigation} />
+      <Stack.Screen name="VerifyShipper" component={VerifyShipper} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Message" component={Message} />
+      <Stack.Screen name="CallScreen" component={CallScreen} />
+      <Stack.Screen
+        options={{headerShown: false}}
+        // DO NOT change the name
+        name="ZegoUIKitPrebuiltCallWaitingScreen"
+        component={ZegoUIKitPrebuiltCallWaitingScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        // DO NOT change the name
+        name="ZegoUIKitPrebuiltCallInCallScreen"
+        component={ZegoUIKitPrebuiltCallInCallScreen}
+      />
     </Stack.Navigator>
   );
 };

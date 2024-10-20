@@ -1,18 +1,37 @@
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {appColor} from '../../constants/appColor';
 import TextComponent from './ComposenentShipper/TextComponent';
 import BtnComponent from './ComposenentShipper/BtnComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import ItemAccount from './ComposenentShipper/ItemAccount';
 import {useNavigation} from '@react-navigation/native';
+import {logout} from '../../Redux/Reducers/LoginSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 
 const Account = () => {
   const navigation = useNavigation();
+  const {user} = useSelector(state => state.login);
+  const {getData, getStatus} = useSelector(state => state.shipper);
+  const dispatch = useDispatch();
 
-  const gotoProfile = screen => {
+  //navigation
+  const gotoScreen = screen => {
     navigation.navigate(screen);
   };
+
+  //lay thông tin shipper trước khi vào thông tin tài khoản
+  useEffect(() => {
+    dispatch(GetShipper(user._id));
+  }, []);
+
+  // log  thông tin shipper
+  useEffect(() => {
+    getStatus == 'succeeded' && console.log(`Account.js: \n           v`),
+      console.log(getData);
+  }, [getStatus]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -50,14 +69,19 @@ const Account = () => {
       <View style={styles.body}>
         <ItemAccount
           screen={() => {
-            gotoProfile('Profile');
+            gotoScreen('Profile');
           }}
           text={'Thông tin cá nhân của bạn'}
           icon={'user'}
         />
         <ItemAccount text={' Lịch sử nạp rút tiền'} icon={'setting'} />
         <ItemAccount text={'Đổi mật khẩu'} icon={'padlock'} />
-        <ItemAccount text={'Đăng xuất'} />
+        <ItemAccount
+          text={'Đăng xuất'}
+          screen={() => {
+            dispatch(logout());
+          }}
+        />
       </View>
     </View>
   );

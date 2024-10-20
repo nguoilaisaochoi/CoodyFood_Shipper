@@ -1,12 +1,12 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import HeaderComponent from '../../components/HeaderComponent';
 import {appColor} from '../../constants/appColor';
@@ -16,43 +16,124 @@ import ButtonComponent from '../../components/ButtonComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {useDispatch, useSelector} from 'react-redux';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
+import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
+import {validateEmail, validatePhone} from '../../utils/Validators';
+import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
+import LoadingModal from '../../modal/LoadingModal';
 
 const ProfileScreen = () => {
-  const [name, setName] = useState('ABC');
-  const [errorName, setErrorName] = useState('Email không được để trống');
-  const [email, setEmail] = useState('abc@gmail.com');
-  const [errorEmail, setErrorEmail] = useState('');
-  const [phone, setPhone] = useState('0123456789');
-  const [errorPhone, setErrorPhone] = useState('');
-  const [address, setAddress] = useState('ABCDEF');
-  const [errorAddress, setErrorAddress] = useState('');
-  const [correct, setCorrect] = useState(true);
-  const [date, setDate] = useState(null);
+  const {user} = useSelector(state => state.login);
+  const {updateStatus, getData} = useSelector(state => state.shipper);
+  const [name, setName] = useState(getData.name ?? null);
+  const [email, setEmail] = useState(getData.email ?? null);
+  const [phone, setPhone] = useState(getData.phone ?? null);
+  const [birthDate, setbirthDate] = useState(getData.birthDate ?? null);
+  const [gender, setGender] = useState(getData.gender == 'male' ? 'Nam' : 'Nữ');
+  const [imagePath, setImagePath] = useState(null);
+  const [vehicleBrand, setvehicleBrand] = useState(
+    getData.vehicleBrand ?? null,
+  );
+  const [vehiclePlate, setvehiclePlate] = useState(
+    getData.vehiclePlate ?? null,
+  );
   const [showPicker, setshowPicker] = useState(false);
-  const [value, setValue] = useState(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [correct, setCorrect] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isclick, setisClick] = useState(false);
+  const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
+  const dispath = useDispatch();
+  //check phone
+  const checkPhone = data => {
+    return validatePhone(data) ? null : 'Số điện thoại không hợp lệ';
+  };
+  //check email
+  const checkEmail = data => {
+    return validateEmail(data) ? null : 'Email không hợp lệ';
+  };
+  //cập nhật shipper lên api
+  const update = () => {
+    const body = {
+      name: name,
+      phone: phone,
+      email: email,
+      birthDate: new Date(birthDate),
+      vehicleBrand: vehicleBrand,
+      vehiclePlate: vehiclePlate,
+      gender: gender == 'Nam' ? 'male' : 'female',
+      status: 'active',
+    };
+    dispath(UpdateShipper({id: user._id, data: body}));
+  };
+  //quản lí state correct
+  useEffect(() => {
+    const checkphone = checkPhone(phone);
+    const checkemail = checkEmail(email);
+    !name ||
+    !phone ||
+    !email ||
+    !vehicleBrand ||
+    !vehiclePlate ||
+    checkemail ||
+    checkphone
+      ? setCorrect(false)
+      : setCorrect(true);
+  }, [name, phone, email, vehicleBrand, vehiclePlate]);
 
+  //thông báo cập nhật
+  useEffect(() => {
+    if (updateStatus == 'succeeded' && isclick) {
+      ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+      setIsLoading(false);
+      dispath(GetShipper(user._id));
+      setisClick(false);
+    } else if (updateStatus == 'failed' && isclick) {
+      ToastAndroid.show('Cập nhật thất bại', ToastAndroid.SHORT);
+      setIsLoading(false);
+      setisClick(false);
+    }
+  }, [updateStatus]);
   //hàm xử lí khi DateTimePicker đc bật
   const handleDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
       const currentDate = selectedDate;
-      setDate(currentDate);
-      console.log('date ' + date);
+      setbirthDate(currentDate);
     }
     setshowPicker(false);
   };
-
+  // Mở Bottom Sheet
+  const openSheet = () => {
+    sheetRef.current.snapToIndex(0);
+    setIsSheetOpen(true);
+  };
+  // Đóng Bottom Sheet
+  const closeSheet = () => {
+    sheetRef.current.close();
+    setIsSheetOpen(false);
+  };
+  //
   return (
     <View style={styles.container}>
       <HeaderComponent text={'Thông tin cá nhân'} isback={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{alignItems: 'center'}}>
           {/*avatar*/}
-          <TouchableOpacity style={styles.body1} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={styles.body1}
+            activeOpacity={0.85}
+            onPress={() => {
+              openSheet();
+            }}>
             <View style={styles.boximg}>
               <Image
                 style={{width: 99, height: 99}}
                 source={{
-                  uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
+                  uri: imagePath
+                    ? imagePath
+                    : 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
                 }}
               />
             </View>
@@ -70,10 +151,25 @@ const ProfileScreen = () => {
             />
           </View>
         </View>
-         {/*text input*/}
-        <TextInputComponent text={'HỌ VÀ TÊN'} placeholder={'Tên Tài Xế'} />
-        <TextInputComponent text={'EMAIL'} placeholder={'abc123@gmail.com'} />
-        <TextInputComponent text={'SỐ ĐIỆN THOẠI'} placeholder={'0123456789'} />
+        {/*text input*/}
+        <TextInputComponent
+          text={'HỌ VÀ TÊN'}
+          value={name}
+          onChangeText={text => setName(text)}
+          error={name ? null : 'Đây là thông tin bắt buộc'}
+        />
+        <TextInputComponent
+          text={'EMAIL'}
+          value={email}
+          onChangeText={text => setEmail(text)}
+          error={email ? checkEmail(email) : 'Đây là thông tin bắt buộc'}
+        />
+        <TextInputComponent
+          text={'SỐ ĐIỆN THOẠI'}
+          value={phone}
+          onChangeText={text => setPhone(text)}
+          error={phone ? checkPhone(phone) : 'Đây là thông tin bắt buộc'}
+        />
         <TextComponent text={'GIỚI TÍNH'} />
         <Dropdown
           style={styles.dropdown}
@@ -85,10 +181,10 @@ const ProfileScreen = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={data[0].label}
-          value={value}
+          placeholder={gender}
+          value={gender}
           onChange={item => {
-            setValue(item.value);
+            setGender(item.value);
           }}
         />
         <TextComponent text={'NGÀY SINH'} fontFamily={fontFamilies.bold} />
@@ -102,29 +198,91 @@ const ProfileScreen = () => {
             <TextComponent
               fontFamily={fontFamilies.regular}
               fontsize={14}
-              text={date ? date.toLocaleDateString('vi-VN') : '--/--/----'}
+              text={
+                birthDate
+                  ? new Date(birthDate).toLocaleDateString('vi-VN')
+                  : '--/--/----'
+              }
               styles={{opacity: 0.5}}
             />
           </TouchableOpacity>
           {showPicker && (
             <DateTimePicker
               mode={'date'}
-              value={date || new Date()}
+              value={new Date(birthDate) || new Date()}
               onChange={handleDateChange}
             />
           )}
         </View>
-        <TextInputComponent text={'HÃNG XE'} placeholder={'Future(đen bóng)'} />
-        <TextInputComponent text={'BIỂN SỐ XE'} placeholder={'43E-567-89'} />
+        <TextInputComponent
+          text={'HÃNG XE'}
+          onChangeText={text => setvehicleBrand(text)}
+          value={vehicleBrand}
+          error={vehicleBrand ? null : 'Đây là thông tin bắt buộc'}
+        />
+        <TextInputComponent
+          text={'BIỂN SỐ XE'}
+          onChangeText={text => setvehiclePlate(text)}
+          value={vehiclePlate}
+          error={vehiclePlate ? null : 'Đây là thông tin bắt buộc'}
+        />
         <View style={styles.footer}>
           <ButtonComponent
             text={'Cập nhật'}
             color={appColor.white}
             height={51}
             styles={{opacity: correct ? 1 : 0.5, marginBottom: '5%'}}
+            onPress={
+              correct
+                ? () => {
+                    update();
+                    setIsLoading(true);
+                    setisClick(true);
+                  }
+                : null
+            }
           />
         </View>
       </ScrollView>
+      {isSheetOpen && (
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.bg}
+          onPress={() => {
+            closeSheet();
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        handleComponent={null}
+        snapPoints={['18%']}
+        index={-1}
+        containerStyle={{flex: 1, zIndex: 2}}>
+        <BottomSheetView style={styles.optionavatar}>
+          <ButtonComponent
+            text={'Chụp ảnh'}
+            width={'40%'}
+            color={appColor.white}
+            height={51}
+            onPress={() => {
+              onOpenCamera(setImagePath);
+              closeSheet();
+            }}
+          />
+          <ButtonComponent
+            text={'Thư viện'}
+            width={'40%'}
+            color={appColor.white}
+            height={51}
+            onPress={() => {
+              onImageLibrary(setImagePath);
+              closeSheet();
+            }}
+          />
+        </BottomSheetView>
+      </BottomSheet>
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };
@@ -135,9 +293,25 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: '10%',
+    paddingTop: '12%',
     paddingLeft: '5%',
     paddingRight: '5%',
+  },
+  bg: {
+    backgroundColor: 'rgba(217.81, 217.81, 217.81, 0.50)',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  optionavatar: {
+    flex: 1,
+    zIndex: 2,
+    backgroundColor: appColor.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   body1: {
     width: 97,
@@ -187,6 +361,6 @@ const styles = StyleSheet.create({
 });
 //data cho dropdown
 const data = [
-  {label: 'Nam', value: '1'},
-  {label: 'Nữ', value: '2'},
+  {label: 'Nam', value: 'Nam'},
+  {label: 'Nữ', value: 'Nữ'},
 ];

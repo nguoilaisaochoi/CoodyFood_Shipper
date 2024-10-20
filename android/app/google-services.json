@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741073661514",
+    "project_id": "callproject-5ae7d",
+    "storage_bucket": "callproject-5ae7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741073661514:android:9a3069678413e5d19a00b3",
+        "android_client_info": {
+          "package_name": "com.coodyfood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHaV76vg6_0Y6DXfT7v3AqYZASddzcKA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

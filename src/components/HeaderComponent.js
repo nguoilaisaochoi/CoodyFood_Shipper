@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     // height: appInfor.sizes.height * 0.1,
     // padding: appInfor.sizes.width * 0.05,
     // paddingTop: appInfor.sizes.height * 0.08,
-    paddingBottom: 40
+    paddingBottom: 30
   },
   title: {
     position: 'absolute',

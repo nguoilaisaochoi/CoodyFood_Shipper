@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {appColor} from '../../constants/appColor';
 import HeaderComponent from '../../components/HeaderComponent';
 import TextComponent from './ComposenentShipper/TextComponent';
@@ -15,6 +15,7 @@ import TextComponent from './ComposenentShipper/TextComponent';
 const Message = () => {
   const Data = data;
   const shipper = Data[0].name;
+
   //item flatlist
   const renderItem = ({item}) => {
     const {id, text, time, name} = item;

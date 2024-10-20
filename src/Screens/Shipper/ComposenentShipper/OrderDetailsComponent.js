@@ -5,7 +5,6 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
-  PermissionsAndroid,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -16,93 +15,49 @@ import SlideButton from 'rn-slide-button-updated';
 import Check from './CheckComponent';
 import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
-import {launchCamera} from 'react-native-image-picker';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
+import {onOpenCamera} from './CameraOpenComponent';
 
 const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
-  const sheetRef = useRef(null);
+  const sheetRef = useRef();
   const snapPoints = ['20%', '90%'];
   const [phoneNumber] = useState('0123456');
-  const [item1, setItem1] = useState(false);
-  const [item2, setItem2] = useState(false);
-  const [item3, setItem3] = useState(false);
-  const [item4, setItem4] = useState(false);
+  const [status, setStatus] = useState({
+    item1: false,
+    item2: false,
+    item3: false,
+    item4: false,
+  });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
   //chuyển sdt qua cuộc gọi
   const call = () => {
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
-  //setting máy ảnh
-  const cameraOptions = {
-    cameraType: 'front',
-    saveToPhotos: true,
-  };
-  //yêu cầu quyền
-  const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
-  };
-  //kiểm tra quyền
-  const checkCameraPermission = async () => {
-    const permissionStatus = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
-    return permissionStatus;
-  };
-  //mở camera
-  const onOpenCamera = async () => {
-    //check quyền
-    const hasPermission = await checkCameraPermission();
-    if (!hasPermission) {
-      const granted = await requestCameraPermission();
-      if (!granted) {
-        Alert.alert('Quyền camera bị từ chối');
-        return;
-      }
-    }
-    try {
-      //mở camera&chụp ảnh
-      const response = await launchCamera(cameraOptions);
-      if (response?.assets) {
-        setImagePath(response.assets[0].uri);
-        console.log(response.assets);
-      } else {
-        console.log('Có lỗi xảy ra', response.errorMessage);
-      }
-    } catch (error) {
-      console.log('Có lỗi xảy ra', error.message);
-    }
-  };
+
   //hiện các status khi đang ship
   const handleReachedToEnd = () => {
-    if (!item1) {
-      setItem1(true);
+    if (!status.item1) {
+      setStatus({...status, item1: true});
       setTitle('Đã lấy món ăn');
-    } else if (!item2) {
+    } else if (!status.item2) {
       if (imagePath) {
-        setItem2(true);
+        setStatus({...status, item2: true});
         setTitle('Đã đến nơi giao');
       } else {
         Alert.alert('Thông báo', 'Bạn cần phải chụp hình');
       }
-    } else if (!item3) {
-      setItem3(true);
+    } else if (!status.item3) {
+      setStatus({...status, item3: true});
       setTitle('Hoàn tất đơn hàng');
-    } else if (!item4) {
-      setItem4(true);
-      setTitle('Hoàn tất,Chuẩn bị đóng lại!');
+    } else if (!status.item4) {
+      setStatus({...status, item4: true});
+      setTitle('Hoàn tất,Chuẩn bị đóng!');
       setTimeout(() => {
         sheetRef.current.close();
+        setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }
   };
@@ -210,18 +165,18 @@ const OrderDetailsComponent = ({setOrder}) => {
             </View>
             {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
             <View style={styles.check}>
-              <Check start={true} checked={item1 ? true : false} />
+              <Check start={true} checked={status.item1 ? true : false} />
               <Check
-                start={item1 ? true : false}
-                checked={item2 ? true : false}
+                start={status.item1 ? true : false}
+                checked={status.item2 ? true : false}
               />
               <Check
-                start={item2 ? true : false}
-                checked={item3 ? true : false}
+                start={status.item2 ? true : false}
+                checked={status.item3 ? true : false}
               />
               <Check
-                start={item3 ? true : false}
-                checked={item4 ? true : false}
+                start={status.item3 ? true : false}
+                checked={status.item4 ? true : false}
               />
             </View>
           </View>
@@ -261,11 +216,11 @@ const OrderDetailsComponent = ({setOrder}) => {
               thumbStyle={{borderRadius: 25}}
             />
             {/*nút chụp ảnh chỉ hiện khi ở `shiper đẫ lấy món ăn`*/}
-            {item1 && !item2 && (
+            {status.item1 && !status.item2 && (
               <TouchableOpacity
                 style={[styles.button, {backgroundColor: appColor.primary}]}
                 onPress={() => {
-                  onOpenCamera();
+                  onOpenCamera(setImagePath);
                 }}>
                 <TextComponent
                   text={'Chụp ảnh'}
@@ -306,7 +261,7 @@ const OrderDetailsComponent = ({setOrder}) => {
                   style={styles.callandmess}
                   activeOpacity={0.7}
                   onPress={() => {
-                    call();
+                    gotoscreen('CallScreen');
                   }}>
                   <Image
                     style={{width: '100%', height: '100%'}}
@@ -337,8 +292,9 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 1,
+    zIndex: 3,
   },
+
   info1: {
     width: '86%',
     minHeight: 123,
