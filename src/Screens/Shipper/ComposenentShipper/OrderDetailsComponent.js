@@ -32,7 +32,8 @@ const OrderDetailsComponent = ({setOrder}) => {
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
-  //chuyển sdt qua cuộc gọi
+  
+  //chuyển sdt qua cuộc gọi sim
   const call = () => {
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
