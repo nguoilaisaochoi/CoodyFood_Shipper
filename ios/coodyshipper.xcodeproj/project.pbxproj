@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* coodyfoodTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* coodyfoodTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-coodyfood.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-coodyfood.a */; };
+		00E356F31AD99517003FC87E /* coodyshipperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* coodyshipperTests.m */; };
+		0C80B921A6F3F58F76C31292 /* libPods-coodyshipper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-coodyshipper.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-coodyfood-coodyfoodTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyfood-coodyfoodTests.a */; };
+		7699B88040F8A987B510C191 /* libPods-coodyshipper-coodyshipperTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyshipper-coodyshipperTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		57401900FC9B4FE3A61CB4B0 /* Inter_18pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CE90B2C6D5E4A2D880525B5 /* Inter_18pt-Bold.ttf */; };
-		5E032F98518C41748EC6EEE8 /* Inter_18pt-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F64F6F5505F24EA3A90A3925 /* Inter_18pt-ExtraBold.ttf */; };
-		546D55FC19324D6EB149974E /* Inter_18pt-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 10F13FE79EDF4EB1BDEEF931 /* Inter_18pt-Light.ttf */; };
-		6CC14042D4414BE08E4BBE4C /* Inter_18pt-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 459BC964DEEB42FB91FA8E75 /* Inter_18pt-Medium.ttf */; };
-		26911520D49346A0BA42D7E1 /* Inter_18pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3B5DDCB183446889FD4E7CD /* Inter_18pt-Regular.ttf */; };
-		838F779C08314F0185B562FA /* Inter_18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBD997885ED1404B862EA707 /* Inter_18pt-SemiBold.ttf */; };
+		13EE59A745414626A750B42D /* Inter_18pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B48AD987729E4FB9BB1B6F0D /* Inter_18pt-Bold.ttf */; };
+		62C2B6B18103453CA58CA34C /* Inter_18pt-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6A15721266C4A328F51E597 /* Inter_18pt-ExtraBold.ttf */; };
+		618CA10553734823AACD76CC /* Inter_18pt-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BB768056C834683B8F318C2 /* Inter_18pt-Light.ttf */; };
+		E000641E85814D24B44ED699 /* Inter_18pt-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 46DCFC3D730747FCBEED62D6 /* Inter_18pt-Medium.ttf */; };
+		BB018DD7C2E54C1CB85C1F58 /* Inter_18pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F29B61E85B14FC2A2264004 /* Inter_18pt-Regular.ttf */; };
+		936194DC43BA42F2880C6075 /* Inter_18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 968E1F38B0894F67800B5C30 /* Inter_18pt-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,35 +28,35 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = coodyfood;
+			remoteInfo = coodyshipper;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* coodyfoodTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = coodyfoodTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* coodyshipperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = coodyshipperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* coodyfoodTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = coodyfoodTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* coodyfood.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = coodyfood.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = coodyfood/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = coodyfood/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = coodyfood/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = coodyfood/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = coodyfood/main.m; sourceTree = "<group>"; };
-		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = coodyfood/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyfood-coodyfoodTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-coodyfood-coodyfoodTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-coodyfood.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyfood.debug.xcconfig"; path = "Target Support Files/Pods-coodyfood/Pods-coodyfood.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-coodyfood.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyfood.release.xcconfig"; path = "Target Support Files/Pods-coodyfood/Pods-coodyfood.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-coodyfood-coodyfoodTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyfood-coodyfoodTests.debug.xcconfig"; path = "Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-coodyfood.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-coodyfood.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = coodyfood/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-coodyfood-coodyfoodTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyfood-coodyfoodTests.release.xcconfig"; path = "Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests.release.xcconfig"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* coodyshipperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = coodyshipperTests.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* coodyshipper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = coodyshipper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = coodyshipper/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = coodyshipper/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = coodyshipper/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = coodyshipper/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = coodyshipper/main.m; sourceTree = "<group>"; };
+		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = coodyshipper/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyshipper-coodyshipperTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-coodyshipper-coodyshipperTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B4392A12AC88292D35C810B /* Pods-coodyshipper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyshipper.debug.xcconfig"; path = "Target Support Files/Pods-coodyshipper/Pods-coodyshipper.debug.xcconfig"; sourceTree = "<group>"; };
+		5709B34CF0A7D63546082F79 /* Pods-coodyshipper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyshipper.release.xcconfig"; path = "Target Support Files/Pods-coodyshipper/Pods-coodyshipper.release.xcconfig"; sourceTree = "<group>"; };
+		5B7EB9410499542E8C5724F5 /* Pods-coodyshipper-coodyshipperTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyshipper-coodyshipperTests.debug.xcconfig"; path = "Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5DCACB8F33CDC322A6C60F78 /* libPods-coodyshipper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-coodyshipper.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = coodyshipper/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89C6BE57DB24E9ADA2F236DE /* Pods-coodyshipper-coodyshipperTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-coodyshipper-coodyshipperTests.release.xcconfig"; path = "Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		2CE90B2C6D5E4A2D880525B5 /* Inter_18pt-Bold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Bold.ttf"; path = "../assets/fonts/Inter_18pt-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F64F6F5505F24EA3A90A3925 /* Inter_18pt-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-ExtraBold.ttf"; path = "../assets/fonts/Inter_18pt-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		10F13FE79EDF4EB1BDEEF931 /* Inter_18pt-Light.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Light.ttf"; path = "../assets/fonts/Inter_18pt-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		459BC964DEEB42FB91FA8E75 /* Inter_18pt-Medium.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Medium.ttf"; path = "../assets/fonts/Inter_18pt-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B3B5DDCB183446889FD4E7CD /* Inter_18pt-Regular.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Regular.ttf"; path = "../assets/fonts/Inter_18pt-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BBD997885ED1404B862EA707 /* Inter_18pt-SemiBold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-SemiBold.ttf"; path = "../assets/fonts/Inter_18pt-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B48AD987729E4FB9BB1B6F0D /* Inter_18pt-Bold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Bold.ttf"; path = "../assets/fonts/Inter_18pt-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B6A15721266C4A328F51E597 /* Inter_18pt-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-ExtraBold.ttf"; path = "../assets/fonts/Inter_18pt-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3BB768056C834683B8F318C2 /* Inter_18pt-Light.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Light.ttf"; path = "../assets/fonts/Inter_18pt-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		46DCFC3D730747FCBEED62D6 /* Inter_18pt-Medium.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Medium.ttf"; path = "../assets/fonts/Inter_18pt-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8F29B61E85B14FC2A2264004 /* Inter_18pt-Regular.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-Regular.ttf"; path = "../assets/fonts/Inter_18pt-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		968E1F38B0894F67800B5C30 /* Inter_18pt-SemiBold.ttf */ = {isa = PBXFileReference; name = "Inter_18pt-SemiBold.ttf"; path = "../assets/fonts/Inter_18pt-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-coodyfood-coodyfoodTests.a in Frameworks */,
+				7699B88040F8A987B510C191 /* libPods-coodyshipper-coodyshipperTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,20 +72,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-coodyfood.a in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* libPods-coodyshipper.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* coodyfoodTests */ = {
+		00E356EF1AD99517003FC87E /* coodyshipperTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* coodyfoodTests.m */,
+				00E356F21AD99517003FC87E /* coodyshipperTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = coodyfoodTests;
+			path = coodyshipperTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -96,7 +96,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* coodyfood */ = {
+		13B07FAE1A68108700A75B9A /* coodyshipper */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -107,15 +107,15 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 			);
-			name = coodyfood;
+			name = coodyshipper;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-coodyfood.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyfood-coodyfoodTests.a */,
+				5DCACB8F33CDC322A6C60F78 /* libPods-coodyshipper.a */,
+				19F6CBCC0A4E27FBF8BF4A61 /* libPods-coodyshipper-coodyshipperTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -130,13 +130,13 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* coodyfood */,
+				13B07FAE1A68108700A75B9A /* coodyshipper */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* coodyfoodTests */,
+				00E356EF1AD99517003FC87E /* coodyshipperTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
-				1B093EB28CFB4789989BCA6C /* Resources */,
+				805520245FE6451CA24308AD /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -146,8 +146,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* coodyfood.app */,
-				00E356EE1AD99517003FC87E /* coodyfoodTests.xctest */,
+				13B07F961A680F5B00A75B9A /* coodyshipper.app */,
+				00E356EE1AD99517003FC87E /* coodyshipperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,23 +155,23 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-coodyfood.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-coodyfood.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-coodyfood-coodyfoodTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-coodyfood-coodyfoodTests.release.xcconfig */,
+				3B4392A12AC88292D35C810B /* Pods-coodyshipper.debug.xcconfig */,
+				5709B34CF0A7D63546082F79 /* Pods-coodyshipper.release.xcconfig */,
+				5B7EB9410499542E8C5724F5 /* Pods-coodyshipper-coodyshipperTests.debug.xcconfig */,
+				89C6BE57DB24E9ADA2F236DE /* Pods-coodyshipper-coodyshipperTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		1B093EB28CFB4789989BCA6C /* Resources */ = {
+		805520245FE6451CA24308AD /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				2CE90B2C6D5E4A2D880525B5 /* Inter_18pt-Bold.ttf */,
-				F64F6F5505F24EA3A90A3925 /* Inter_18pt-ExtraBold.ttf */,
-				10F13FE79EDF4EB1BDEEF931 /* Inter_18pt-Light.ttf */,
-				459BC964DEEB42FB91FA8E75 /* Inter_18pt-Medium.ttf */,
-				B3B5DDCB183446889FD4E7CD /* Inter_18pt-Regular.ttf */,
-				BBD997885ED1404B862EA707 /* Inter_18pt-SemiBold.ttf */,
+				B48AD987729E4FB9BB1B6F0D /* Inter_18pt-Bold.ttf */,
+				B6A15721266C4A328F51E597 /* Inter_18pt-ExtraBold.ttf */,
+				3BB768056C834683B8F318C2 /* Inter_18pt-Light.ttf */,
+				46DCFC3D730747FCBEED62D6 /* Inter_18pt-Medium.ttf */,
+				8F29B61E85B14FC2A2264004 /* Inter_18pt-Regular.ttf */,
+				968E1F38B0894F67800B5C30 /* Inter_18pt-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -180,9 +180,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* coodyfoodTests */ = {
+		00E356ED1AD99517003FC87E /* coodyshipperTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "coodyfoodTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "coodyshipperTests" */;
 			buildPhases = (
 				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -196,14 +196,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = coodyfoodTests;
-			productName = coodyfoodTests;
-			productReference = 00E356EE1AD99517003FC87E /* coodyfoodTests.xctest */;
+			name = coodyshipperTests;
+			productName = coodyshipperTests;
+			productReference = 00E356EE1AD99517003FC87E /* coodyshipperTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* coodyfood */ = {
+		13B07F861A680F5B00A75B9A /* coodyshipper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "coodyfood" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "coodyshipper" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -217,9 +217,9 @@
 			);
 			dependencies = (
 			);
-			name = coodyfood;
-			productName = coodyfood;
-			productReference = 13B07F961A680F5B00A75B9A /* coodyfood.app */;
+			name = coodyshipper;
+			productName = coodyshipper;
+			productReference = 13B07F961A680F5B00A75B9A /* coodyshipper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -239,7 +239,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "coodyfood" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "coodyshipper" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -252,8 +252,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* coodyfood */,
-				00E356ED1AD99517003FC87E /* coodyfoodTests */,
+				13B07F861A680F5B00A75B9A /* coodyshipper */,
+				00E356ED1AD99517003FC87E /* coodyshipperTests */,
 			);
 		};
 /* End PBXProject section */
@@ -272,12 +272,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				57401900FC9B4FE3A61CB4B0 /* Inter_18pt-Bold.ttf in Resources */,
-				5E032F98518C41748EC6EEE8 /* Inter_18pt-ExtraBold.ttf in Resources */,
-				546D55FC19324D6EB149974E /* Inter_18pt-Light.ttf in Resources */,
-				6CC14042D4414BE08E4BBE4C /* Inter_18pt-Medium.ttf in Resources */,
-				26911520D49346A0BA42D7E1 /* Inter_18pt-Regular.ttf in Resources */,
-				838F779C08314F0185B562FA /* Inter_18pt-SemiBold.ttf in Resources */,
+				13EE59A745414626A750B42D /* Inter_18pt-Bold.ttf in Resources */,
+				62C2B6B18103453CA58CA34C /* Inter_18pt-ExtraBold.ttf in Resources */,
+				618CA10553734823AACD76CC /* Inter_18pt-Light.ttf in Resources */,
+				E000641E85814D24B44ED699 /* Inter_18pt-Medium.ttf in Resources */,
+				BB018DD7C2E54C1CB85C1F58 /* Inter_18pt-Regular.ttf in Resources */,
+				936194DC43BA42F2880C6075 /* Inter_18pt-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,15 +306,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -332,7 +332,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-coodyfood-coodyfoodTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-coodyshipper-coodyshipperTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -354,7 +354,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-coodyfood-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-coodyshipper-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -367,15 +367,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
@@ -384,15 +384,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyfood/Pods-coodyfood-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyshipper/Pods-coodyshipper-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
@@ -401,15 +401,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyfood-coodyfoodTests/Pods-coodyfood-coodyfoodTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-coodyshipper-coodyshipperTests/Pods-coodyshipper-coodyshipperTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -419,7 +419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* coodyfoodTests.m in Sources */,
+				00E356F31AD99517003FC87E /* coodyshipperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,7 +437,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* coodyfood */;
+			target = 13B07F861A680F5B00A75B9A /* coodyshipper */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -445,14 +445,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-coodyfood-coodyfoodTests.debug.xcconfig */;
+			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-coodyshipper-coodyshipperTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = coodyfoodTests/Info.plist;
+				INFOPLIST_FILE = coodyshipperTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -466,17 +466,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coodyfood.app/coodyfood";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coodyshipper.app/coodyshipper";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-coodyfood-coodyfoodTests.release.xcconfig */;
+			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-coodyshipper-coodyshipperTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = coodyfoodTests/Info.plist;
+				INFOPLIST_FILE = coodyshipperTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -490,19 +490,19 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coodyfood.app/coodyfood";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coodyshipper.app/coodyshipper";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-coodyfood.debug.xcconfig */;
+			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-coodyshipper.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = coodyfood/Info.plist;
+				INFOPLIST_FILE = coodyshipper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,7 +514,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = coodyfood;
+				PRODUCT_NAME = coodyshipper;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -523,12 +523,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-coodyfood.release.xcconfig */;
+			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-coodyshipper.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = coodyfood/Info.plist;
+				INFOPLIST_FILE = coodyshipper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -540,7 +540,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = coodyfood;
+				PRODUCT_NAME = coodyshipper;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -688,7 +688,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "coodyfoodTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "coodyshipperTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -697,7 +697,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "coodyfood" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "coodyshipper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -706,7 +706,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "coodyfood" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "coodyshipper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

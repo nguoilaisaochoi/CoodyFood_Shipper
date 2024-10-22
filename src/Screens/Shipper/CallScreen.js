@@ -18,7 +18,7 @@ import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
 import {useSelector} from 'react-redux';
 import {appColor} from '../../constants/appColor';
-import {ZegoLayoutMode, ZegoViewPosition} from '@zegocloud/zego-uikit-rn';
+
 const CallScreen = () => {
   const {getData} = useSelector(state => state.shipper);
   const [email, setEmail] = useState(getData.email ?? null);

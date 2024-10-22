@@ -1,4 +1,4 @@
-package com.coodyfood
+package com.coodyshipper
 
 import android.app.Application
 import com.facebook.react.PackageList
