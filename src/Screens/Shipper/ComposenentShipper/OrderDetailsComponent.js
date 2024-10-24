@@ -16,7 +16,7 @@ import Check from './CheckComponent';
 import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
-import {onOpenCamera} from './CameraOpenComponent';
+import {onOpenCamera} from './ImagePicker';
 
 const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
@@ -32,7 +32,7 @@ const OrderDetailsComponent = ({setOrder}) => {
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
-  
+
   //chuyển sdt qua cuộc gọi sim
   const call = () => {
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
@@ -240,7 +240,7 @@ const OrderDetailsComponent = ({setOrder}) => {
                   fontsize={20}
                   fontFamily={fontFamilies.semiBold}
                 />
-                <Image style={styles.verified} source={{uri: imagePath}} />
+                <Image style={styles.verified} source={{uri: imagePath.uri}} />
               </View>
             )}
             {/*view thông tin khách hàng*/}

@@ -18,11 +18,11 @@ import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useDispatch, useSelector} from 'react-redux';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {onOpenCamera} from './ComposenentShipper/CameraOpenComponent';
-import {onImageLibrary} from './ComposenentShipper/ImageLibraryComponent';
 import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
+import {uploadImageToCloudinary} from './ComposenentShipper/UploadImage';
+import {onImageLibrary, onOpenCamera} from './ComposenentShipper/ImagePicker';
 
 const ProfileScreen = () => {
   const {user} = useSelector(state => state.login);
@@ -33,6 +33,7 @@ const ProfileScreen = () => {
   const [birthDate, setbirthDate] = useState(getData.birthDate ?? null);
   const [gender, setGender] = useState(getData.gender == 'male' ? 'Nam' : 'Nữ');
   const [imagePath, setImagePath] = useState(null);
+  const [avatar, setAvatar] = useState(getData.image[0] ?? null);
   const [vehicleBrand, setvehicleBrand] = useState(
     getData.vehicleBrand ?? null,
   );
@@ -55,7 +56,7 @@ const ProfileScreen = () => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
   //cập nhật shipper lên api
-  const update = () => {
+  const update = async () => {
     const body = {
       name: name,
       phone: phone,
@@ -65,6 +66,7 @@ const ProfileScreen = () => {
       vehiclePlate: vehiclePlate,
       gender: gender == 'Nam' ? 'male' : 'female',
       status: 'active',
+      image: await uploadImageToCloudinary(imagePath),
     };
     dispath(UpdateShipper({id: user._id, data: body}));
   };
@@ -114,6 +116,11 @@ const ProfileScreen = () => {
     sheetRef.current.close();
     setIsSheetOpen(false);
   };
+  useEffect(() => {
+    if (imagePath) {
+      setAvatar(imagePath.uri);
+    }
+  }, [imagePath]);
   //
   return (
     <View style={styles.container}>
@@ -131,9 +138,9 @@ const ProfileScreen = () => {
               <Image
                 style={{width: 99, height: 99}}
                 source={{
-                  uri: imagePath
-                    ? imagePath
-                    : 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
+                  uri: avatar
+                    ? avatar
+                    : 'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
                 }}
               />
             </View>
@@ -316,6 +323,10 @@ const styles = StyleSheet.create({
   body1: {
     width: 97,
     height: 95,
+  },
+  boximg:{
+    borderRadius: 10,
+    overflow: 'hidden',
     backgroundColor: appColor.subText,
   },
   camera: {

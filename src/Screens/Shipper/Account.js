@@ -28,8 +28,11 @@ const Account = () => {
 
   // log  thông tin shipper
   useEffect(() => {
-    getStatus == 'succeeded' && console.log(`Account.js: \n           v`),
-      console.log(getData);
+    getStatus == 'succeeded' &&
+      console.info(
+        '\x1b[34m[Account.js___GetShipper]\x1b[0m',
+        JSON.stringify(getData),
+      );
   }, [getStatus]);
 
   return (

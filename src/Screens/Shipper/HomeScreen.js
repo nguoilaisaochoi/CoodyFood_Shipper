@@ -20,7 +20,6 @@ const HomeScreen = ({navigation}) => {
       navigation.replace('VerifyShipper');
     } else if (getData.name) {
       setverify(true);
-      console.log(verify);
     }
   }, [getStatus]);
 

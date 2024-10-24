@@ -1,9 +1,9 @@
 import {Alert, PermissionsAndroid} from 'react-native';
-import {launchCamera} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 //yêu cầu quyền
 const cameraOptions = {
   cameraType: 'front',
-  saveToPhotos: true,
+  saveToPhotos: false,
 };
 //yêu cầu quyền
 const requestCameraPermission = async () => {
@@ -25,7 +25,7 @@ const checkCameraPermission = async () => {
   return permissionStatus;
 };
 //mở camera
-export const onOpenCamera = async (setImagePath) => {
+export const onOpenCamera = async setImagePath => {
   //check quyền
   const hasPermission = await checkCameraPermission();
   if (!hasPermission) {
@@ -39,12 +39,35 @@ export const onOpenCamera = async (setImagePath) => {
     //mở camera&chụp ảnh
     const response = await launchCamera(cameraOptions);
     if (response?.assets) {
-      setImagePath(response.assets[0].uri);
-      console.log(response.assets);
+      setImagePath(response.assets[0]);
+      //del
+      console.info(
+        '\x1b[36m[ImagePicker___LaunchCamera]\x1b[0m',
+        JSON.stringify(response.assets),
+      );
     } else {
-      console.log('Có lỗi xảy ra', response.errorMessage);
+      console.error('[ImagePicker___LaunchCamera]', response.errorMessage);
     }
   } catch (error) {
-    console.log('Có lỗi xảy ra', error.message);
+    console.error('[ImagePicker___LaunchCamera]', error.message);
+  }
+};
+
+//mở thư viện ảnh
+export const onImageLibrary = async setImagePath => {
+  try {
+    const response = await launchImageLibrary();
+    if (response?.assets) {
+      setImagePath(response.assets[0]);
+      //del
+      console.info(
+        '\x1b[36m[ImagePicker___LaunchImageLibrary]\x1b[0m',
+        JSON.stringify(response.assets),
+      );
+    } else {
+      console.error('[ImagePicker___LaunchImageLibrary]', response.errorMessage);
+    }
+  } catch (error) {
+    console.error('[ImagePicker___LaunchImageLibrary]', error.message);
   }
 };
