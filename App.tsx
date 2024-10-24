@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistor, store } from './src/Redux/Store'
 import AppNavigation from './src/navigators/AppNavigation'
-import MapScreen from './src/Screens/Main/Stacks/MapScreen'
+
 
 
 const App = () => {

@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">coodyfood</string>
-    <string name="facebook_app_id">825915416410531</string><string name="facebook_client_token">cdf48aa551aab3fe8790a0b62af8bed1</string>
+    <string name="app_name">CoodyShipper</string>
+     <string name="facebook_app_id">825915416410531</string><string name="facebook_client_token">cdf48aa551aab3fe8790a0b62af8bed1</string>
 </resources>

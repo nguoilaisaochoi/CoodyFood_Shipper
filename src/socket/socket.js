@@ -7,15 +7,15 @@ let socket;
 export const connectSocket = () => {
   socket = socketIOClient(host);
   socket.on('connect', () => {
-    console.log('Đã kết nối với server socket:', socket.id);
+    console.log('[Socket___Đã kết nối]', socket.id);
   });
 
   socket.on('connect_error', error => {
-    console.log('Kết nối socket không thành công:', error);
+    console.log('[Socket___chưa kết nối]', error);
   });
 
   socket.on('disconnect', () => {
-    console.log('Đã ngắt kết nối với server socket');
+    console.log('[Socket___ngắt kết nối]');
   });
 };
 

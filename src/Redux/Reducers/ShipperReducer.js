@@ -8,7 +8,6 @@ export const UpdateShipper = createAsyncThunk('update', async ({id, data}) => {
 
 export const GetShipper = createAsyncThunk('get', async id => {
   const response = await AxiosInstance().get(`shipper/${id}`);
-  console.log(id);
   return response.data;
 });
 export const ShipperSlice = createSlice({

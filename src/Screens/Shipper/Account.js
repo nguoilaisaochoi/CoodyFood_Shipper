@@ -28,44 +28,15 @@ const Account = () => {
 
   // log  thông tin shipper
   useEffect(() => {
-    getStatus == 'succeeded' && console.log(`Account.js: \n           v`),
-      console.log(getData);
+    getStatus == 'succeeded' &&
+      console.info(
+        '\x1b[34m[Account.js___GetShipper]\x1b[0m',
+        JSON.stringify(getData),
+      );
   }, [getStatus]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headertext}>
-          <TextComponent
-            text={'Số dư của bạn'}
-            fontsize={20}
-            color={appColor.white}
-            fontfamily={fontFamilies.bold}
-          />
-          <TextComponent
-            text={'999.999.999đ'}
-            fontsize={35}
-            color={appColor.white}
-            fontfamily={fontFamilies.bold}
-          />
-        </View>
-        <View style={styles.btn}>
-          <BtnComponent
-            width={'30%'}
-            text={'Nạp tiền'}
-            backgroundColor={appColor.white}
-            borderColor={appColor.white}
-            fontFamily={fontFamilies.bold}
-          />
-          <BtnComponent
-            width={'30%'}
-            text={'Rút tiền'}
-            backgroundColor={appColor.white}
-            borderColor={appColor.white}
-            fontFamily={fontFamilies.bold}
-          />
-        </View>
-      </View>
       <View style={styles.body}>
         <ItemAccount
           screen={() => {

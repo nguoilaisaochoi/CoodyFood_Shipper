@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "coodyfood.app"
-               BlueprintName = "coodyfood"
-               ReferencedContainer = "container:coodyfood.xcodeproj">
+               BuildableName = "coodyshipper.app"
+               BlueprintName = "coodyshipper"
+               ReferencedContainer = "container:coodyshipper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "coodyfoodTests.xctest"
-               BlueprintName = "coodyfoodTests"
-               ReferencedContainer = "container:coodyfood.xcodeproj">
+               BuildableName = "coodyshipperTests.xctest"
+               BlueprintName = "coodyshipperTests"
+               ReferencedContainer = "container:coodyshipper.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "coodyfood.app"
-            BlueprintName = "coodyfood"
-            ReferencedContainer = "container:coodyfood.xcodeproj">
+            BuildableName = "coodyshipper.app"
+            BlueprintName = "coodyshipper"
+            ReferencedContainer = "container:coodyshipper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "coodyfood.app"
-            BlueprintName = "coodyfood"
-            ReferencedContainer = "container:coodyfood.xcodeproj">
+            BuildableName = "coodyshipper.app"
+            BlueprintName = "coodyshipper"
+            ReferencedContainer = "container:coodyshipper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
