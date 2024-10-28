@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {appColor} from '../../../constants/appColor';
 import TextComponent from '../../../components/TextComponent';
@@ -17,6 +17,8 @@ import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import {onOpenCamera} from './ImagePicker';
+import {getSocket} from '../../../socket/socket';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OrderDetailsComponent = ({setOrder}) => {
   const navigation = useNavigation();
@@ -32,12 +34,49 @@ const OrderDetailsComponent = ({setOrder}) => {
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const Data = data;
+  const roomID = '1234';
 
   //chuyển sdt qua cuộc gọi sim
   const call = () => {
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
 
+  //tham gia chat
+  useEffect(() => {
+    // Kết nối socket
+    const socketInstance = getSocket();
+    // Tham gia room
+    socketInstance.emit('join_room', roomID);
+    // Lắng nghe socket
+    try {
+      socketInstance.on('receive_message', async data => {
+        // Lấy tin nhắn hiện tại từ AsyncStorage
+        const storedMessages = await AsyncStorage.getItem('messageList');
+        const messageList = storedMessages ? JSON.parse(storedMessages) : [];
+
+        // Thêm tin nhắn mới vào danh sách
+        const newMessageList = [...messageList, data];
+
+        // Lưu danh sách mới vào AsyncStorage
+        await AsyncStorage.setItem(
+          'messageList',
+          JSON.stringify(newMessageList),
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  //xoá tin nhắn sau khi giao xong
+  const clearMessageList = async () => {
+    try {
+      await AsyncStorage.removeItem('messageList');
+      console.log('Message list cleared successfully.');
+    } catch (error) {
+      console.error('Failed to clear message list:', error);
+    }
+  };
   //hiện các status khi đang ship
   const handleReachedToEnd = () => {
     if (!status.item1) {
@@ -58,6 +97,7 @@ const OrderDetailsComponent = ({setOrder}) => {
       setTitle('Hoàn tất,Chuẩn bị đóng!');
       setTimeout(() => {
         sheetRef.current.close();
+        clearMessageList();
         setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }

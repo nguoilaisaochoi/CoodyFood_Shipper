@@ -4,7 +4,7 @@ import ModalviewComponent from './ComposenentShipper/ModalviewComponent';
 import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {connectSocket, disconnectSocket} from '../../socket/socket';
+import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
 import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 const HomeScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
@@ -22,6 +22,7 @@ const HomeScreen = ({navigation}) => {
       setverify(true);
     }
   }, [getStatus]);
+  
 
   //giả lập sau 2s sẽ có đơn
   useEffect(() => {
