@@ -20,7 +20,7 @@ import {onOpenCamera} from './ImagePicker';
 import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const OrderDetailsComponent = ({setOrder}) => {
+const OrderDetailsComponent = ({Order}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef();
@@ -33,7 +33,6 @@ const OrderDetailsComponent = ({setOrder}) => {
     item4: false,
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
-  const Data = data;
   const roomID = '1234';
 
   //chuyển sdt qua cuộc gọi sim
@@ -108,14 +107,14 @@ const OrderDetailsComponent = ({setOrder}) => {
   };
   //render item
   const renderitem = ({item}) => {
-    const {id, name, quantity, note, img} = item;
+    const {id, name, images, quantity, note} = item;
     return (
       <View style={styles.item}>
         <View style={styles.imgitem}>
           <Image
             style={{flex: 1}}
             source={{
-              uri: img,
+              uri: images[0] ?? null,
             }}
           />
         </View>
@@ -127,13 +126,6 @@ const OrderDetailsComponent = ({setOrder}) => {
             fontsize={13}
             color={appColor.subText}
           />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              style={styles.star}
-              source={require('../../../assets/images/shipper/note.png')}
-            />
-            <TextComponent text={' ' + note} fontsize={11} />
-          </View>
         </View>
       </View>
     );
@@ -149,24 +141,25 @@ const OrderDetailsComponent = ({setOrder}) => {
             <Image
               style={styles.img}
               source={{
-                uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+                uri: Order.shopOwner.images[0],
               }}
             />
             <View style={styles.detail1}>
               <TextComponent
-                text={'Đồ Ăn Chay Thanh Đạm'}
+                text={Order.shopOwner.name}
                 fontFamily={fontFamilies.bold}
               />
               <TextComponent
-                text={
-                  'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh '
-                }
+                text={Order.shopOwner.address}
                 styles={{maxHeight: '50%'}}
                 fontsize={13}
                 color={appColor.subText}
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TextComponent text={'Đánh giá: ' + '4.6 '} fontsize={13} />
+                <TextComponent
+                  text={'Đánh giá: ' + Order.shopOwner.rating + ' '}
+                  fontsize={13}
+                />
                 <Image
                   style={styles.star}
                   source={require('../../../assets/images/shipper/star.png')}
@@ -183,9 +176,9 @@ const OrderDetailsComponent = ({setOrder}) => {
               fontsize={20}
             />
             <FlatList
-              data={Data}
+              data={Order.items}
               renderItem={renderitem}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.name}
               contentContainerStyle={styles.flatlist}
               scrollEnabled={false}
             />
@@ -199,10 +192,10 @@ const OrderDetailsComponent = ({setOrder}) => {
             />
             {/*thông tin bên phải các vòng tròn*/}
             <View style={styles.statusship}>
-              <TextComponent text={'Shipper đã đến nhà hàng'} />
-              <TextComponent text={'Shipper đã lấy món ăn'} />
-              <TextComponent text={'Shipper đã đến nơi giao'} />
-              <TextComponent text={'Đơn hàng hoàn tất'} />
+              <TextComponent text={'Bạn đã đến nhà hàng'} />
+              <TextComponent text={'Bạn đã lấy món ăn'} />
+              <TextComponent text={'Bạn đã đến nơi giao'} />
+              <TextComponent text={'Bạn đã giao hàng'} />
             </View>
             {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
             <View style={styles.check}>
@@ -229,10 +222,13 @@ const OrderDetailsComponent = ({setOrder}) => {
               fontFamily={fontFamilies.bold}
               color={appColor.primary}
             />
-            <Info4txt text={'Giá tiền lấy đồ'} price={'0'} />
-            <Info4txt text={'Phí giao hàng'} price={'31,500'} />
-            <Info4txt text={'Thu tiền khách hàng'} price={'0'} />
-            <Info4txt text={'Thu nhập'} price={'31,500'} />
+            <Info4txt
+              text={'Giá tiền lấy đồ'}
+              price={Order.totalPrice + ' đ'}
+            />
+            <Info4txt text={'Phí giao hàng'} price={'31,500' + ' đ'} />
+            <Info4txt text={'Thu tiền khách hàng'} price={'0' + ' đ'} />
+            <Info4txt text={'Thu nhập'} price={'31,500' + ' đ'} />
           </View>
           <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
             {/*nút kéo từ trái sang phải*/}
@@ -289,12 +285,14 @@ const OrderDetailsComponent = ({setOrder}) => {
                 <Image
                   style={{flex: 1}}
                   source={{
-                    uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+                    uri:
+                      Order.user.images ??
+                      'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
                   }}
                 />
               </View>
               <View style={styles.namecustomer}>
-                <TextComponent text={'Nguyễn Thị A'} />
+                <TextComponent text={Order.user.name} />
                 <TextComponent text={'Khách hàng'} />
               </View>
               <View style={styles.callandmessboder}>
@@ -349,14 +347,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   detail1: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    gap: '20%',
     width: '70%',
   },
   detail2: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     width: '80%',
     height: '90%',
   },
+
   img: {
     width: 86,
     aspectRatio: 1,
@@ -414,6 +414,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: '5%',
     backgroundColor: 'pink',
+    overflow: 'hidden',
   },
   flatlist: {
     gap: 15,
@@ -460,10 +461,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   imgcustomer: {
-    width: 80,
+    width: '20%',
     aspectRatio: 1,
     borderRadius: 15,
     marginRight: '2%',
+    overflow: 'hidden',
+    alignSelf: 'center',
   },
   verified: {
     width: '100%',
@@ -497,6 +500,48 @@ const data = [
   },
   {
     id: 2,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 3,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 4,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 5,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 6,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 7,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 8,
     name: 'Bánh Pizza Margherita',
     quantity: 2,
     note: 'Nướng cháy khét lẹt',

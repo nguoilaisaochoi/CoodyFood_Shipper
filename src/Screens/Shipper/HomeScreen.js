@@ -11,29 +11,25 @@ const HomeScreen = ({navigation}) => {
   const {getStatus, getData} = useSelector(state => state.shipper);
   const dispath = useDispatch();
   const [modalVisible, setModalVisible] = useState(false); //modal nhận đơn hiện và tắt
-  const [order, setOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
+  const [acceptorder, setAcceptOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
   const [verify, setverify] = useState(false);
+  const [order, setOrder] = useState(null);
 
   //nếu chưa xác thực sẽ chuyển sang màn hình xác thực
   useEffect(() => {
-    if (getStatus == 'succeeded' && !getData.name) {
+    if (getStatus == 'succeeded' && !getData.vehicleBrand) {
       navigation.replace('VerifyShipper');
-    } else if (getData.name) {
+    } else if (getData.vehicleBrand) {
       setverify(true);
     }
   }, [getStatus]);
-  
 
-  //giả lập sau 2s sẽ có đơn
   useEffect(() => {
     //lay id shipper
     dispath(GetShipper(user._id));
     if (verify) {
       //kết nối socket
       connectSocket();
-      setTimeout(() => {
-        setModalVisible(true);
-      }, 2000);
     }
     // Ngắt kết nối socket khi component unmount
     return () => {
@@ -41,16 +37,25 @@ const HomeScreen = ({navigation}) => {
     };
   }, [verify]);
 
+  useEffect(() => {
+    if (verify) {
+      const socketInstance = getSocket();
+      socketInstance.on('order_shipper_receive', dataGot => {
+        setOrder(dataGot), setModalVisible(true);
+      });
+    }
+  }, [getStatus]);
   return (
     <View style={{flex: 1}}>
       {modalVisible && (
         <ModalviewComponent
           setModalVisible={setModalVisible}
-          setOrder={setOrder}
+          setAcceptOrder={setAcceptOrder}
+          Order={order}
         />
       )}
       {/*modal sau khi chấp nhận đơn */}
-      {order && <OrderDetailsComponent setOrder={setOrder} />}
+      {acceptorder && <OrderDetailsComponent Order={order} />}
       {/*để tạm-sau này thay thế bằng maps */}
       <Image
         style={styles.img}

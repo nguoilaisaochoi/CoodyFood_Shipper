@@ -6,7 +6,7 @@ import {appColor} from '../../../constants/appColor';
 import BtnComponent from './BtnComponent';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
 
-const ModalviewComponent = ({setModalVisible, setOrder}) => {
+const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
   const refTimer = useRef();
   return (
@@ -24,7 +24,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
             />
             <CountDownTimer
               ref={refTimer}
-              timestamp={300}
+              timestamp={100}
               timerCallback={() => {
                 setModalVisible(false);
               }} //gọi funtion khi hết tg
@@ -38,14 +38,12 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
           </View>
           <View style={styles.address}>
             <Textcompose
-              text={'Lấy: Tên của shop '}
+              text={'Cửa hàng: ' + Order.shopOwner.name}
               fontsize={16}
               color={appColor.subText}
             />
             <Textcompose
-              text={
-                'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh, Việt Nam'
-              }
+              text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
             />
             <Image
@@ -53,14 +51,12 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
               source={require('../../../assets/images/shipper/down.png')}
             />
             <Textcompose
-              text={'Giao: Tên người nhận'}
+              text={'Giao đến: ' + Order.shippingAddress.recipientName}
               fontsize={16}
               color={appColor.subText}
             />
             <Textcompose
-              text={
-                'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh, Việt Nam'
-              }
+              text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
             />
           </View>
@@ -99,7 +95,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
               fontFamily={fontFamilies.bold}
               onPress={() => {
                 setModalVisible(false);
-                setOrder(true);
+                setAcceptOrder(true);
               }}
             />
           </View>
@@ -109,7 +105,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
       {cancelVisible && (
         <Modal animationType="fade" transparent={true} visible={cancelVisible}>
           <View style={styles.modal}>
-            <View style={styles.detail}>
+            <View style={styles.detailcanel}>
               <Textcompose
                 text={'Xác nhận từ chối đơn hàng'}
                 fontsize={23}
@@ -170,6 +166,8 @@ const styles = StyleSheet.create({
   },
   detail: {
     width: '76%',
+    maxHeight: '80%',
+    minHeight: '50%',
     backgroundColor: 'white',
     borderRadius: 30,
     padding: '6%',
@@ -177,31 +175,48 @@ const styles = StyleSheet.create({
     elevation: 20,
     justifyContent: 'space-between',
   },
+  detailcanel: {
+    width: '76%',
+    height: '25%',
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: '6%',
+    alignItems: 'center',
+    elevation: 20,
+    justifyContent: 'space-between',
+    gap: 30,
+    justifyContent: 'center',
+  },
   time: {
     position: 'absolute',
     right: '-20%',
     top: '29%',
   },
   address: {
+    width: '100%',
+    maxHeight: '60%',
     borderBottomWidth: 1,
     justifyContent: 'space-around',
+    alignItems: 'flex-start',
     paddingBottom: '5%',
     borderColor: 'rgba(0, 0, 0, 0.3)',
   },
   down: {
     resizeMode: 'contain',
     alignSelf: 'center',
-    flex: 0.3,
+    width: 25,
+    height: 25,
   },
   title2: {
     flexDirection: 'row',
+    maxHeight: '20%',
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   twobtn: {
-    paddingTop: '5%',
     flexDirection: 'row',
+    maxHeight: '20%',
     gap: 25,
   },
 });

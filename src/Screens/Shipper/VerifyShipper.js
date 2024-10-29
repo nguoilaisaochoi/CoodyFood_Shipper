@@ -12,7 +12,7 @@ const VerifyShipper = ({navigation}) => {
   const {getStatus, getData} = useSelector(state => state.shipper);
   const [navigated, setNavigated] = useState(false);
   useEffect(() => {
-    if (getData.name && !navigated) {
+    if (getData.vehicleBrand && !navigated) {
       setNavigated(true);
       navigation.replace('Tab');
     }
