@@ -19,8 +19,10 @@ import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import {onOpenCamera} from './ImagePicker';
 import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
 
-const OrderDetailsComponent = ({Order}) => {
+
+const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef();
@@ -33,6 +35,8 @@ const OrderDetailsComponent = ({Order}) => {
     item4: false,
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
+  const {getData} = useSelector(state => state.shipper);
+  const dispath = useDispatch();
   const roomID = '1234';
 
   //chuyển sdt qua cuộc gọi sim
@@ -44,6 +48,8 @@ const OrderDetailsComponent = ({Order}) => {
   useEffect(() => {
     // Kết nối socket
     const socketInstance = getSocket();
+    //unactive shipper
+    setGetjob(false);
     // Tham gia room
     socketInstance.emit('join_room', roomID);
     // Lắng nghe socket
@@ -76,6 +82,19 @@ const OrderDetailsComponent = ({Order}) => {
       console.error('Failed to clear message list:', error);
     }
   };
+  //hoàn thành đơn
+  const complete = () => {
+    const socketInstance = getSocket();
+    socketInstance.emit('confirm_order_by_shipper_id', {
+      orderId: Order._id,
+      shipperId: getData._id,
+    });
+    clearMessageList();
+    setStatus({item1: false, item2: false, item3: false, item4: false});
+    setAcceptOrder(false);
+    setGetjob(true);
+    return socketInstance.off('confirm_order_by_shipper_id');
+  };
   //hiện các status khi đang ship
   const handleReachedToEnd = () => {
     if (!status.item1) {
@@ -96,8 +115,7 @@ const OrderDetailsComponent = ({Order}) => {
       setTitle('Hoàn tất,Chuẩn bị đóng!');
       setTimeout(() => {
         sheetRef.current.close();
-        clearMessageList();
-        setStatus({item1: false, item2: false, item3: false, item4: false});
+        complete();
       }, 2200);
     }
   };
@@ -135,7 +153,7 @@ const OrderDetailsComponent = ({Order}) => {
     <View style={styles.container}>
       {/*bottom sheet */}
       <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
-        <BottomSheetScrollView>
+        <BottomSheetScrollView style={{paddingTop: '2%'}}>
           {/*info1: thông tin quán ăn*/}
           <View style={styles.info1}>
             <Image
@@ -331,9 +349,8 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 3,
+    zIndex: 9,
   },
-
   info1: {
     width: '86%',
     minHeight: 123,
@@ -413,7 +430,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 10,
     marginRight: '5%',
-    backgroundColor: 'pink',
+    backgroundColor: appColor.gray,
     overflow: 'hidden',
   },
   flatlist: {

@@ -45,7 +45,13 @@ const Account = () => {
           text={'Thông tin cá nhân của bạn'}
           icon={'user'}
         />
-        <ItemAccount text={' Lịch sử nạp rút tiền'} icon={'setting'} />
+        <ItemAccount
+          text={' Lịch sử nạp rút tiền'}
+          icon={'setting'}
+          screen={() => {
+            gotoScreen('CallScreen');
+          }}
+        />
         <ItemAccount text={'Đổi mật khẩu'} icon={'padlock'} />
         <ItemAccount
           text={'Đăng xuất'}

@@ -5,12 +5,27 @@ import {fontFamilies} from '../../../constants/fontFamilies';
 import {appColor} from '../../../constants/appColor';
 import BtnComponent from './BtnComponent';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
+import {getSocket} from '../../../socket/socket';
+import {useSelector} from 'react-redux';
 
 const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
+  const {getData} = useSelector(state => state.shipper);
   const refTimer = useRef();
+  const acceptorders = () => {
+    const socketInstance = getSocket();
+    socketInstance.emit('confirm_order_shipper_exists', {
+      orderId: Order._id,
+      shipperId: getData._id,
+    });
+    setModalVisible(false);
+    setAcceptOrder(true);
+  };
+  if (!Order) {
+    return null; // or some fallback UI
+  }
   return (
-    <View style={[styles.bg, {zIndex: 1}]}>
+    <View style={[styles.bg, {zIndex: 10}]}>
       {/*làm tối bg khi modal xác nhận huỷ xuất hiện */}
       {cancelVisible && <View style={[styles.bg, {zIndex: 2}]} />}
       <View style={[styles.modal]}>
@@ -24,7 +39,7 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
             />
             <CountDownTimer
               ref={refTimer}
-              timestamp={100}
+              timestamp={90}
               timerCallback={() => {
                 setModalVisible(false);
               }} //gọi funtion khi hết tg
@@ -94,8 +109,7 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
               color={appColor.white}
               fontFamily={fontFamilies.bold}
               onPress={() => {
-                setModalVisible(false);
-                setAcceptOrder(true);
+                acceptorders();
               }}
             />
           </View>
@@ -156,7 +170,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.10)',
+    backgroundColor: 'rgba(0, 0, 0, 0.20)',
   },
   line: {
     flexShrink: 1,
