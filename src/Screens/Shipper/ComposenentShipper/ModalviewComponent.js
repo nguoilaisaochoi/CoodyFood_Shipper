@@ -1,5 +1,5 @@
 import {View, Modal, StyleSheet, Image} from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Textcompose from './TextComponent';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {appColor} from '../../../constants/appColor';
@@ -7,11 +7,13 @@ import BtnComponent from './BtnComponent';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
 import {getSocket} from '../../../socket/socket';
 import {useSelector} from 'react-redux';
+import {formatCurrency} from './FormatCurrency';
 
 const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
-  const {getData} = useSelector(state => state.shipper);
+  const {getData} = useSelector(state => state.shipper);//thông tin shipper
   const refTimer = useRef();
+  //socket
   const acceptorders = () => {
     const socketInstance = getSocket();
     socketInstance.emit('confirm_order_shipper_exists', {
@@ -21,9 +23,11 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
     setModalVisible(false);
     setAcceptOrder(true);
   };
+
   if (!Order) {
-    return null; // or some fallback UI
+    return null;
   }
+
   return (
     <View style={[styles.bg, {zIndex: 10}]}>
       {/*làm tối bg khi modal xác nhận huỷ xuất hiện */}
@@ -78,7 +82,7 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
           <View style={styles.title2}>
             <Textcompose text={'Quảng đường ước tính:'} />
             <Textcompose
-              text={'6' + ' Km'}
+              text={'?' + ' Km'}
               fontsize={14}
               fontfamily={fontFamilies.bold}
             />
@@ -86,7 +90,7 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
           <View style={styles.title2}>
             <Textcompose text={'Thu nhập từ đơn này:'} />
             <Textcompose
-              text={'31,500' + ' đ'}
+              text={formatCurrency(Order.shippingfee)}
               fontsize={20}
               fontfamily={fontFamilies.bold}
               color={appColor.primary}

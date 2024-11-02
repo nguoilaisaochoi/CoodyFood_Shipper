@@ -5,7 +5,7 @@ import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
-import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import {GetRevenue, GetShipper} from '../../Redux/Reducers/ShipperReducer';
 const HomeScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
   const {getStatus, getData} = useSelector(state => state.shipper);
@@ -28,7 +28,7 @@ const HomeScreen = ({navigation}) => {
     //lay id shipper
     dispath(GetShipper(user._id));
     if (verify) {
-      //kết nối socket
+      //kết nối socket từ file socket.js
       connectSocket();
     }
     // Ngắt kết nối socket khi component unmount
@@ -37,7 +37,7 @@ const HomeScreen = ({navigation}) => {
     };
   }, [verify]);
 
-  //đợi cuốc cho shipper đã xác thực
+  //đợi đơn cho shipper đã xác thực
   useEffect(() => {
     const socketInstance = getSocket();
     if (verify && getjob) {
@@ -77,7 +77,7 @@ const HomeScreen = ({navigation}) => {
       {!acceptorder && (
         <View style={styles.buttonContainer}>
           <Button
-            title={'Nhận cuốc: ' + (getjob ? 'Bật' : 'Tắt')}
+            title={'Nhận đơn: ' + (getjob ? 'Bật' : 'Tắt')}
             backgroundColor={'red'}
             onPress={() => {
               setGetjob(!getjob);

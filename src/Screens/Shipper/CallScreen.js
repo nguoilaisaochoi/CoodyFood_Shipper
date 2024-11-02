@@ -32,8 +32,8 @@ const CallScreen = () => {
   const onUserLogin = async (userID, userName) => {
     try {
       await ZegoUIKitPrebuiltCallService.init(
-        785543570,
-        'c3d0338ceef0dd5036a0aefc0a2d31818597e77598a1d3c60bed8d7d912e0b5e',
+        1174464780,//AppID
+        'a13abce8327d63610fdcc01effb642e7cc6bf0e9817aa0843b74c69a1e5dd59a',//AppSign
         userID,
         userName,
         [ZIM, ZPNs],
@@ -47,7 +47,7 @@ const CallScreen = () => {
           },
           ringtoneConfig: {
             incomingCallFileName: 'zego_incoming.mp3',
-            outgoingCallFileName: 'zego_outgoing.mp3',
+            outgoingCallFileName: 'zego_incoming.mp3',
           },
           androidNotificationConfig: {
             channelID: 'ZegoUIKit',

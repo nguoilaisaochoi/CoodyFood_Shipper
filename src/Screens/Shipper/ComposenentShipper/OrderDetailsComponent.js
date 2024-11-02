@@ -20,14 +20,14 @@ import {onOpenCamera} from './ImagePicker';
 import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-
+import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
+import {formatCurrency} from './FormatCurrency';
 
 const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef();
   const snapPoints = ['20%', '90%'];
-  const [phoneNumber] = useState('0123456');
   const [status, setStatus] = useState({
     item1: false,
     item2: false,
@@ -36,8 +36,10 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const {getData} = useSelector(state => state.shipper);
+  const {user} = useSelector(state => state.login);
   const dispath = useDispatch();
-  const roomID = '1234';
+  const roomID = '1234'; //room socket chat demo
+  //const [phoneNumber] = useState('0123456');
 
   //chuyển sdt qua cuộc gọi sim
   const call = () => {
@@ -84,18 +86,17 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   };
   //hoàn thành đơn
   const complete = () => {
+    clearMessageList();
     const socketInstance = getSocket();
     socketInstance.emit('confirm_order_by_shipper_id', {
       orderId: Order._id,
       shipperId: getData._id,
     });
-    clearMessageList();
-    setStatus({item1: false, item2: false, item3: false, item4: false});
-    setAcceptOrder(false);
-    setGetjob(true);
+    Revenue();
     return socketInstance.off('confirm_order_by_shipper_id');
   };
-  //hiện các status khi đang ship
+
+  //theo dõi các status khi đang ship
   const handleReachedToEnd = () => {
     if (!status.item1) {
       setStatus({...status, item1: true});
@@ -112,17 +113,25 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
       setTitle('Hoàn tất đơn hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
-      setTitle('Hoàn tất,Chuẩn bị đóng!');
+      setTitle('Hoàn thành, Chuẩn bị đóng!');
+      complete();
       setTimeout(() => {
         sheetRef.current.close();
-        complete();
+      }, 2000);
+      //khi bottom sheet đóng lại
+      setTimeout(() => {
+        setAcceptOrder(false);
+        setGetjob(true);
+        setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }
   };
-  //hiện màn chụp ảnh
+
+  //navigate
   const gotoscreen = screen => {
     navigation.navigate(screen);
   };
+
   //render item
   const renderitem = ({item}) => {
     const {id, name, images, quantity, note} = item;
@@ -147,6 +156,17 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
         </View>
       </View>
     );
+  };
+
+  //gọi doanh thu sau khi xong đơn
+  const Revenue = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1);
+    const day = String(currentDate.getDate());
+
+    const formattedDate = `${year}/${month}/${day}`;
+    dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
   return (
@@ -242,11 +262,20 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
             />
             <Info4txt
               text={'Giá tiền lấy đồ'}
-              price={Order.totalPrice + ' đ'}
+              price={formatCurrency(Order.totalPrice)}
             />
-            <Info4txt text={'Phí giao hàng'} price={'31,500' + ' đ'} />
-            <Info4txt text={'Thu tiền khách hàng'} price={'0' + ' đ'} />
-            <Info4txt text={'Thu nhập'} price={'31,500' + ' đ'} />
+            <Info4txt
+              text={'Phí giao hàng'}
+              price={formatCurrency(Order.shippingfee)}
+            />
+            <Info4txt
+              text={'Thu tiền khách hàng'}
+              price={formatCurrency(Order.totalPrice)}
+            />
+            <Info4txt
+              text={'Thu nhập'}
+              price={formatCurrency(Order.shippingfee)}
+            />
           </View>
           <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
             {/*nút kéo từ trái sang phải*/}

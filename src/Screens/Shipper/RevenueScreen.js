@@ -9,6 +9,8 @@ import TextComponent from '../../components/TextComponent';
 import Info4txtComponent from './ComposenentShipper/Info4txtComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
+import {formatCurrency} from './ComposenentShipper/FormatCurrency';
+
 
 const RevenueScreen = () => {
   const [value, setValue] = useState(date[0].value);
@@ -30,38 +32,35 @@ const RevenueScreen = () => {
 
   useEffect(() => {
     if (getRevenueStatus == 'succeeded') {
-      console.log(getRevenueData.orders);
       setData(getRevenueData);
     }
   }, [getRevenueStatus]);
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
   const renderItem = ({item}) => {
-    const {
-      paymentMethod,
-      gap,
-      shippingfee,
-      orderDate,
-      shipper,
-      shopOwner
-    } = item;
+    const {paymentMethod, gap, shippingfee, orderDate, user, shopOwner} = item;
     const date = new Date(orderDate);
-    const formattedDate = date.toLocaleString('en-US');
+    const timeString = date.toLocaleTimeString('vi-VN', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false,
+    });
+    const dateString = date.toLocaleDateString();
+    const formattedDate = `${dateString}, (${timeString}) `;
     return (
       <View style={[styles.boxed, {justifyContent: 'center', margin: '3.7%'}]}>
-        <Info4txtComponent
-          text={formattedDate}
-          color1={appColor.subText}
-          color2={appColor.primary}
-          fontsize={14}
-          //price={status}
-          fontFamily2={fontFamilies.semiBold}
-        />
+        <View style={{paddingLeft: '2%'}}>
+          <Info4txtComponent
+            text={formattedDate}
+            color1={appColor.subText}
+            color2={appColor.primary}
+            fontsize={14}
+            price={'Thành công'}
+            fontFamily2={fontFamilies.semiBold}
+          />
+        </View>
         <Info4txtComponent
           text={' Khách hàng'}
-          price={shipper.name}
+          price={user.name}
           fontsize={20}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
@@ -88,7 +87,7 @@ const RevenueScreen = () => {
         <Info4txtComponent
           text={' Thu nhập'}
           color1={appColor.subText}
-          price={shippingfee + ' đ'}
+          price={formatCurrency(shippingfee)}
           fontsize={14}
         />
       </View>
@@ -136,19 +135,19 @@ const RevenueScreen = () => {
             color1={appColor.subText}
             fontsize={14}
             text={'Tổng thu nhập:'}
-            price={Data.totalRevenue + 'đ'}
+            price={formatCurrency(Data.totalRevenue)}
           />
           <Info4txtComponent
             color1={appColor.subText}
             fontsize={14}
             text={'Nhận tiền mặt:'}
-            price={Data.cashTotal + 'đ'}
+            price={formatCurrency(Data.cashTotal)}
           />
           <Info4txtComponent
             color1={appColor.subText}
             fontsize={14}
             text={'Nhận vào app:'}
-            price={Data.appTotal + 'đ'}
+            price={formatCurrency(Data.appTotal)}
           />
         </View>
       </View>
@@ -165,11 +164,11 @@ const RevenueScreen = () => {
         />
       </View>
       {/*danh sách đơn hàng và hiển thị thông  không có đơn hàng khi trống*/}
-      {Data? (
+      {Data ? (
         <FlatList
           data={Data.orders}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           contentContainerStyle={styles.faltlist}
         />
       ) : (

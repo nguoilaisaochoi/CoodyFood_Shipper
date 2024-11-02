@@ -1,9 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 import {appColor} from '../../constants/appColor';
-import TextComponent from './ComposenentShipper/TextComponent';
-import BtnComponent from './ComposenentShipper/BtnComponent';
-import {fontFamilies} from '../../constants/fontFamilies';
 import ItemAccount from './ComposenentShipper/ItemAccount';
 import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../Redux/Reducers/LoginSlice';
