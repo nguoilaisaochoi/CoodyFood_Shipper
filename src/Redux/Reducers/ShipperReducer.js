@@ -10,6 +10,14 @@ export const GetShipper = createAsyncThunk('get', async id => {
   const response = await AxiosInstance().get(`shipper/${id}`);
   return response.data;
 });
+
+export const GetRevenue = createAsyncThunk('revenue', async ({id, data,date}) => {
+  const response = await AxiosInstance().get(
+    `shipper/${id}/revenue/?date=${data}&filter=${date}`,
+  );
+  return response.data;
+});
+
 export const ShipperSlice = createSlice({
   name: 'shipper',
   initialState: {
@@ -17,10 +25,15 @@ export const ShipperSlice = createSlice({
     updateStatus: 'idle',
     getData: {},
     getStatus: 'idle',
+    getRevenueData: {},
+    getRevenueStatus: 'idle',
+    unActiveStatus: 'idle',
+    ActiveStatus: 'idle',
   },
   reducers: {},
   extraReducers: builder => {
     builder
+      //cập nhật shipper**
       .addCase(UpdateShipper.pending, (state, action) => {
         state.updateStatus = 'loading';
       })
@@ -32,6 +45,7 @@ export const ShipperSlice = createSlice({
         state.updateStatus = 'failed';
         console.log(action.error.message);
       })
+      //lấy thông tin shipper**
       .addCase(GetShipper.pending, (state, action) => {
         state.getStatus = 'loading';
       })
@@ -42,6 +56,18 @@ export const ShipperSlice = createSlice({
       .addCase(GetShipper.rejected, (state, action) => {
         state.getStatus = 'failed';
         console.error('K lấy đc shipper: ' + action.error.message);
+      })
+      //lấy doanh thu**
+      .addCase(GetRevenue.pending, (state, action) => {
+        state.getRevenueStatus = 'loading';
+      })
+      .addCase(GetRevenue.fulfilled, (state, action) => {
+        state.getRevenueStatus = 'succeeded';
+        state.getRevenueData = action.payload;
+      })
+      .addCase(GetRevenue.rejected, (state, action) => {
+        state.getRevenueStatus = 'failed';
+        console.error('K lấy đc doanh thu: ' + action.error.message);
       });
   },
 });

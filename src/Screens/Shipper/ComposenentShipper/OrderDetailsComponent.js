@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {appColor} from '../../../constants/appColor';
 import TextComponent from '../../../components/TextComponent';
@@ -17,13 +17,17 @@ import Info4txt from './Info4txtComponent';
 import {useNavigation} from '@react-navigation/native';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import {onOpenCamera} from './ImagePicker';
+import {getSocket} from '../../../socket/socket';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
+import {formatCurrency} from './FormatCurrency';
 
-const OrderDetailsComponent = ({setOrder}) => {
+const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef();
   const snapPoints = ['20%', '90%'];
-  const [phoneNumber] = useState('0123456');
   const [status, setStatus] = useState({
     item1: false,
     item2: false,
@@ -31,14 +35,68 @@ const OrderDetailsComponent = ({setOrder}) => {
     item4: false,
   });
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
-  const Data = data;
+  const {getData} = useSelector(state => state.shipper);
+  const {user} = useSelector(state => state.login);
+  const dispath = useDispatch();
+  const roomID = '1234'; //room socket chat demo
+  //const [phoneNumber] = useState('0123456');
 
   //chuyển sdt qua cuộc gọi sim
   const call = () => {
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
 
-  //hiện các status khi đang ship
+  //tham gia chat
+  useEffect(() => {
+    // Kết nối socket
+    const socketInstance = getSocket();
+    //unactive shipper
+    setGetjob(false);
+    // Tham gia room
+    socketInstance.emit('join_room', roomID);
+    // Lắng nghe socket
+    try {
+      socketInstance.on('receive_message', async data => {
+        // Lấy tin nhắn hiện tại từ AsyncStorage
+        const storedMessages = await AsyncStorage.getItem('messageList');
+        const messageList = storedMessages ? JSON.parse(storedMessages) : [];
+
+        // Thêm tin nhắn mới vào danh sách
+        const newMessageList = [...messageList, data];
+
+        // Lưu danh sách mới vào AsyncStorage
+        await AsyncStorage.setItem(
+          'messageList',
+          JSON.stringify(newMessageList),
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  //xoá tin nhắn sau khi giao xong
+  const clearMessageList = async () => {
+    try {
+      await AsyncStorage.removeItem('messageList');
+      console.log('Message list cleared successfully.');
+    } catch (error) {
+      console.error('Failed to clear message list:', error);
+    }
+  };
+  //hoàn thành đơn
+  const complete = () => {
+    clearMessageList();
+    const socketInstance = getSocket();
+    socketInstance.emit('confirm_order_by_shipper_id', {
+      orderId: Order._id,
+      shipperId: getData._id,
+    });
+    Revenue();
+    return socketInstance.off('confirm_order_by_shipper_id');
+  };
+
+  //theo dõi các status khi đang ship
   const handleReachedToEnd = () => {
     if (!status.item1) {
       setStatus({...status, item1: true});
@@ -55,27 +113,35 @@ const OrderDetailsComponent = ({setOrder}) => {
       setTitle('Hoàn tất đơn hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
-      setTitle('Hoàn tất,Chuẩn bị đóng!');
+      setTitle('Hoàn thành, Chuẩn bị đóng!');
+      complete();
       setTimeout(() => {
         sheetRef.current.close();
+      }, 2000);
+      //khi bottom sheet đóng lại
+      setTimeout(() => {
+        setAcceptOrder(false);
+        setGetjob(true);
         setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }
   };
-  //hiện màn chụp ảnh
+
+  //navigate
   const gotoscreen = screen => {
     navigation.navigate(screen);
   };
+
   //render item
   const renderitem = ({item}) => {
-    const {id, name, quantity, note, img} = item;
+    const {id, name, images, quantity, note} = item;
     return (
       <View style={styles.item}>
         <View style={styles.imgitem}>
           <Image
             style={{flex: 1}}
             source={{
-              uri: img,
+              uri: images[0] ?? null,
             }}
           />
         </View>
@@ -87,46 +153,51 @@ const OrderDetailsComponent = ({setOrder}) => {
             fontsize={13}
             color={appColor.subText}
           />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              style={styles.star}
-              source={require('../../../assets/images/shipper/note.png')}
-            />
-            <TextComponent text={' ' + note} fontsize={11} />
-          </View>
         </View>
       </View>
     );
+  };
+
+  //gọi doanh thu sau khi xong đơn
+  const Revenue = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1);
+    const day = String(currentDate.getDate());
+
+    const formattedDate = `${year}/${month}/${day}`;
+    dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
   return (
     <View style={styles.container}>
       {/*bottom sheet */}
       <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
-        <BottomSheetScrollView>
+        <BottomSheetScrollView style={{paddingTop: '2%'}}>
           {/*info1: thông tin quán ăn*/}
           <View style={styles.info1}>
             <Image
               style={styles.img}
               source={{
-                uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+                uri: Order.shopOwner.images[0],
               }}
             />
             <View style={styles.detail1}>
               <TextComponent
-                text={'Đồ Ăn Chay Thanh Đạm'}
+                text={Order.shopOwner.name}
                 fontFamily={fontFamilies.bold}
               />
               <TextComponent
-                text={
-                  'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh '
-                }
+                text={Order.shopOwner.address}
                 styles={{maxHeight: '50%'}}
                 fontsize={13}
                 color={appColor.subText}
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TextComponent text={'Đánh giá: ' + '4.6 '} fontsize={13} />
+                <TextComponent
+                  text={'Đánh giá: ' + Order.shopOwner.rating + ' '}
+                  fontsize={13}
+                />
                 <Image
                   style={styles.star}
                   source={require('../../../assets/images/shipper/star.png')}
@@ -143,9 +214,9 @@ const OrderDetailsComponent = ({setOrder}) => {
               fontsize={20}
             />
             <FlatList
-              data={Data}
+              data={Order.items}
               renderItem={renderitem}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.name}
               contentContainerStyle={styles.flatlist}
               scrollEnabled={false}
             />
@@ -159,10 +230,10 @@ const OrderDetailsComponent = ({setOrder}) => {
             />
             {/*thông tin bên phải các vòng tròn*/}
             <View style={styles.statusship}>
-              <TextComponent text={'Shipper đã đến nhà hàng'} />
-              <TextComponent text={'Shipper đã lấy món ăn'} />
-              <TextComponent text={'Shipper đã đến nơi giao'} />
-              <TextComponent text={'Đơn hàng hoàn tất'} />
+              <TextComponent text={'Bạn đã đến nhà hàng'} />
+              <TextComponent text={'Bạn đã lấy món ăn'} />
+              <TextComponent text={'Bạn đã đến nơi giao'} />
+              <TextComponent text={'Bạn đã giao hàng'} />
             </View>
             {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
             <View style={styles.check}>
@@ -189,10 +260,22 @@ const OrderDetailsComponent = ({setOrder}) => {
               fontFamily={fontFamilies.bold}
               color={appColor.primary}
             />
-            <Info4txt text={'Giá tiền lấy đồ'} price={'0'} />
-            <Info4txt text={'Phí giao hàng'} price={'31,500'} />
-            <Info4txt text={'Thu tiền khách hàng'} price={'0'} />
-            <Info4txt text={'Thu nhập'} price={'31,500'} />
+            <Info4txt
+              text={'Giá tiền lấy đồ'}
+              price={formatCurrency(Order.totalPrice)}
+            />
+            <Info4txt
+              text={'Phí giao hàng'}
+              price={formatCurrency(Order.shippingfee)}
+            />
+            <Info4txt
+              text={'Thu tiền khách hàng'}
+              price={formatCurrency(Order.totalPrice)}
+            />
+            <Info4txt
+              text={'Thu nhập'}
+              price={formatCurrency(Order.shippingfee)}
+            />
           </View>
           <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
             {/*nút kéo từ trái sang phải*/}
@@ -249,12 +332,14 @@ const OrderDetailsComponent = ({setOrder}) => {
                 <Image
                   style={{flex: 1}}
                   source={{
-                    uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+                    uri:
+                      Order.user.images ??
+                      'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
                   }}
                 />
               </View>
               <View style={styles.namecustomer}>
-                <TextComponent text={'Nguyễn Thị A'} />
+                <TextComponent text={Order.user.name} />
                 <TextComponent text={'Khách hàng'} />
               </View>
               <View style={styles.callandmessboder}>
@@ -293,9 +378,8 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 3,
+    zIndex: 9,
   },
-
   info1: {
     width: '86%',
     minHeight: 123,
@@ -309,14 +393,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   detail1: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    gap: '20%',
     width: '70%',
   },
   detail2: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     width: '80%',
     height: '90%',
   },
+
   img: {
     width: 86,
     aspectRatio: 1,
@@ -373,7 +459,8 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 10,
     marginRight: '5%',
-    backgroundColor: 'pink',
+    backgroundColor: appColor.gray,
+    overflow: 'hidden',
   },
   flatlist: {
     gap: 15,
@@ -420,10 +507,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   imgcustomer: {
-    width: 80,
+    width: '20%',
     aspectRatio: 1,
     borderRadius: 15,
     marginRight: '2%',
+    overflow: 'hidden',
+    alignSelf: 'center',
   },
   verified: {
     width: '100%',
@@ -457,6 +546,48 @@ const data = [
   },
   {
     id: 2,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 3,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 4,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 5,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 6,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 7,
+    name: 'Bánh Pizza Margherita',
+    quantity: 2,
+    note: 'Nướng cháy khét lẹt',
+    img: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318386/Rectangle_175_xzn14n.jpg',
+  },
+  {
+    id: 8,
     name: 'Bánh Pizza Margherita',
     quantity: 2,
     note: 'Nướng cháy khét lẹt',

@@ -48,13 +48,6 @@ const LoginScreen = ({navigation}) => {
       setsignbtn(true);
       setIsLoading(true);
       dispatch(login({identifier: email, password}));
-      // if (status == 'loading') {
-      //     setIsLoading(true)
-      // }
-      // if (status == 'success') {
-      //     setIsLoading(false)
-      //     ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT)
-      // }
     } catch (error) {}
   };
 
@@ -66,8 +59,17 @@ const LoginScreen = ({navigation}) => {
         Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
         setsignbtn(true);
       }, 200);
+    } else if (
+      status == 'success' &&
+      signbtn == true &&
+      user?.role != 'shipper'
+    ) {
+      setIsLoading(false);
+      setTimeout(() => {
+        Alert.alert('Thông báo', 'Bạn không phải là tài xế của chúng tôi');
+        setsignbtn(true);
+      }, 200);
     }
-    console.log(signbtn);
   }, [status]);
 
   const handleLoginWithGG = async () => {

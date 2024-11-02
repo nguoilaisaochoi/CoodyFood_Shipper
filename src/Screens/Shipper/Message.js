@@ -7,23 +7,80 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {appColor} from '../../constants/appColor';
 import HeaderComponent from '../../components/HeaderComponent';
 import TextComponent from './ComposenentShipper/TextComponent';
+import {getSocket} from '../../socket/socket';
+import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Message = () => {
   const Data = data;
   const shipper = Data[0].name;
+  const [messageList, setMessageList] = useState([]);
+  const [message, setMessage] = useState('');
+  const {getData} = useSelector(state => state.shipper);
+  const roomID = '1234';
+  const flatListRef = useRef();
+
+  useEffect(() => {
+    // Kết nối socket
+    const socketInstance = getSocket();
+    // Lấy dữ liệu từ localStorage khi component được khởi tạo
+    fetchMessages();
+    // Lắng nghe socket
+    socketInstance.on('receive_message', dataGot => {
+      setMessageList(oldMsgs => {
+        const newMsgs = [...oldMsgs, dataGot];
+        // Lưu messageList vào localStorage
+        setMessageList(newMsgs);
+        AsyncStorage.setItem('messageList', JSON.stringify(newMsgs));
+        return newMsgs;
+      });
+    });
+  }, []);
+  const fetchMessages = async () => {
+    try {
+      const storedMessages = await AsyncStorage.getItem('messageList');
+      if (storedMessages) {
+        setMessageList(JSON.parse(storedMessages));
+      }
+    } catch (error) {
+      console.error('Lỗi khi fetching messages từ AsyncStorage:', error);
+    }
+  };
+  useEffect(() => {
+    if (messageList) {
+      flatListRef.current.scrollToEnd({animated: true});
+    }
+  }, [messageList]);
+
+  //gửi tin lên socket room
+  const handleSend = () => {
+    const socketInstance = getSocket();
+    if (message) {
+      const data = {
+        time: Date.now(),
+        name: getData.name,
+        text: message,
+      };
+      socketInstance.emit('send_message', {roomID, data});
+      setMessage('');
+    } else {
+      console.log('message trống');
+    }
+  };
 
   //item flatlist
   const renderItem = ({item}) => {
-    const {id, text, time, name} = item;
+    const {text, time, name} = item;
+    const date = new Date(time);
     return (
       <View
         style={[
           styles.chat,
-          {flexDirection: name == shipper ? 'row-reverse' : 'row'},
+          {flexDirection: name == getData.name ? 'row-reverse' : 'row'},
         ]}>
         <Image
           style={styles.img}
@@ -36,18 +93,18 @@ const Message = () => {
             styles.text,
             {
               backgroundColor:
-                name == shipper ? appColor.gray : appColor.primary,
+                name == getData.name ? appColor.gray : appColor.primary,
             },
           ]}>
           <TextComponent
             text={text}
             fontsize={14}
-            color={name == shipper ? appColor.text : appColor.white}
+            color={name == getData.name ? appColor.text : appColor.white}
           />
           <TextComponent
-            text={time}
+            text={date.getHours() + ':' + date.getMinutes()}
             fontsize={12}
-            color={name == shipper ? appColor.text : appColor.white}
+            color={name == getData.name ? appColor.text : appColor.white}
           />
         </View>
       </View>
@@ -58,9 +115,10 @@ const Message = () => {
     <View style={styles.container}>
       <HeaderComponent text={'Tên khách hàng'} isback={true} />
       <FlatList
-        data={Data[0].chat[0].text}
+        ref={flatListRef}
+        data={messageList}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.time}
       />
       <View style={styles.input}>
         <Image
@@ -69,13 +127,20 @@ const Message = () => {
         />
         <TextInput
           style={styles.textinput}
+          value={message}
+          onChangeText={text => {
+            setMessage(text);
+          }}
           placeholder=" Nhập tin nhắn của bạn vào đây......."
           placeholderTextColor={appColor.subText}
           color={appColor.text}
         />
         <TouchableOpacity
           activeOpacity={0.7}
-          style={[styles.icon, {width: '14%'}]}>
+          style={[styles.icon, {width: '14%'}]}
+          onPress={() => {
+            handleSend();
+          }}>
           <Image
             style={{width: '100%', resizeMode: 'contain'}}
             source={require('../../assets/images/shipper/send.png')}

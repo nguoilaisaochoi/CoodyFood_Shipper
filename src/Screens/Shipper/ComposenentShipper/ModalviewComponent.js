@@ -1,16 +1,35 @@
 import {View, Modal, StyleSheet, Image} from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Textcompose from './TextComponent';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {appColor} from '../../../constants/appColor';
 import BtnComponent from './BtnComponent';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
+import {getSocket} from '../../../socket/socket';
+import {useSelector} from 'react-redux';
+import {formatCurrency} from './FormatCurrency';
 
-const ModalviewComponent = ({setModalVisible, setOrder}) => {
+const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
+  const {getData} = useSelector(state => state.shipper);//thông tin shipper
   const refTimer = useRef();
+  //socket
+  const acceptorders = () => {
+    const socketInstance = getSocket();
+    socketInstance.emit('confirm_order_shipper_exists', {
+      orderId: Order._id,
+      shipperId: getData._id,
+    });
+    setModalVisible(false);
+    setAcceptOrder(true);
+  };
+
+  if (!Order) {
+    return null;
+  }
+
   return (
-    <View style={[styles.bg, {zIndex: 1}]}>
+    <View style={[styles.bg, {zIndex: 10}]}>
       {/*làm tối bg khi modal xác nhận huỷ xuất hiện */}
       {cancelVisible && <View style={[styles.bg, {zIndex: 2}]} />}
       <View style={[styles.modal]}>
@@ -24,7 +43,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
             />
             <CountDownTimer
               ref={refTimer}
-              timestamp={300}
+              timestamp={90}
               timerCallback={() => {
                 setModalVisible(false);
               }} //gọi funtion khi hết tg
@@ -38,14 +57,12 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
           </View>
           <View style={styles.address}>
             <Textcompose
-              text={'Lấy: Tên của shop '}
+              text={'Cửa hàng: ' + Order.shopOwner.name}
               fontsize={16}
               color={appColor.subText}
             />
             <Textcompose
-              text={
-                'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh, Việt Nam'
-              }
+              text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
             />
             <Image
@@ -53,21 +70,19 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
               source={require('../../../assets/images/shipper/down.png')}
             />
             <Textcompose
-              text={'Giao: Tên người nhận'}
+              text={'Giao đến: ' + Order.shippingAddress.recipientName}
               fontsize={16}
               color={appColor.subText}
             />
             <Textcompose
-              text={
-                'Công Viên Phần Mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Hồ Chí Minh, Việt Nam'
-              }
+              text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
             />
           </View>
           <View style={styles.title2}>
             <Textcompose text={'Quảng đường ước tính:'} />
             <Textcompose
-              text={'6' + ' Km'}
+              text={'?' + ' Km'}
               fontsize={14}
               fontfamily={fontFamilies.bold}
             />
@@ -75,7 +90,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
           <View style={styles.title2}>
             <Textcompose text={'Thu nhập từ đơn này:'} />
             <Textcompose
-              text={'31,500' + ' đ'}
+              text={formatCurrency(Order.shippingfee)}
               fontsize={20}
               fontfamily={fontFamilies.bold}
               color={appColor.primary}
@@ -98,8 +113,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
               color={appColor.white}
               fontFamily={fontFamilies.bold}
               onPress={() => {
-                setModalVisible(false);
-                setOrder(true);
+                acceptorders();
               }}
             />
           </View>
@@ -109,7 +123,7 @@ const ModalviewComponent = ({setModalVisible, setOrder}) => {
       {cancelVisible && (
         <Modal animationType="fade" transparent={true} visible={cancelVisible}>
           <View style={styles.modal}>
-            <View style={styles.detail}>
+            <View style={styles.detailcanel}>
               <Textcompose
                 text={'Xác nhận từ chối đơn hàng'}
                 fontsize={23}
@@ -160,7 +174,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.10)',
+    backgroundColor: 'rgba(0, 0, 0, 0.20)',
   },
   line: {
     flexShrink: 1,
@@ -170,6 +184,8 @@ const styles = StyleSheet.create({
   },
   detail: {
     width: '76%',
+    maxHeight: '80%',
+    minHeight: '50%',
     backgroundColor: 'white',
     borderRadius: 30,
     padding: '6%',
@@ -177,31 +193,48 @@ const styles = StyleSheet.create({
     elevation: 20,
     justifyContent: 'space-between',
   },
+  detailcanel: {
+    width: '76%',
+    height: '25%',
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: '6%',
+    alignItems: 'center',
+    elevation: 20,
+    justifyContent: 'space-between',
+    gap: 30,
+    justifyContent: 'center',
+  },
   time: {
     position: 'absolute',
     right: '-20%',
     top: '29%',
   },
   address: {
+    width: '100%',
+    maxHeight: '60%',
     borderBottomWidth: 1,
     justifyContent: 'space-around',
+    alignItems: 'flex-start',
     paddingBottom: '5%',
     borderColor: 'rgba(0, 0, 0, 0.3)',
   },
   down: {
     resizeMode: 'contain',
     alignSelf: 'center',
-    flex: 0.3,
+    width: 25,
+    height: 25,
   },
   title2: {
     flexDirection: 'row',
+    maxHeight: '20%',
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   twobtn: {
-    paddingTop: '5%',
     flexDirection: 'row',
+    maxHeight: '20%',
     gap: 25,
   },
 });
