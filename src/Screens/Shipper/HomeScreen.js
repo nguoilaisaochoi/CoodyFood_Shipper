@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
 import {GetRevenue, GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import {CallConfig} from '../Call/Callconfig';
 const HomeScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
   const {getStatus, getData} = useSelector(state => state.shipper);
@@ -30,6 +31,8 @@ const HomeScreen = ({navigation}) => {
     if (verify) {
       //kết nối socket từ file socket.js
       connectSocket();
+      //bật nghe cuộc gọi
+      CallConfig(getData.phone, getData.name);
     }
     // Ngắt kết nối socket khi component unmount
     return () => {

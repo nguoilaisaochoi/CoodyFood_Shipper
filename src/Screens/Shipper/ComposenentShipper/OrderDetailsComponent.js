@@ -22,7 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from './FormatCurrency';
-
+import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
@@ -343,17 +343,19 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
                 <TextComponent text={'Khách hàng'} />
               </View>
               <View style={styles.callandmessboder}>
-                <TouchableOpacity
-                  style={styles.callandmess}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    gotoscreen('CallScreen');
-                  }}>
-                  <Image
-                    style={{width: '100%', height: '100%'}}
-                    source={require('../../../assets/images/shipper/call.png')}
-                  />
-                </TouchableOpacity>
+                <ZegoSendCallInvitationButton
+                  invitees={[
+                    //{userID: Order.user.phone, userName: Order.user.name},
+                    {userID: '0123456789', userName: 'cus1'},
+                  ]}
+                  width={45}
+                  height={45}
+                  backgroundColor={'#EF2E2E'}
+                  icon={require('../../../assets/images/shipper/callicon.png')}
+                  borderRadius={10}
+                  isVideoCall={true}
+                  resourceID={'zego_data'}
+                />
                 <TouchableOpacity
                   style={styles.callandmess}
                   activeOpacity={0.7}
@@ -378,7 +380,7 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 9,
+    zIndex: 8,
   },
   info1: {
     width: '86%',
