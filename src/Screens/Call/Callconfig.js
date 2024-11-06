@@ -4,7 +4,7 @@ import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
 
 //cấu hình cuộc gọi
-export const CallConfig = async (userID, userName) => {
+export const CallConfig = async (userID, userName,image) => {
   try {
     await ZegoUIKitPrebuiltCallService.init(
       1174464780, //AppID
@@ -34,7 +34,11 @@ export const CallConfig = async (userID, userName) => {
               <Image
                 style={{width: '100%', height: '100%'}}
                 resizeMode="cover"
-                source={{uri: `https://robohash.org/abc.png`}}
+                source={{
+                  uri: image
+                    ? image
+                    : `https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png`,
+                }}
               />
             </View>
           );
