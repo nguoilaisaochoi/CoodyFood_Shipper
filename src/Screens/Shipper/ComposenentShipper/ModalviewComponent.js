@@ -11,7 +11,7 @@ import {formatCurrency} from './FormatCurrency';
 
 const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
-  const {getData} = useSelector(state => state.shipper);//thông tin shipper
+  const {getData} = useSelector(state => state.shipper); //thông tin shipper
   const refTimer = useRef();
   //socket
   const acceptorders = () => {
@@ -29,7 +29,7 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
   }
 
   return (
-    <View style={[styles.bg, {zIndex: 10}]}>
+    <View style={[styles.bg, {zIndex: 6}]}>
       {/*làm tối bg khi modal xác nhận huỷ xuất hiện */}
       {cancelVisible && <View style={[styles.bg, {zIndex: 2}]} />}
       <View style={[styles.modal]}>

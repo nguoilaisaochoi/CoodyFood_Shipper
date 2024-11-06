@@ -9,11 +9,7 @@ import {
   Text,
 } from 'react-native';
 import ZegoUIKitPrebuiltCallService, {
-  ZegoCallInvitationDialog,
-  ZegoUIKitPrebuiltCallWaitingScreen,
-  ZegoUIKitPrebuiltCallInCallScreen,
   ZegoSendCallInvitationButton,
-  ONE_ON_ONE_VIDEO_CALL_CONFIG,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
@@ -24,52 +20,12 @@ const CallScreen = () => {
   const [email] = useState(getData.email ?? null);
   const [name] = useState(getData.name ?? null);
   const [inputValue, setInputValue] = useState('');
+  const [inputValue2, setInputValue2] = useState('');
   //login cuoc goi
   useEffect(() => {
-    onUserLogin(email, name);
+    //onUserLogin(email, name);
   }, []);
-  //call config
-  const onUserLogin = async (userID, userName) => {
-    try {
-      await ZegoUIKitPrebuiltCallService.init(
-        1174464780,//AppID
-        'a13abce8327d63610fdcc01effb642e7cc6bf0e9817aa0843b74c69a1e5dd59a',//AppSign
-        userID,
-        userName,
-        [ZIM, ZPNs],
-        {
-          innerText: {
-            incomingVideoCallDialogTitle: '%0',
-            incomingVideoCallDialogMessage: 'Đang gọi đến bạn',
-            outgoingVideoCallPageMessage: 'Đang gọi...',
-            incomingCallPageDeclineButton: 'Từ chối',
-            incomingCallPageAcceptButton: 'Trả lời',
-          },
-          ringtoneConfig: {
-            incomingCallFileName: 'zego_incoming.mp3',
-            outgoingCallFileName: 'zego_incoming.mp3',
-          },
-          androidNotificationConfig: {
-            channelID: 'ZegoUIKit',
-            channelName: 'ZegoUIKit',
-          },
-          avatarBuilder: ({userInfo}) => {
-            return (
-              <View style={{width: '100%', height: '100%'}}>
-                <Image
-                  style={{width: '100%', height: '100%'}}
-                  resizeMode="cover"
-                  source={{uri: `https://robohash.org/${userInfo.userID}.png`}}
-                />
-              </View>
-            );
-          },
-        },
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   useEffect(() => {
     console.log('Input Value:', inputValue);
@@ -89,12 +45,25 @@ const CallScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Nhập văn bản ở đây"
-        value={'user' + inputValue}
+        value={inputValue2}
+        onChangeText={text => {
+          setInputValue2(text);
+        }}
       />
       <ZegoSendCallInvitationButton
         invitees={[{userID: inputValue, userName: 'user' + inputValue}]}
         isVideoCall={true}
         resourceID={'zego_call'}
+      />
+      <ZegoSendCallInvitationButton
+        invitees={[{userID: inputValue, userName: inputValue2}]}
+        width={45}
+        height={45}
+        backgroundColor={'#EF2E2E'}
+        icon={require('../../assets/images/shipper/callicon.png')}
+        borderRadius={10}
+        isVideoCall={true}
+        resourceID={'zego_data'}
       />
     </View>
   );

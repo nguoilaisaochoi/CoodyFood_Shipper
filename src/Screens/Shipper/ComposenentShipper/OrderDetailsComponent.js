@@ -22,7 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from './FormatCurrency';
-
+import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
+import {CallConfig} from '../../Call/Callconfig';
 const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
@@ -38,7 +39,7 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   const {getData} = useSelector(state => state.shipper);
   const {user} = useSelector(state => state.login);
   const dispath = useDispatch();
-  const roomID = '1234'; //room socket chat demo
+
   //const [phoneNumber] = useState('0123456');
 
   //chuyển sdt qua cuộc gọi sim
@@ -48,12 +49,14 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
 
   //tham gia chat
   useEffect(() => {
+    //bật nghe cuộc gọi
+    CallConfig(getData.phone, getData.name, Order.user.image);
     // Kết nối socket
     const socketInstance = getSocket();
     //unactive shipper
     setGetjob(false);
     // Tham gia room
-    socketInstance.emit('join_room', roomID);
+    socketInstance.emit('join_room', Order._id);
     // Lắng nghe socket
     try {
       socketInstance.on('receive_message', async data => {
@@ -93,7 +96,8 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
       shipperId: getData._id,
     });
     Revenue();
-    return socketInstance.off('confirm_order_by_shipper_id');
+    socketInstance.off('confirm_order_by_shipper_id');
+    socketInstance.off('receive_message');
   };
 
   //theo dõi các status khi đang ship
@@ -343,22 +347,24 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
                 <TextComponent text={'Khách hàng'} />
               </View>
               <View style={styles.callandmessboder}>
+                <ZegoSendCallInvitationButton
+                  invitees={[
+                    //{userID: Order.user.phone, userName: Order.user.name},
+                    {userID: Order.user.phone, userName: Order.user.name},
+                  ]}
+                  width={45}
+                  height={45}
+                  backgroundColor={'#EF2E2E'}
+                  icon={require('../../../assets/images/shipper/callicon.png')}
+                  borderRadius={10}
+                  isVideoCall={true}
+                  resourceID={'zego_data'}
+                />
                 <TouchableOpacity
                   style={styles.callandmess}
                   activeOpacity={0.7}
                   onPress={() => {
-                    gotoscreen('CallScreen');
-                  }}>
-                  <Image
-                    style={{width: '100%', height: '100%'}}
-                    source={require('../../../assets/images/shipper/call.png')}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.callandmess}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    gotoscreen('Message');
+                    navigation.navigate('Message', {item: Order});
                   }}>
                   <Image
                     style={{width: '100%', height: '100%'}}
@@ -378,7 +384,7 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 9,
+    zIndex: 8,
   },
   info1: {
     width: '86%',

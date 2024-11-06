@@ -15,13 +15,11 @@ import {getSocket} from '../../socket/socket';
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Message = () => {
-  const Data = data;
-  const shipper = Data[0].name;
+const Message = ({route}) => {
+  const {item} = route.params;
   const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState('');
   const {getData} = useSelector(state => state.shipper);
-  const roomID = '1234';
   const flatListRef = useRef();
 
   useEffect(() => {
@@ -33,13 +31,12 @@ const Message = () => {
     socketInstance.on('receive_message', dataGot => {
       setMessageList(oldMsgs => {
         const newMsgs = [...oldMsgs, dataGot];
-        // Lưu messageList vào localStorage
-        setMessageList(newMsgs);
-        AsyncStorage.setItem('messageList', JSON.stringify(newMsgs));
         return newMsgs;
       });
     });
+    console.log(messageList);
   }, []);
+
   const fetchMessages = async () => {
     try {
       const storedMessages = await AsyncStorage.getItem('messageList');
@@ -58,13 +55,16 @@ const Message = () => {
 
   //gửi tin lên socket room
   const handleSend = () => {
+    const roomID = item._id;
     const socketInstance = getSocket();
     if (message) {
       const data = {
         time: Date.now(),
         name: getData.name,
         text: message,
+        image: getData.image[0],
       };
+      //gửi tin
       socketInstance.emit('send_message', {roomID, data});
       setMessage('');
     } else {
@@ -74,7 +74,7 @@ const Message = () => {
 
   //item flatlist
   const renderItem = ({item}) => {
-    const {text, time, name} = item;
+    const {text, time, name, image} = item;
     const date = new Date(time);
     return (
       <View
@@ -82,12 +82,17 @@ const Message = () => {
           styles.chat,
           {flexDirection: name == getData.name ? 'row-reverse' : 'row'},
         ]}>
-        <Image
-          style={styles.img}
-          source={{
-            uri: 'https://res.cloudinary.com/djywo5wza/image/upload/v1726318840/Rectangle_201_ltuozm.jpg',
-          }}
-        />
+        <View style={styles.imgitem}>
+          <Image
+            style={{flex: 1}}
+            source={{
+              uri:
+                image && image.length > 1
+                  ? image
+                  : 'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
+            }}
+          />
+        </View>
         <View
           style={[
             styles.text,
@@ -113,7 +118,7 @@ const Message = () => {
   //
   return (
     <View style={styles.container}>
-      <HeaderComponent text={'Tên khách hàng'} isback={true} />
+      <HeaderComponent text={item.user.name} isback={true} />
       <FlatList
         ref={flatListRef}
         data={messageList}
@@ -121,10 +126,10 @@ const Message = () => {
         keyExtractor={item => item.time}
       />
       <View style={styles.input}>
-        <Image
+        {/*        <Image
           style={[styles.icon, {width: '8%'}]}
           source={require('../../assets/images/shipper/smile.png')}
-        />
+        /> */}
         <TextInput
           style={styles.textinput}
           value={message}
@@ -142,7 +147,7 @@ const Message = () => {
             handleSend();
           }}>
           <Image
-            style={{width: '100%', resizeMode: 'contain'}}
+            style={{width: '50%', resizeMode: 'contain'}}
             source={require('../../assets/images/shipper/send.png')}
           />
         </TouchableOpacity>
@@ -166,12 +171,6 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: 'flex-start',
     marginBottom: '5%',
-  },
-  img: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
-    borderRadius: 10,
   },
   text: {
     maxWidth: '80%',
@@ -202,59 +201,11 @@ const styles = StyleSheet.create({
     width: '78%',
     padding: '2%',
   },
-});
-
-const data = [
-  {
-    name: 'shippervip',
-    chat: [
-      {
-        customer: 'Anh long',
-        text: [
-          {
-            id: 1,
-            name: 'Anh Long',
-            text: 'Chào bạn, bạn có khỏe không?aaaaaaaaaaaaaaaa',
-            time: '99:98',
-          },
-          {
-            id: 2,
-            name: 'shippervip',
-            text: 'Mình khỏe, cảm ơn bạn! Bạn thì sao?',
-            time: '99:99',
-          },
-          {
-            id: 3,
-            name: 'shippervip',
-            text: 'hi?',
-            time: '99:99',
-          },
-          {
-            id: 4,
-            name: 'Anh Long',
-            text: 'hi?',
-            time: '99:99',
-          },
-          {
-            id: 5,
-            name: 'shippervip',
-            text: 'hi?',
-            time: '99:99',
-          },
-          {
-            id: 6,
-            name: 'shippervip',
-            text: 'hi?',
-            time: '99:99',
-          },
-          {
-            id: 7,
-            name: 'Anh Long',
-            text: 'hi?',
-            time: '99:99',
-          },
-        ],
-      },
-    ],
+  imgitem: {
+    width: 55,
+    aspectRatio: 1,
+    borderRadius: 10,
+    backgroundColor: appColor.gray,
+    overflow: 'hidden',
   },
-];
+});

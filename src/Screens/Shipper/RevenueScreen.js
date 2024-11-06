@@ -11,7 +11,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from './ComposenentShipper/FormatCurrency';
 
-
 const RevenueScreen = () => {
   const [value, setValue] = useState(date[0].value);
   const [Data, setData] = useState(data);
@@ -116,14 +115,27 @@ const RevenueScreen = () => {
         <View style={styles.boxed}>
           <View style={styles.wallanddate}>
             <Image
-              style={styles.img}
+              style={[
+                styles.img,
+                {
+                  flexShrink: value != 'day' ? 0.4 : 0.3,
+                  flexGrow: value != 'day' ? 0.3 : 0.2,
+                },
+              ]}
               source={require('../../assets/images/shipper/wallet.png')}
             />
             <TextComponent
-              text={new Date().toLocaleDateString('vi-VN')}
-              fontsize={18}
+              text={new Date(Data.startDate).toLocaleDateString('vi-VN')}
+              fontsize={value != 'day' ? 16 : 18}
               fontFamily={fontFamilies.bold}
             />
+            {value != 'day' && (
+              <TextComponent
+                text={'-' + new Date(Data.endDate).toLocaleDateString('vi-VN')}
+                fontsize={16}
+                fontFamily={fontFamilies.bold}
+              />
+            )}
           </View>
           <Info4txtComponent
             color1={appColor.subText}
@@ -229,8 +241,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   img: {
-    flexShrink: 0.3,
-    flexGrow: 0.2,
     resizeMode: 'contain',
     marginRight: 12,
   },
