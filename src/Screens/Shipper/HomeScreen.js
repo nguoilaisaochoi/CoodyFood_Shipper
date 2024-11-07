@@ -5,27 +5,28 @@ import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
-import {GetRevenue, GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 const HomeScreen = ({navigation}) => {
-  const {user} = useSelector(state => state.login);
-  const {getStatus, getData} = useSelector(state => state.shipper);
-  const dispath = useDispatch();
+  const {user} = useSelector(state => state.login); //thông tin khi đăng nhập
+  const {getStatus, getData} = useSelector(state => state.shipper); //thông tin shipper
   const [modalVisible, setModalVisible] = useState(false); //modal nhận đơn hiện và tắt
   const [acceptorder, setAcceptOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
-  const [verify, setverify] = useState(false);
-  const [order, setOrder] = useState(null);
-  const [getjob, setGetjob] = useState(true); //active or unactive
+  const [verify, setverify] = useState(false); // xác nhận shipper đã điền đầy đủ thông tin
+  const [order, setOrder] = useState(null); //order truyền vào các modal
+  const [getjob, setGetjob] = useState(true); //quản lí nhận đơn
+  const dispath = useDispatch();
   //nếu chưa xác thực sẽ chuyển sang màn hình xác thực
   useEffect(() => {
     if (getStatus == 'succeeded' && !getData.vehicleBrand) {
       navigation.replace('VerifyShipper');
+      setGetjob(false);
     } else if (getData.vehicleBrand) {
       setverify(true);
     }
   }, [getStatus]);
 
   useEffect(() => {
-    //lay id shipper
+    //lay thông tin shipper
     dispath(GetShipper(user._id));
     if (verify) {
       //kết nối socket từ file socket.js
