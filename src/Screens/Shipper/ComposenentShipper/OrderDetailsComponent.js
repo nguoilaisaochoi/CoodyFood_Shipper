@@ -87,7 +87,7 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
       console.error('Failed to clear message list:', error);
     }
   };
-  //hoàn thành đơn
+  //khi hoàn thành đơn
   const complete = () => {
     clearMessageList();
     const socketInstance = getSocket();

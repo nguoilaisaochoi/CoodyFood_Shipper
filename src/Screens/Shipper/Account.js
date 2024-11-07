@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import React, {useEffect} from 'react';
 import {appColor} from '../../constants/appColor';
 import ItemAccount from './ComposenentShipper/ItemAccount';
@@ -6,6 +6,9 @@ import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../Redux/Reducers/LoginSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import TextComponent from './ComposenentShipper/TextComponent';
+import {fontFamilies} from '../../constants/fontFamilies';
+import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 
 const Account = () => {
   const navigation = useNavigation();
@@ -34,6 +37,33 @@ const Account = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={{width: '80%'}}>
+          <TextComponent
+            text={'Xin chào '}
+            fontsize={23}
+            color={appColor.white}
+            fontfamily={fontFamilies.semiBold}
+            styles={{opacity: 0.9}}
+          />
+          <TextComponent
+            text={getData.name}
+            fontsize={23}
+            color={appColor.white}
+            fontfamily={fontFamilies.bold}
+          />
+        </View>
+        <View style={styles.imgitem}>
+          <Image
+            style={{flex: 1}}
+            source={{
+              uri:
+                getData.image[0] ??
+                'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
+            }}
+          />
+        </View>
+      </View>
       <View style={styles.body}>
         <ItemAccount
           screen={() => {
@@ -43,13 +73,12 @@ const Account = () => {
           icon={'user'}
         />
         <ItemAccount
-          text={' Lịch sử nạp rút tiền'}
-          icon={'setting'}
+          text={'Đổi mật khẩu'}
+          icon={'padlock'}
           screen={() => {
-            gotoScreen('CallScreen');
+            gotoScreen('ChangePass');
           }}
         />
-        <ItemAccount text={'Đổi mật khẩu'} icon={'padlock'} />
         <ItemAccount
           text={'Đăng xuất'}
           screen={() => {
@@ -69,11 +98,12 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
   },
   header: {
-    flex: 1,
+    flex: 0.4,
     backgroundColor: appColor.primary,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
     padding: '2%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   body: {
     flex: 2,
@@ -106,5 +136,14 @@ const styles = StyleSheet.create({
   img: {
     aspectRatio: 1,
     resizeMode: 'contain',
+  },
+  imgitem: {
+    width: '20%',
+    aspectRatio: 1,
+    borderRadius: 10,
+    marginRight: '5%',
+    backgroundColor: appColor.gray,
+    overflow: 'hidden',
+    borderRadius: 99,
   },
 });

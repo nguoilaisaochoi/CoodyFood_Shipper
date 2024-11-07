@@ -17,6 +17,7 @@ import {
 
 import VerifyShipper from '../Screens/Shipper/VerifyShipper';
 import CallScreen from '../Screens/Shipper/CallScreen';
+import ChangePassScreen from '../Screens/Shipper/ChangePassScreen';
 
 
 const Stack = createStackNavigator();
@@ -30,6 +31,7 @@ const MainNavigation = () => {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Message" component={Message} />
       <Stack.Screen name="CallScreen" component={CallScreen} />
+      <Stack.Screen name="ChangePass" component={ChangePassScreen} />
       <Stack.Screen
         options={{headerShown: false}}
         // DO NOT change the name
