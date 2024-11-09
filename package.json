@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.4",
+    "@mapbox/polyline": "^1.2.1",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-native-firebase/app": "^21.0.0",
@@ -27,6 +28,7 @@
     "axios": "^1.7.7",
     "iconsax-react-native": "^0.0.8",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "react": "18.3.1",
     "react-delegate-component": "^1.0.0",
     "react-native": "0.75.2",
@@ -36,6 +38,7 @@
     "react-native-element-dropdown": "^2.12.1",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fbsdk-next": "^13.0.0",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.19.0",
     "react-native-image-picker": "^7.1.2",
     "react-native-immediate-phone-call": "^2.0.0",
