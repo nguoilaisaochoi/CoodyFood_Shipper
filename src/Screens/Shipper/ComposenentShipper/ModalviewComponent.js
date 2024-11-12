@@ -9,7 +9,7 @@ import {getSocket} from '../../../socket/socket';
 import {useSelector} from 'react-redux';
 import {formatCurrency} from './FormatCurrency';
 
-const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
+const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order,setShopLocation,setCustomerLocation}) => {
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
   const {getData} = useSelector(state => state.shipper); //thông tin shipper
   const refTimer = useRef();
@@ -22,6 +22,8 @@ const ModalviewComponent = ({setModalVisible, setAcceptOrder, Order}) => {
     });
     setModalVisible(false);
     setAcceptOrder(true);
+    setShopLocation([Order.shopOwner.longitude, Order.shopOwner.latitude])
+    setCustomerLocation([Order.shippingAddress.longitude,Order.shippingAddress.latitude])
   };
 
   if (!Order) {

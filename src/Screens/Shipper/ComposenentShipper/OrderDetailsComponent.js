@@ -24,7 +24,14 @@ import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from './FormatCurrency';
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {CallConfig} from '../../Call/Callconfig';
-const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
+const OrderDetailsComponent = ({
+  Order,
+  setAcceptOrder,
+  setGetjob,
+  setAtRestaurant,
+  setShopLocation,
+  setCustomerLocation,
+}) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
   const sheetRef = useRef();
@@ -105,6 +112,7 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
     if (!status.item1) {
       setStatus({...status, item1: true});
       setTitle('Đã lấy món ăn');
+      setAtRestaurant(true);
     } else if (!status.item2) {
       if (imagePath) {
         setStatus({...status, item2: true});
@@ -117,6 +125,8 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
       setTitle('Hoàn tất đơn hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
+      setShopLocation([-999,-999])
+      setCustomerLocation([-999,-999]),
       setTitle('Hoàn thành, Chuẩn bị đóng!');
       complete();
       setTimeout(() => {
@@ -174,218 +184,211 @@ const OrderDetailsComponent = ({Order, setAcceptOrder, setGetjob}) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/*bottom sheet */}
-      <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
-        <BottomSheetScrollView style={{paddingTop: '2%'}}>
-          {/*info1: thông tin quán ăn*/}
-          <View style={styles.info1}>
-            <Image
-              style={styles.img}
-              source={{
-                uri: Order.shopOwner.images[0],
-              }}
+    <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
+      <BottomSheetScrollView style={{paddingTop: '2%', zIndex: 8}}>
+        {/*info1: thông tin quán ăn*/}
+        <View style={styles.info1}>
+          <Image
+            style={styles.img}
+            source={{
+              uri: Order.shopOwner.images[0],
+            }}
+          />
+          <View style={styles.detail1}>
+            <TextComponent
+              text={Order.shopOwner.name}
+              fontFamily={fontFamilies.bold}
             />
-            <View style={styles.detail1}>
+            <TextComponent
+              text={Order.shopOwner.address}
+              styles={{maxHeight: '50%'}}
+              fontsize={13}
+              color={appColor.subText}
+            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextComponent
-                text={Order.shopOwner.name}
+                text={'Đánh giá: ' + Order.shopOwner.rating + ' '}
+                fontsize={13}
+              />
+              <Image
+                style={styles.star}
+                source={require('../../../assets/images/shipper/star.png')}
+              />
+            </View>
+          </View>
+        </View>
+        {/*info2: danh sách các món ăn*/}
+        <View style={styles.info2}>
+          <TextComponent
+            text={'Danh sách món'}
+            styles={{marginLeft: '6%'}}
+            fontFamily={fontFamilies.bold}
+            fontsize={20}
+          />
+          <FlatList
+            data={Order.items}
+            renderItem={renderitem}
+            keyExtractor={item => item.name}
+            contentContainerStyle={styles.flatlist}
+            scrollEnabled={false}
+          />
+        </View>
+        {/*info3: bảng lộ trình của shipper*/}
+        <View style={styles.info3}>
+          {/*ảnh vòng tròn màu xám */}
+          <Image
+            style={styles.bodership}
+            source={require('../../../assets/images/shipper/Frame_11.png')}
+          />
+          {/*thông tin bên phải các vòng tròn*/}
+          <View style={styles.statusship}>
+            <TextComponent text={'Bạn đã đến nhà hàng'} />
+            <TextComponent text={'Bạn đã lấy món ăn'} />
+            <TextComponent text={'Bạn đã đến nơi giao'} />
+            <TextComponent text={'Bạn đã giao hàng'} />
+          </View>
+          {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
+          <View style={styles.check}>
+            <Check start={true} checked={status.item1 ? true : false} />
+            <Check
+              start={status.item1 ? true : false}
+              checked={status.item2 ? true : false}
+            />
+            <Check
+              start={status.item2 ? true : false}
+              checked={status.item3 ? true : false}
+            />
+            <Check
+              start={status.item3 ? true : false}
+              checked={status.item4 ? true : false}
+            />
+          </View>
+        </View>
+        {/*info4: tóm tắt*/}
+        <View style={styles.info4}>
+          <TextComponent
+            text={'Tóm tắt'}
+            fontsize={20}
+            fontFamily={fontFamilies.bold}
+            color={appColor.primary}
+          />
+          <Info4txt
+            text={'Giá tiền lấy đồ'}
+            price={formatCurrency(Order.totalPrice)}
+          />
+          <Info4txt
+            text={'Phí giao hàng'}
+            price={formatCurrency(Order.shippingfee)}
+          />
+          <Info4txt
+            text={'Thu tiền khách hàng'}
+            price={formatCurrency(Order.totalPrice)}
+          />
+          <Info4txt
+            text={'Thu nhập'}
+            price={formatCurrency(Order.shippingfee)}
+          />
+        </View>
+        <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
+          {/*nút kéo từ trái sang phải*/}
+          <SlideButton
+            onReachedToEnd={handleReachedToEnd}
+            autoReset={true}
+            borderRadius={10}
+            title={title}
+            titleStyle={{fontsize: 20, fontFamily: fontFamilies.bold}}
+            containerStyle={{
+              backgroundColor: appColor.primary,
+              elevation: 10,
+            }}
+            underlayStyle={{backgroundColor: 'transparent'}}
+            autoResetDelay={400}
+            icon={
+              <Image
+                style={{flex: 0.6, resizeMode: 'contain'}}
+                source={require('../../../assets/images/shipper/image_45.png')}
+              />
+            }
+            thumbStyle={{borderRadius: 25}}
+          />
+          {/*nút chụp ảnh chỉ hiện khi ở `shiper đẫ lấy món ăn`*/}
+          {status.item1 && !status.item2 && (
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: appColor.primary}]}
+              onPress={() => {
+                onOpenCamera(setImagePath);
+              }}>
+              <TextComponent
+                text={'Chụp ảnh'}
+                color={appColor.white}
+                fontsize={20}
                 fontFamily={fontFamilies.bold}
               />
+            </TouchableOpacity>
+          )}
+          {/*hiện ảnh nếu đã chụp*/}
+          {imagePath && (
+            <View>
               <TextComponent
-                text={Order.shopOwner.address}
-                styles={{maxHeight: '50%'}}
-                fontsize={13}
-                color={appColor.subText}
+                text={'Hình ảnh xác thực'}
+                color={appColor.primary}
+                fontsize={20}
+                fontFamily={fontFamilies.semiBold}
               />
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TextComponent
-                  text={'Đánh giá: ' + Order.shopOwner.rating + ' '}
-                  fontsize={13}
-                />
-                <Image
-                  style={styles.star}
-                  source={require('../../../assets/images/shipper/star.png')}
-                />
-              </View>
+              <Image style={styles.verified} source={{uri: imagePath.uri}} />
             </View>
-          </View>
-          {/*info2: danh sách các món ăn*/}
-          <View style={styles.info2}>
-            <TextComponent
-              text={'Danh sách món'}
-              styles={{marginLeft: '6%'}}
-              fontFamily={fontFamilies.bold}
-              fontsize={20}
-            />
-            <FlatList
-              data={Order.items}
-              renderItem={renderitem}
-              keyExtractor={item => item.name}
-              contentContainerStyle={styles.flatlist}
-              scrollEnabled={false}
-            />
-          </View>
-          {/*info3: bảng lộ trình của shipper*/}
-          <View style={styles.info3}>
-            {/*ảnh vòng tròn màu xám */}
-            <Image
-              style={styles.bodership}
-              source={require('../../../assets/images/shipper/Frame_11.png')}
-            />
-            {/*thông tin bên phải các vòng tròn*/}
-            <View style={styles.statusship}>
-              <TextComponent text={'Bạn đã đến nhà hàng'} />
-              <TextComponent text={'Bạn đã lấy món ăn'} />
-              <TextComponent text={'Bạn đã đến nơi giao'} />
-              <TextComponent text={'Bạn đã giao hàng'} />
-            </View>
-            {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
-            <View style={styles.check}>
-              <Check start={true} checked={status.item1 ? true : false} />
-              <Check
-                start={status.item1 ? true : false}
-                checked={status.item2 ? true : false}
-              />
-              <Check
-                start={status.item2 ? true : false}
-                checked={status.item3 ? true : false}
-              />
-              <Check
-                start={status.item3 ? true : false}
-                checked={status.item4 ? true : false}
+          )}
+          {/*view thông tin khách hàng*/}
+          <View style={styles.customer}>
+            <View style={styles.imgcustomer}>
+              <Image
+                style={{flex: 1}}
+                source={{
+                  uri:
+                    Order.user.images ??
+                    'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
+                }}
               />
             </View>
-          </View>
-          {/*info4: tóm tắt*/}
-          <View style={styles.info4}>
-            <TextComponent
-              text={'Tóm tắt'}
-              fontsize={20}
-              fontFamily={fontFamilies.bold}
-              color={appColor.primary}
-            />
-            <Info4txt
-              text={'Giá tiền lấy đồ'}
-              price={formatCurrency(Order.totalPrice)}
-            />
-            <Info4txt
-              text={'Phí giao hàng'}
-              price={formatCurrency(Order.shippingfee)}
-            />
-            <Info4txt
-              text={'Thu tiền khách hàng'}
-              price={formatCurrency(Order.totalPrice)}
-            />
-            <Info4txt
-              text={'Thu nhập'}
-              price={formatCurrency(Order.shippingfee)}
-            />
-          </View>
-          <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
-            {/*nút kéo từ trái sang phải*/}
-            <SlideButton
-              onReachedToEnd={handleReachedToEnd}
-              autoReset={true}
-              borderRadius={10}
-              title={title}
-              titleStyle={{fontsize: 20, fontFamily: fontFamilies.bold}}
-              containerStyle={{
-                backgroundColor: appColor.primary,
-                elevation: 10,
-              }}
-              underlayStyle={{backgroundColor: 'transparent'}}
-              autoResetDelay={400}
-              icon={
-                <Image
-                  style={{flex: 0.6, resizeMode: 'contain'}}
-                  source={require('../../../assets/images/shipper/image_45.png')}
-                />
-              }
-              thumbStyle={{borderRadius: 25}}
-            />
-            {/*nút chụp ảnh chỉ hiện khi ở `shiper đẫ lấy món ăn`*/}
-            {status.item1 && !status.item2 && (
+            <View style={styles.namecustomer}>
+              <TextComponent text={Order.user.name} />
+              <TextComponent text={'Khách hàng'} />
+            </View>
+            <View style={styles.callandmessboder}>
+              <ZegoSendCallInvitationButton
+                invitees={[
+                  //{userID: Order.user.phone, userName: Order.user.name},
+                  {userID: Order.user.phone, userName: Order.user.name},
+                ]}
+                width={45}
+                height={45}
+                backgroundColor={'#EF2E2E'}
+                icon={require('../../../assets/images/shipper/callicon.png')}
+                borderRadius={10}
+                isVideoCall={true}
+                resourceID={'zego_data'}
+              />
               <TouchableOpacity
-                style={[styles.button, {backgroundColor: appColor.primary}]}
+                style={styles.callandmess}
+                activeOpacity={0.7}
                 onPress={() => {
-                  onOpenCamera(setImagePath);
+                  navigation.navigate('Message', {item: Order});
                 }}>
-                <TextComponent
-                  text={'Chụp ảnh'}
-                  color={appColor.white}
-                  fontsize={20}
-                  fontFamily={fontFamilies.bold}
+                <Image
+                  style={{width: '100%', height: '100%'}}
+                  source={require('../../../assets/images/shipper/message.png')}
                 />
               </TouchableOpacity>
-            )}
-            {/*hiện ảnh nếu đã chụp*/}
-            {imagePath && (
-              <View>
-                <TextComponent
-                  text={'Hình ảnh xác thực'}
-                  color={appColor.primary}
-                  fontsize={20}
-                  fontFamily={fontFamilies.semiBold}
-                />
-                <Image style={styles.verified} source={{uri: imagePath.uri}} />
-              </View>
-            )}
-            {/*view thông tin khách hàng*/}
-            <View style={styles.customer}>
-              <View style={styles.imgcustomer}>
-                <Image
-                  style={{flex: 1}}
-                  source={{
-                    uri:
-                      Order.user.images ??
-                      'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
-                  }}
-                />
-              </View>
-              <View style={styles.namecustomer}>
-                <TextComponent text={Order.user.name} />
-                <TextComponent text={'Khách hàng'} />
-              </View>
-              <View style={styles.callandmessboder}>
-                <ZegoSendCallInvitationButton
-                  invitees={[
-                    //{userID: Order.user.phone, userName: Order.user.name},
-                    {userID: Order.user.phone, userName: Order.user.name},
-                  ]}
-                  width={45}
-                  height={45}
-                  backgroundColor={'#EF2E2E'}
-                  icon={require('../../../assets/images/shipper/callicon.png')}
-                  borderRadius={10}
-                  isVideoCall={true}
-                  resourceID={'zego_data'}
-                />
-                <TouchableOpacity
-                  style={styles.callandmess}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    navigation.navigate('Message', {item: Order});
-                  }}>
-                  <Image
-                    style={{width: '100%', height: '100%'}}
-                    source={require('../../../assets/images/shipper/message.png')}
-                  />
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </View>
+        </View>
+      </BottomSheetScrollView>
+    </BottomSheet>
   );
 };
 
 export default OrderDetailsComponent;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    zIndex: 8,
-  },
   info1: {
     width: '86%',
     minHeight: 123,

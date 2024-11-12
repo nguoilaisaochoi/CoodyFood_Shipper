@@ -1,23 +1,32 @@
-import { View, Image, StyleSheet, Modal, Button, Platform, PermissionsAndroid } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Modal,
+  Button,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import ModalviewComponent from './ComposenentShipper/ModalviewComponent';
 import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
-import { useDispatch, useSelector } from 'react-redux';
-import MapboxGL from '@rnmapbox/maps'
-import { connectSocket, disconnectSocket, getSocket } from '../../socket/socket';
-import { GetShipper } from '../../Redux/Reducers/ShipperReducer';
-import Geolocation from 'react-native-geolocation-service'
+import {useDispatch, useSelector} from 'react-redux';
+import MapboxGL from '@rnmapbox/maps';
+import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
+import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import Geolocation from 'react-native-geolocation-service';
 import MapAPI from '../../core/apiMap/MapAPI';
-import { appColor } from '../../constants/appColor';
+import {appColor} from '../../constants/appColor';
 import LoadingModal from '../../modal/LoadingModal';
-const polyline = require('@mapbox/polyline')
+const polyline = require('@mapbox/polyline');
 
+MapboxGL.setAccessToken(
+  'pk.eyJ1IjoibWFzdGVydGFvMzIxIiwiYSI6ImNtMWtrMzFhMTB6bW0ya29jMjZnbXJscnEifQ.c39zAYV1D82VHxuCJNe9Jw',
+);
 
-MapboxGL.setAccessToken('pk.eyJ1IjoibWFzdGVydGFvMzIxIiwiYSI6ImNtMWtrMzFhMTB6bW0ya29jMjZnbXJscnEifQ.c39zAYV1D82VHxuCJNe9Jw')
-
-const HomeScreen = ({ navigation }) => {
-  const { user } = useSelector(state => state.login); //thông tin khi đăng nhập
-  const { getStatus, getData } = useSelector(state => state.shipper); //thông tin shipper
+const HomeScreen = ({navigation}) => {
+  const {user} = useSelector(state => state.login); //thông tin khi đăng nhập
+  const {getStatus, getData} = useSelector(state => state.shipper); //thông tin shipper
   const [modalVisible, setModalVisible] = useState(false); //modal nhận đơn hiện và tắt
   const [acceptorder, setAcceptOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
   const [verify, setverify] = useState(false); // xác nhận shipper đã điền đầy đủ thông tin
@@ -25,36 +34,35 @@ const HomeScreen = ({ navigation }) => {
   const [getjob, setGetjob] = useState(true); //quản lí nhận đơn
   const dispath = useDispatch();
   const [shipperLocation, setShipperLocation] = useState(null);
-  const [shopLocation, setShopLocation] = useState([106.641335, 10.867153]);
-  const [customerLocation, setCustomerLocation] = useState([106.700424, 10.775659]);
+  const [shopLocation, setShopLocation] = useState([-999, -999]);
+  const [customerLocation, setCustomerLocation] = useState([-999, -999]);
   const [routeToCustomer, setRouteToCustomer] = useState(null);
   const [routeToShop, setRouteToShop] = useState(null);
   const [atRestaurant, setAtRestaurant] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const camera = useRef(null);
 
-
+  //quyền
   const requestLocationPermission = async () => {
     if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
-
     }
     return true;
   };
-
+  //vi tri shipper
   const getUserLocation = () => {
     Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+      position => {
+        const {latitude, longitude} = position.coords;
         setShipperLocation([longitude, latitude]);
       },
-      (error) => {
+      error => {
         console.error(error);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
@@ -71,15 +79,19 @@ const HomeScreen = ({ navigation }) => {
       setIsLoading(true);
       if (!atRestaurant) {
         // Lấy chỉ đường từ vị trí shipper đến nhà hàng
-
         const directionToRestaurant = await MapAPI.getDirections({
           vehicle: 'bike',
           origin: shipperLocation,
           destination: shopLocation,
         });
 
-        if (directionToRestaurant.routes && directionToRestaurant.routes.length > 0) {
-          const route = decodePolyline(directionToRestaurant.routes[0].overview_polyline.points);
+        if (
+          directionToRestaurant.routes &&
+          directionToRestaurant.routes.length > 0
+        ) {
+          const route = decodePolyline(
+            directionToRestaurant.routes[0].overview_polyline.points,
+          );
           setRouteToShop(route);
         }
       } else {
@@ -90,8 +102,13 @@ const HomeScreen = ({ navigation }) => {
           destination: customerLocation,
         });
 
-        if (directionToCustomer.routes && directionToCustomer.routes.length > 0) {
-          const route = decodePolyline(directionToCustomer.routes[0].overview_polyline.points);
+        if (
+          directionToCustomer.routes &&
+          directionToCustomer.routes.length > 0
+        ) {
+          const route = decodePolyline(
+            directionToCustomer.routes[0].overview_polyline.points,
+          );
           setRouteToCustomer(route);
         }
       }
@@ -100,33 +117,23 @@ const HomeScreen = ({ navigation }) => {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  // Gọi sự kiên khi nhấn nút nhận đơn
-  const handleGetDirections = () => {
-    if (shipperLocation && customerLocation && shopLocation) {
-      getDirections();
-    }
-  }
-
-  // Gọi sự kiện khi nhấn nút đã nhận món ăn
-  const handleArriveAtRestaurant = () => {
-    setAtRestaurant(true);
   };
 
+  //quyền
   useEffect(() => {
-    if (atRestaurant) {
-      getDirections(); // Lấy chỉ đường từ nhà hàng đến chỗ người đặt hàng khi atRestaurant thay đổi
-    }
-  }, [atRestaurant]);
-
-  useEffect(() => {
-    requestLocationPermission().then((hasPermission) => {
+    requestLocationPermission().then(hasPermission => {
       if (hasPermission) {
         getUserLocation();
       }
     });
   }, []);
+
+    //thay đổi chỉ dẫn map khi shipper đã tới nhà hàng
+  useEffect(() => {
+    if (acceptorder) {
+      getDirections();
+    }
+  }, [acceptorder,atRestaurant]);
 
   //nếu chưa xác thực sẽ chuyển sang màn hình xác thực
   useEffect(() => {
@@ -167,20 +174,14 @@ const HomeScreen = ({ navigation }) => {
   }, [verify, getjob]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       {modalVisible && (
         <ModalviewComponent
           setModalVisible={setModalVisible}
           setAcceptOrder={setAcceptOrder}
+          setShopLocation={setShopLocation}
+          setCustomerLocation={setCustomerLocation}
           Order={order}
-        />
-      )}
-      {/*modal sau khi chấp nhận đơn */}
-      {acceptorder && (
-        <OrderDetailsComponent
-          Order={order}
-          setAcceptOrder={setAcceptOrder}
-          setGetjob={setGetjob}
         />
       )}
       {/*để tạm-sau này thay thế bằng maps */}
@@ -191,62 +192,83 @@ const HomeScreen = ({ navigation }) => {
       <MapboxGL.MapView
         style={styles.img}
         projection="globe" // Phép chiếu được sử dụng khi hiển thị bản đồ
-        zoomEnabled={true}
-      >
+        zoomEnabled={true}>
         {shipperLocation && (
           <MapboxGL.PointAnnotation
             id="userLocation"
             coordinate={shipperLocation}
           />
         )}
-        {shopLocation && (
+        {shopLocation != '-999' && (
           <MapboxGL.PointAnnotation
             id="restaurantLocation"
             coordinate={shopLocation}
-            ref={ref => (this.markerRef = ref)}
-          >
-            <Image source={require('../../assets/images/shipper/shop.png')} style={{ width: 30, height: 30 }}
-              onLoad={() => this.markerRef.refresh()} />
+            ref={ref => (this.markerRef = ref)}>
+            <Image
+              source={require('../../assets/images/shipper/shop.png')}
+              style={{width: 30, height: 30}}
+              onLoad={() => this.markerRef.refresh()}
+            />
           </MapboxGL.PointAnnotation>
         )}
-        {customerLocation && (
+        {customerLocation != '-999' && (
           <MapboxGL.PointAnnotation
             id="customerLocation"
             coordinate={customerLocation}
-            ref={ref => (this.markerRef = ref)}
-          >
-            <Image source={require('../../assets/images/tabBar/home2.png')} style={{ width: 30, height: 30 }}
-              onLoad={() => this.markerRef.refresh()} />
+            ref={ref => (this.markerRef = ref)}>
+            <Image
+              source={require('../../assets/images/tabBar/home2.png')}
+              style={{width: 30, height: 30}}
+              onLoad={() => this.markerRef.refresh()}
+            />
           </MapboxGL.PointAnnotation>
         )}
         {routeToShop && !atRestaurant && (
-          <MapboxGL.ShapeSource id="routeToRestaurantSource" shape={{
-            type: 'Feature',
-            geometry: {
-              type: 'LineString',
-              coordinates: routeToShop.map(coord => [
-                coord.longitude,
-                coord.latitude,
-              ]),
-            },
-          }}>
-            <MapboxGL.LineLayer id="routeToRestaurantFill"
-              style={{ lineColor: appColor.primary, lineWidth: 3, lineCap: 'round', lineJoin: 'round' }} />
+          <MapboxGL.ShapeSource
+            id="routeToRestaurantSource"
+            shape={{
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: routeToShop.map(coord => [
+                  coord.longitude,
+                  coord.latitude,
+                ]),
+              },
+            }}>
+            <MapboxGL.LineLayer
+              id="routeToRestaurantFill"
+              style={{
+                lineColor: appColor.primary,
+                lineWidth: 3,
+                lineCap: 'round',
+                lineJoin: 'round',
+              }}
+            />
           </MapboxGL.ShapeSource>
         )}
         {routeToCustomer && atRestaurant && (
-          <MapboxGL.ShapeSource id="routeToCustomerSource" shape={{
-            type: 'Feature',
-            geometry: {
-              type: 'LineString',
-              coordinates: routeToCustomer.map(coord => [
-                coord.longitude,
-                coord.latitude,
-              ]),
-            },
-          }}>
-            <MapboxGL.LineLayer id="routeToCustomerFill"
-              style={{ lineColor: appColor.primary, lineWidth: 3, lineCap: 'round', lineJoin: 'round' }} />
+          <MapboxGL.ShapeSource
+            id="routeToCustomerSource"
+            shape={{
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: routeToCustomer.map(coord => [
+                  coord.longitude,
+                  coord.latitude,
+                ]),
+              },
+            }}>
+            <MapboxGL.LineLayer
+              id="routeToCustomerFill"
+              style={{
+                lineColor: appColor.primary,
+                lineWidth: 3,
+                lineCap: 'round',
+                lineJoin: 'round',
+              }}
+            />
           </MapboxGL.ShapeSource>
         )}
 
@@ -255,7 +277,7 @@ const HomeScreen = ({ navigation }) => {
             ref={camera}
             zoomLevel={15} // Mức thu phóng của bản đồ
             centerCoordinate={shipperLocation}
-            animationMode='flyTo' // Chế độ di chuyển của camera
+            animationMode="flyTo" // Chế độ di chuyển của camera
             animationDuration={3000}
             pitch={20}
           />
@@ -272,6 +294,17 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
       )}
+      {/*modal sau khi chấp nhận đơn */}
+      {acceptorder && (
+        <OrderDetailsComponent
+          Order={order}
+          setAcceptOrder={setAcceptOrder}
+          setGetjob={setGetjob}
+          setAtRestaurant={setAtRestaurant}
+          setShopLocation={setShopLocation}
+          setCustomerLocation={setCustomerLocation}
+        />
+      )}
       <LoadingModal visible={isLoading} />
     </View>
   );
@@ -280,9 +313,12 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 const styles = StyleSheet.create({
   img: {
-    // position: 'absolute',
+    position: 'absolute',
     zIndex: 0,
-    flex: 1,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   buttonContainer: {
     position: 'absolute',
