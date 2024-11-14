@@ -23,6 +23,7 @@ import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import {uploadImageToCloudinary} from './ComposenentShipper/UploadImage';
 import {onImageLibrary, onOpenCamera} from './ComposenentShipper/ImagePicker';
+import SelectImage from './ComposenentShipper/SelectImage';
 
 const ProfileScreen = () => {
   const {user} = useSelector(state => state.login);
@@ -106,16 +107,7 @@ const ProfileScreen = () => {
     }
     setshowPicker(false);
   };
-  // Mở Bottom Sheet
-  const openSheet = () => {
-    sheetRef.current.snapToIndex(0);
-    setIsSheetOpen(true);
-  };
-  // Đóng Bottom Sheet
-  const closeSheet = () => {
-    sheetRef.current.close();
-    setIsSheetOpen(false);
-  };
+
   useEffect(() => {
     if (imagePath) {
       setAvatar(imagePath.uri);
@@ -132,7 +124,7 @@ const ProfileScreen = () => {
             style={styles.body1}
             activeOpacity={0.85}
             onPress={() => {
-              openSheet();
+              setIsSheetOpen(true);
             }}>
             <View style={styles.boximg}>
               <Image
@@ -252,43 +244,11 @@ const ProfileScreen = () => {
         </View>
       </ScrollView>
       {isSheetOpen && (
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.bg}
-          onPress={() => {
-            closeSheet();
-          }}
+        <SelectImage
+          setImagePath={setImagePath}
+          setIsSheetOpen={setIsSheetOpen}
         />
       )}
-      <BottomSheet
-        ref={sheetRef}
-        handleComponent={null}
-        snapPoints={['18%']}
-        index={-1}
-        containerStyle={{flex: 1, zIndex: 2}}>
-        <BottomSheetView style={styles.optionavatar}>
-          <ButtonComponent
-            text={'Chụp ảnh'}
-            width={'40%'}
-            color={appColor.white}
-            height={51}
-            onPress={() => {
-              onOpenCamera(setImagePath);
-              closeSheet();
-            }}
-          />
-          <ButtonComponent
-            text={'Thư viện'}
-            width={'40%'}
-            color={appColor.white}
-            height={51}
-            onPress={() => {
-              onImageLibrary(setImagePath);
-              closeSheet();
-            }}
-          />
-        </BottomSheetView>
-      </BottomSheet>
       <LoadingModal visible={isLoading} />
     </View>
   );
@@ -324,7 +284,7 @@ const styles = StyleSheet.create({
     width: 97,
     height: 95,
   },
-  boximg:{
+  boximg: {
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: appColor.subText,

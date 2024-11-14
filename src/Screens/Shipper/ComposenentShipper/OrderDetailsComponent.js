@@ -21,9 +21,10 @@ import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
-import {formatCurrency} from './FormatCurrency';
+
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {CallConfig} from '../../Call/Callconfig';
+import { formatCurrency } from '../../../utils/Validators';
 const OrderDetailsComponent = ({
   Order,
   setAcceptOrder,
@@ -31,6 +32,7 @@ const OrderDetailsComponent = ({
   setAtRestaurant,
   setShopLocation,
   setCustomerLocation,
+  setRouteToCustomer,
 }) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
@@ -125,9 +127,9 @@ const OrderDetailsComponent = ({
       setTitle('Hoàn tất đơn hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
-      setShopLocation([-999,-999])
-      setCustomerLocation([-999,-999]),
-      setTitle('Hoàn thành, Chuẩn bị đóng!');
+      setShopLocation([-999, -999]);
+      setCustomerLocation([-999, -999]), setTitle('Hoàn thành, Chuẩn bị đóng!');
+      setRouteToCustomer(null);
       complete();
       setTimeout(() => {
         sheetRef.current.close();

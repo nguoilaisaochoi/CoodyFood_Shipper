@@ -128,12 +128,13 @@ const HomeScreen = ({navigation}) => {
     });
   }, []);
 
-    //thay đổi chỉ dẫn map khi shipper đã tới nhà hàng
+  //thay đổi chỉ dẫn map khi shipper đã tới nhà hàng
   useEffect(() => {
     if (acceptorder) {
       getDirections();
+      console.log(customerLocation);
     }
-  }, [acceptorder,atRestaurant]);
+  }, [acceptorder, atRestaurant, customerLocation]);
 
   //nếu chưa xác thực sẽ chuyển sang màn hình xác thực
   useEffect(() => {
@@ -185,10 +186,6 @@ const HomeScreen = ({navigation}) => {
         />
       )}
       {/*để tạm-sau này thay thế bằng maps */}
-      {/* <Image
-        style={styles.img}
-        source={require('../../assets/images/shipper/map.png')}
-      /> */}
       <MapboxGL.MapView
         style={styles.img}
         projection="globe" // Phép chiếu được sử dụng khi hiển thị bản đồ
@@ -303,6 +300,7 @@ const HomeScreen = ({navigation}) => {
           setAtRestaurant={setAtRestaurant}
           setShopLocation={setShopLocation}
           setCustomerLocation={setCustomerLocation}
+          setRouteToCustomer={setRouteToCustomer}
         />
       )}
       <LoadingModal visible={isLoading} />

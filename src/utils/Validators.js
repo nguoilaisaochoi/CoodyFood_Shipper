@@ -11,3 +11,11 @@ export const validatePhone = (phone) => {
     const phoneRegex = /^0\d{9,}$/
     return phoneRegex.test(phone)
 }
+
+//chuyển số sang dạng tiền
+export const formatCurrency = amount => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
