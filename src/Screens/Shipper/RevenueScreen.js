@@ -9,7 +9,7 @@ import TextComponent from '../../components/TextComponent';
 import Info4txtComponent from './ComposenentShipper/Info4txtComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
-import {formatCurrency} from './ComposenentShipper/FormatCurrency';
+import {formatCurrency} from '../../utils/Validators';
 
 const RevenueScreen = () => {
   const [value, setValue] = useState(date[0].value);
