@@ -17,12 +17,10 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useDispatch, useSelector} from 'react-redux';
-import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import {uploadImageToCloudinary} from './ComposenentShipper/UploadImage';
-import {onImageLibrary, onOpenCamera} from './ComposenentShipper/ImagePicker';
 import SelectImage from './ComposenentShipper/SelectImage';
 
 const ProfileScreen = () => {
@@ -57,7 +55,7 @@ const ProfileScreen = () => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
   //cập nhật shipper lên api
-  const update = async () => {
+  const update = () => {
     const body = {
       name: name,
       phone: phone,
@@ -67,7 +65,7 @@ const ProfileScreen = () => {
       vehiclePlate: vehiclePlate,
       gender: gender == 'Nam' ? 'male' : 'female',
       status: 'active',
-      image: await uploadImageToCloudinary(imagePath),
+      image: avatar,
     };
     dispath(UpdateShipper({id: user._id, data: body}));
   };
