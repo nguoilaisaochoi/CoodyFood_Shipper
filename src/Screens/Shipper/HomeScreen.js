@@ -119,7 +119,7 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  //quyền
+  //check quyen
   useEffect(() => {
     requestLocationPermission().then(hasPermission => {
       if (hasPermission) {
@@ -132,7 +132,6 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     if (acceptorder) {
       getDirections();
-      console.log(customerLocation);
     }
   }, [acceptorder, atRestaurant, customerLocation]);
 
@@ -146,6 +145,7 @@ const HomeScreen = ({navigation}) => {
     }
   }, [getStatus]);
 
+  //sau khi thong tin shipper day du
   useEffect(() => {
     //lay thông tin shipper
     dispath(GetShipper(user._id));
@@ -196,7 +196,8 @@ const HomeScreen = ({navigation}) => {
             coordinate={shipperLocation}
           />
         )}
-        {shopLocation != '-999' && (
+
+        {shopLocation != -999 && (
           <MapboxGL.PointAnnotation
             id="restaurantLocation"
             coordinate={shopLocation}
@@ -208,13 +209,13 @@ const HomeScreen = ({navigation}) => {
             />
           </MapboxGL.PointAnnotation>
         )}
-        {customerLocation != '-999' && (
+        {customerLocation != -999 && (
           <MapboxGL.PointAnnotation
             id="customerLocation"
             coordinate={customerLocation}
             ref={ref => (this.markerRef = ref)}>
             <Image
-              source={require('../../assets/images/tabBar/home2.png')}
+              source={require('../../assets/images/tabBar/home.png')}
               style={{width: 30, height: 30}}
               onLoad={() => this.markerRef.refresh()}
             />

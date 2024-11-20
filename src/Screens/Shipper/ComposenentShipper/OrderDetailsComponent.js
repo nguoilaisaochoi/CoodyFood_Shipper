@@ -24,7 +24,7 @@ import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {CallConfig} from '../../Call/Callconfig';
-import { formatCurrency } from '../../../utils/Validators';
+import {formatCurrency} from '../../../utils/Validators';
 const OrderDetailsComponent = ({
   Order,
   setAcceptOrder,
@@ -64,6 +64,7 @@ const OrderDetailsComponent = ({
     const socketInstance = getSocket();
     //unactive shipper
     setGetjob(false);
+    setAtRestaurant(false);
     // Tham gia room
     socketInstance.emit('join_room', Order._id);
     // Lắng nghe socket
@@ -114,11 +115,11 @@ const OrderDetailsComponent = ({
     if (!status.item1) {
       setStatus({...status, item1: true});
       setTitle('Đã lấy món ăn');
-      setAtRestaurant(true);
     } else if (!status.item2) {
       if (imagePath) {
         setStatus({...status, item2: true});
         setTitle('Đã đến nơi giao');
+        setAtRestaurant(true);
       } else {
         Alert.alert('Thông báo', 'Bạn cần phải chụp hình');
       }
@@ -128,7 +129,8 @@ const OrderDetailsComponent = ({
     } else if (!status.item4) {
       setStatus({...status, item4: true});
       setShopLocation([-999, -999]);
-      setCustomerLocation([-999, -999]), setTitle('Hoàn thành, Chuẩn bị đóng!');
+      setCustomerLocation([-999, -999]);
+      setTitle('Hoàn thành, Chuẩn bị đóng!');
       setRouteToCustomer(null);
       complete();
       setTimeout(() => {
@@ -141,11 +143,6 @@ const OrderDetailsComponent = ({
         setStatus({item1: false, item2: false, item3: false, item4: false});
       }, 2200);
     }
-  };
-
-  //navigate
-  const gotoscreen = screen => {
-    navigation.navigate(screen);
   };
 
   //render item
