@@ -20,7 +20,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
-import {uploadImageToCloudinary} from './ComposenentShipper/UploadImage';
 import SelectImage from './ComposenentShipper/SelectImage';
 
 const ProfileScreen = () => {
@@ -77,7 +76,7 @@ const ProfileScreen = () => {
     !phone ||
     !email ||
     !vehicleBrand ||
-    !vehiclePlate ||
+    vehiclePlate.length < 14 ||
     checkemail ||
     checkphone
       ? setCorrect(false)
@@ -219,9 +218,16 @@ const ProfileScreen = () => {
         />
         <TextInputComponent
           text={'BIỂN SỐ XE'}
-          onChangeText={text => setvehiclePlate(text)}
+          onChangeText={text => setvehiclePlate(text.toUpperCase())}
           value={vehiclePlate}
-          error={vehiclePlate ? null : 'Đây là thông tin bắt buộc'}
+          mask={'99 - AA 999.99'}
+          error={
+            vehiclePlate
+              ? vehiclePlate.length == 14
+                ? null
+                : 'Hãy điền đầy đủ thông tin'
+              : 'Hãy điền đầy đủ thông tin'
+          }
         />
         <View style={styles.footer}>
           <ButtonComponent
