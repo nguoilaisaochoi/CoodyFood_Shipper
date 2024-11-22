@@ -271,6 +271,7 @@ const OrderDetailsComponent = ({
             fontFamily={fontFamilies.bold}
             color={appColor.primary}
           />
+          <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} />
           <Info4txt
             text={'Giá tiền lấy đồ'}
             price={formatCurrency(Order.totalPrice)}
@@ -281,7 +282,11 @@ const OrderDetailsComponent = ({
           />
           <Info4txt
             text={'Thu tiền khách hàng'}
-            price={formatCurrency(Order.totalPrice)}
+            price={
+              Order.paymentMethod == 'Tiền mặt'
+                ? formatCurrency(Order.totalPrice)
+                : 0
+            }
           />
           <Info4txt
             text={'Thu nhập'}

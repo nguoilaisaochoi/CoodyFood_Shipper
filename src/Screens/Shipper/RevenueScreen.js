@@ -35,8 +35,8 @@ const RevenueScreen = () => {
     }
   }, [getRevenueStatus]);
 
-  const renderItem = ({item}) => {
-    const {paymentMethod, gap, shippingfee, orderDate, user, shopOwner} = item;
+  //ngay : (gio)
+  const formattedDate = orderDate => {
     const date = new Date(orderDate);
     const timeString = date.toLocaleTimeString('vi-VN', {
       hour: 'numeric',
@@ -44,16 +44,35 @@ const RevenueScreen = () => {
       hour12: false,
     });
     const dateString = date.toLocaleDateString();
-    const formattedDate = `${dateString}, (${timeString}) `;
+    return `${dateString}, (${timeString}) `;
+  };
+  
+  //neu ten shop qua dai
+  const formatnameshop = name => {
+    return name.length  > 14 ? `${name.slice(0, 14)}...` : name;
+  };
+  //
+  const renderItem = ({item}) => {
+    const {
+      paymentMethod,
+      gap,
+      shippingfee,
+      orderDate,
+      user,
+      shopOwner,
+      status,
+    } = item;
     return (
       <View style={[styles.boxed, {justifyContent: 'center', margin: '3.7%'}]}>
         <View style={{paddingLeft: '2%'}}>
           <Info4txtComponent
-            text={formattedDate}
+            text={formattedDate(orderDate)}
             color1={appColor.subText}
             color2={appColor.primary}
             fontsize={14}
-            price={'Thành công'}
+            price={
+              status == 'Đơn hàng đã được giao hoàn tất' ? 'Thành công' : status
+            }
             fontFamily2={fontFamilies.semiBold}
           />
         </View>
@@ -66,7 +85,7 @@ const RevenueScreen = () => {
         />
         <Info4txtComponent
           text={' Nhà hàng'}
-          price={shopOwner.name}
+          price={formatnameshop(shopOwner?.name ?? 'Không')}
           fontsize={20}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
