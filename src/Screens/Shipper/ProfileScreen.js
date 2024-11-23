@@ -43,7 +43,6 @@ const ProfileScreen = () => {
   const [correct, setCorrect] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isclick, setisClick] = useState(false);
-  const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
   const dispath = useDispatch();
   //check phone
   const checkPhone = data => {
@@ -53,6 +52,7 @@ const ProfileScreen = () => {
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
+  
   //cập nhật shipper lên api
   const update = () => {
     const body = {
@@ -62,7 +62,7 @@ const ProfileScreen = () => {
       birthDate: new Date(birthDate),
       vehicleBrand: vehicleBrand,
       vehiclePlate: vehiclePlate,
-      gender: gender == 'Nam' ? 'male' : 'female',
+      gender: gender,
       status: 'active',
       image: avatar,
     };
@@ -336,6 +336,6 @@ const styles = StyleSheet.create({
 });
 //data cho dropdown
 const data = [
-  {label: 'Nam', value: 'Nam'},
-  {label: 'Nữ', value: 'Nữ'},
+  {label: 'Nam', value: 'male'},
+  {label: 'Nữ', value: 'female'},
 ];

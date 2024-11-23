@@ -97,6 +97,7 @@ const OrderDetailsComponent = ({
       console.error('Failed to clear message list:', error);
     }
   };
+  
   //khi hoàn thành đơn
   const complete = () => {
     clearMessageList();

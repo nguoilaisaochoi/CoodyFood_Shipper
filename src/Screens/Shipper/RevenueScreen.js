@@ -12,26 +12,37 @@ import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from '../../utils/Validators';
 
 const RevenueScreen = () => {
-  const [value, setValue] = useState(date[0].value);
-  const [Data, setData] = useState(data);
-  const dispath = useDispatch();
   const {user} = useSelector(state => state.login);
   const {getRevenueStatus, getRevenueData} = useSelector(
     state => state.shipper,
   );
-  useEffect(() => {
+  const [value, setValue] = useState(date[0].value);
+  const [Data, setData] = useState(data);
+  const dispath = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
+  //call api
+  const fetchRevenue = () => {
+    setRefreshing(true);
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1);
     const day = String(currentDate.getDate());
-
     const formattedDate = `${year}/${month}/${day}`;
     dispath(GetRevenue({id: user._id, data: formattedDate, date: value}));
-  }, [value]);
+  };
 
   useEffect(() => {
-    if (getRevenueStatus == 'succeeded') {
+    fetchRevenue();
+  }, [value]);
+
+  //status get rev
+  useEffect(() => {
+    if (getRevenueStatus === 'succeeded') {
       setData(getRevenueData);
+    }
+    if (refreshing) {
+      setRefreshing(false); // Kết thúc làm mới
     }
   }, [getRevenueStatus]);
 
@@ -46,10 +57,10 @@ const RevenueScreen = () => {
     const dateString = date.toLocaleDateString();
     return `${dateString}, (${timeString}) `;
   };
-  
+
   //neu ten shop qua dai
   const formatnameshop = name => {
-    return name.length  > 14 ? `${name.slice(0, 14)}...` : name;
+    return name.length > 14 ? `${name.slice(0, 14)}...` : name;
   };
   //
   const renderItem = ({item}) => {
@@ -201,6 +212,8 @@ const RevenueScreen = () => {
           renderItem={renderItem}
           keyExtractor={item => item._id}
           contentContainerStyle={styles.faltlist}
+          refreshing={refreshing} // Trạng thái làm mới
+          onRefresh={fetchRevenue} // Hàm gọi lại để làm mới
         />
       ) : (
         <View style={styles.nondelivery}>
