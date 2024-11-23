@@ -57,11 +57,6 @@ const RevenueScreen = () => {
     const dateString = date.toLocaleDateString();
     return `${dateString}, (${timeString}) `;
   };
-
-  //neu ten shop qua dai
-  const formatnameshop = name => {
-    return name.length > 14 ? `${name.slice(0, 14)}...` : name;
-  };
   //
   const renderItem = ({item}) => {
     const {
@@ -96,7 +91,7 @@ const RevenueScreen = () => {
         />
         <Info4txtComponent
           text={' Nhà hàng'}
-          price={formatnameshop(shopOwner?.name ?? 'Không')}
+          price={shopOwner?.name ?? 'Không'}
           fontsize={20}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}

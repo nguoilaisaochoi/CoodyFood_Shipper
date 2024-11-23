@@ -1,6 +1,6 @@
 import {View, Modal, StyleSheet, Image} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import Textcompose from './TextComponent';
+
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {appColor} from '../../../constants/appColor';
 import BtnComponent from './BtnComponent';
@@ -8,6 +8,7 @@ import CountDownTimer from 'react-native-countdown-timer-hooks';
 import {getSocket} from '../../../socket/socket';
 import {useSelector} from 'react-redux';
 import { formatCurrency } from '../../../utils/Validators';
+import TextComponent from '../../../components/TextComponent';
 
 
 const ModalviewComponent = ({
@@ -47,10 +48,10 @@ const ModalviewComponent = ({
       <View style={[styles.modal]}>
         <View style={styles.detail}>
           <View style={styles.titletime}>
-            <Textcompose
+            <TextComponent
               text={'Đơn Hàng Mới'}
               fontsize={24}
-              fontfamily={fontFamilies.bold}
+              fontFamily={fontFamilies.bold}
               color={appColor.primary}
             />
             <CountDownTimer
@@ -68,12 +69,12 @@ const ModalviewComponent = ({
             />
           </View>
           <View style={styles.address}>
-            <Textcompose
+            <TextComponent
               text={'Cửa hàng: ' + Order.shopOwner.name}
               fontsize={16}
               color={appColor.subText}
             />
-            <Textcompose
+            <TextComponent
               text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
             />
@@ -81,30 +82,30 @@ const ModalviewComponent = ({
               style={styles.down}
               source={require('../../../assets/images/shipper/down.png')}
             />
-            <Textcompose
+            <TextComponent
               text={'Giao đến: ' + Order.shippingAddress.recipientName}
               fontsize={16}
               color={appColor.subText}
             />
-            <Textcompose
+            <TextComponent
               text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
             />
           </View>
           <View style={styles.title2}>
-            <Textcompose text={'Quảng đường ước tính:'} />
-            <Textcompose
+            <TextComponent text={'Quảng đường ước tính:'} />
+            <TextComponent
               text={'?' + ' Km'}
               fontsize={14}
-              fontfamily={fontFamilies.bold}
+              fontFamily={fontFamilies.bold}
             />
           </View>
           <View style={styles.title2}>
-            <Textcompose text={'Thu nhập từ đơn này:'} />
-            <Textcompose
+            <TextComponent text={'Thu nhập từ đơn này:'} />
+            <TextComponent
               text={formatCurrency(Order.shippingfee)}
               fontsize={20}
-              fontfamily={fontFamilies.bold}
+              fontFamily={fontFamilies.bold}
               color={appColor.primary}
             />
           </View>
@@ -136,10 +137,10 @@ const ModalviewComponent = ({
         <Modal animationType="fade" transparent={true} visible={cancelVisible}>
           <View style={styles.modal}>
             <View style={styles.detailcanel}>
-              <Textcompose
+              <TextComponent
                 text={'Xác nhận từ chối đơn hàng'}
                 fontsize={23}
-                fontfamily={fontFamilies.bold}
+                fontFamily={fontFamilies.bold}
                 styles={{textAlign: 'center'}}
               />
               <View style={styles.twobtn}>

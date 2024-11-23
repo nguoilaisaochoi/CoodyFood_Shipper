@@ -7,7 +7,7 @@ const TextComponent = ({ text, color, fontsize, fontFamily, styles, textAlign, n
     return (
         <Text style={[{
             color: color ?? appColor.text,
-            fontSize: fontsize ?? 16,
+            fontSize: fontsize ?? 14,
             fontFamily: fontFamily ?? fontFamilies.medium,
             textAlign: textAlign ?? 'left',
             width: width ?? 'auto'

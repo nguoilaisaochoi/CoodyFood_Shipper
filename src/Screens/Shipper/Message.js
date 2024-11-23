@@ -10,10 +10,11 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {appColor} from '../../constants/appColor';
 import HeaderComponent from '../../components/HeaderComponent';
-import TextComponent from './ComposenentShipper/TextComponent';
+
 import {getSocket} from '../../socket/socket';
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TextComponent from '../../components/TextComponent';
 
 const Message = ({route}) => {
   const {item} = route.params;

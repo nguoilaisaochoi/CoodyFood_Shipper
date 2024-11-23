@@ -8,7 +8,8 @@ import {logout} from '../../Redux/Reducers/LoginSlice';
 import LoadingModal from '../../modal/LoadingModal';
 import {ChangePassword} from '../../Redux/Reducers/ShipperReducer';
 import PassInputComponent from './ComposenentShipper/PassInputComponent';
-import TextComponent from './ComposenentShipper/TextComponent';
+import TextComponent from '../../components/TextComponent';
+
 
 const ChangePassScreen = () => {
   const {user} = useSelector(state => state.login); //thông tin khi đăng nhập

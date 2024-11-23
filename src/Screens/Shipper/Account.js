@@ -6,9 +6,10 @@ import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../Redux/Reducers/LoginSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
-import TextComponent from './ComposenentShipper/TextComponent';
+
 import {fontFamilies} from '../../constants/fontFamilies';
-import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+import TextComponent from '../../components/TextComponent';
+
 
 const Account = () => {
   const navigation = useNavigation();
@@ -43,14 +44,14 @@ const Account = () => {
             text={'Xin chào '}
             fontsize={23}
             color={appColor.white}
-            fontfamily={fontFamilies.semiBold}
+            fontFamily={fontFamilies.semiBold}
             styles={{opacity: 0.9}}
           />
           <TextComponent
             text={getData.name}
             fontsize={23}
             color={appColor.white}
-            fontfamily={fontFamilies.bold}
+            fontFamily={fontFamilies.bold}
           />
         </View>
         <View style={styles.imgitem}>
