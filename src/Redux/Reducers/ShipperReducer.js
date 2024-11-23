@@ -11,12 +11,26 @@ export const GetShipper = createAsyncThunk('get', async id => {
   return response.data;
 });
 
-export const GetRevenue = createAsyncThunk('revenue', async ({id, data,date}) => {
-  const response = await AxiosInstance().get(
-    `shipper/${id}/revenue/?date=${data}&filter=${date}`,
-  );
-  return response.data;
-});
+export const GetRevenue = createAsyncThunk(
+  'revenue',
+  async ({id, data, date}) => {
+    const response = await AxiosInstance().get(
+      `shipper/${id}/revenue/?date=${data}&filter=${date}`,
+    );
+    return response.data;
+  },
+);
+
+export const ChangePassword = createAsyncThunk(
+  'changePassword',
+  async ({data}) => {
+    const response = await AxiosInstance().post(
+      `shipper/change-password`,
+      data,
+    );
+    return response.data;
+  },
+);
 
 export const ShipperSlice = createSlice({
   name: 'shipper',
@@ -29,6 +43,8 @@ export const ShipperSlice = createSlice({
     getRevenueStatus: 'idle',
     unActiveStatus: 'idle',
     ActiveStatus: 'idle',
+    ChangePasswordData: {},
+    ChangePasswordStatus: 'ide',
   },
   reducers: {},
   extraReducers: builder => {
@@ -68,6 +84,18 @@ export const ShipperSlice = createSlice({
       .addCase(GetRevenue.rejected, (state, action) => {
         state.getRevenueStatus = 'failed';
         console.error('K lấy đc doanh thu: ' + action.error.message);
+      })
+      //thay đổi mk
+      .addCase(ChangePassword.pending, (state, action) => {
+        state.ChangePasswordStatus = 'loading';
+      })
+      .addCase(ChangePassword.fulfilled, (state, action) => {
+        state.ChangePasswordStatus = 'succeeded';
+        state.ChangePasswordData = action.payload;
+      })
+      .addCase(ChangePassword.rejected, (state, action) => {
+        state.ChangePasswordStatus = 'failed';
+        console.error('Lỗi doi mk: ' + action.error.message);
       });
   },
 });

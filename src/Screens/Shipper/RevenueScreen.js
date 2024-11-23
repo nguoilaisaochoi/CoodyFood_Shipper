@@ -12,31 +12,42 @@ import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from '../../utils/Validators';
 
 const RevenueScreen = () => {
-  const [value, setValue] = useState(date[0].value);
-  const [Data, setData] = useState(data);
-  const dispath = useDispatch();
   const {user} = useSelector(state => state.login);
   const {getRevenueStatus, getRevenueData} = useSelector(
     state => state.shipper,
   );
-  useEffect(() => {
+  const [value, setValue] = useState(date[0].value);
+  const [Data, setData] = useState(data);
+  const dispath = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
+  //call api
+  const fetchRevenue = () => {
+    setRefreshing(true);
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1);
     const day = String(currentDate.getDate());
-
     const formattedDate = `${year}/${month}/${day}`;
     dispath(GetRevenue({id: user._id, data: formattedDate, date: value}));
-  }, [value]);
+  };
 
   useEffect(() => {
-    if (getRevenueStatus == 'succeeded') {
+    fetchRevenue();
+  }, [value]);
+
+  //status get rev
+  useEffect(() => {
+    if (getRevenueStatus === 'succeeded') {
       setData(getRevenueData);
+    }
+    if (refreshing) {
+      setRefreshing(false); // Kết thúc làm mới
     }
   }, [getRevenueStatus]);
 
-  const renderItem = ({item}) => {
-    const {paymentMethod, gap, shippingfee, orderDate, user, shopOwner} = item;
+  //ngay : (gio)
+  const formattedDate = orderDate => {
     const date = new Date(orderDate);
     const timeString = date.toLocaleTimeString('vi-VN', {
       hour: 'numeric',
@@ -44,16 +55,35 @@ const RevenueScreen = () => {
       hour12: false,
     });
     const dateString = date.toLocaleDateString();
-    const formattedDate = `${dateString}, (${timeString}) `;
+    return `${dateString}, (${timeString}) `;
+  };
+
+  //neu ten shop qua dai
+  const formatnameshop = name => {
+    return name.length > 14 ? `${name.slice(0, 14)}...` : name;
+  };
+  //
+  const renderItem = ({item}) => {
+    const {
+      paymentMethod,
+      gap,
+      shippingfee,
+      orderDate,
+      user,
+      shopOwner,
+      status,
+    } = item;
     return (
       <View style={[styles.boxed, {justifyContent: 'center', margin: '3.7%'}]}>
         <View style={{paddingLeft: '2%'}}>
           <Info4txtComponent
-            text={formattedDate}
+            text={formattedDate(orderDate)}
             color1={appColor.subText}
             color2={appColor.primary}
             fontsize={14}
-            price={'Thành công'}
+            price={
+              status == 'Đơn hàng đã được giao hoàn tất' ? 'Thành công' : status
+            }
             fontFamily2={fontFamilies.semiBold}
           />
         </View>
@@ -66,7 +96,7 @@ const RevenueScreen = () => {
         />
         <Info4txtComponent
           text={' Nhà hàng'}
-          price={shopOwner.name}
+          price={formatnameshop(shopOwner?.name ?? 'Không')}
           fontsize={20}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
@@ -182,6 +212,8 @@ const RevenueScreen = () => {
           renderItem={renderItem}
           keyExtractor={item => item._id}
           contentContainerStyle={styles.faltlist}
+          refreshing={refreshing} // Trạng thái làm mới
+          onRefresh={fetchRevenue} // Hàm gọi lại để làm mới
         />
       ) : (
         <View style={styles.nondelivery}>

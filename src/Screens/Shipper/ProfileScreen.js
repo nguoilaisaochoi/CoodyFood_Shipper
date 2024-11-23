@@ -20,7 +20,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
-import {uploadImageToCloudinary} from './ComposenentShipper/UploadImage';
 import SelectImage from './ComposenentShipper/SelectImage';
 
 const ProfileScreen = () => {
@@ -44,7 +43,6 @@ const ProfileScreen = () => {
   const [correct, setCorrect] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isclick, setisClick] = useState(false);
-  const sheetRef = useRef(null); //lưu giá trị mà không cần phải rerender lại khi giá trị thay đổi
   const dispath = useDispatch();
   //check phone
   const checkPhone = data => {
@@ -54,6 +52,7 @@ const ProfileScreen = () => {
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
+  
   //cập nhật shipper lên api
   const update = () => {
     const body = {
@@ -63,7 +62,7 @@ const ProfileScreen = () => {
       birthDate: new Date(birthDate),
       vehicleBrand: vehicleBrand,
       vehiclePlate: vehiclePlate,
-      gender: gender == 'Nam' ? 'male' : 'female',
+      gender: gender,
       status: 'active',
       image: avatar,
     };
@@ -77,7 +76,7 @@ const ProfileScreen = () => {
     !phone ||
     !email ||
     !vehicleBrand ||
-    !vehiclePlate ||
+    vehiclePlate.length < 14 ||
     checkemail ||
     checkphone
       ? setCorrect(false)
@@ -219,9 +218,16 @@ const ProfileScreen = () => {
         />
         <TextInputComponent
           text={'BIỂN SỐ XE'}
-          onChangeText={text => setvehiclePlate(text)}
+          onChangeText={text => setvehiclePlate(text.toUpperCase())}
           value={vehiclePlate}
-          error={vehiclePlate ? null : 'Đây là thông tin bắt buộc'}
+          mask={'99 - AA 999.99'}
+          error={
+            vehiclePlate
+              ? vehiclePlate.length == 14
+                ? null
+                : 'Hãy điền đầy đủ thông tin'
+              : 'Hãy điền đầy đủ thông tin'
+          }
         />
         <View style={styles.footer}>
           <ButtonComponent
@@ -330,6 +336,6 @@ const styles = StyleSheet.create({
 });
 //data cho dropdown
 const data = [
-  {label: 'Nam', value: 'Nam'},
-  {label: 'Nữ', value: 'Nữ'},
+  {label: 'Nam', value: 'male'},
+  {label: 'Nữ', value: 'female'},
 ];

@@ -2,6 +2,16 @@ import {View, Text, StyleSheet, TextInput} from 'react-native';
 import React from 'react';
 import {appColor} from '../../../constants/appColor';
 import TextComponent from '../../../components/TextComponent';
+import {TextInputMask} from 'react-native-masked-text';
+
+/*MASK*
+ * mask: (String | required | default '')
+ * the mask pattern
+ * 9 - accept digit.
+ * A - accept alpha.
+ * S - accept alphanumeric.
+ * * - accept all, EXCEPT white space.
+ */
 
 const TextInputComponent = ({
   text,
@@ -9,19 +19,38 @@ const TextInputComponent = ({
   value,
   onChangeText,
   error,
+  mask,
 }) => {
   return (
     <View>
-      <TextComponent text={text} color={error ? appColor.primary : appColor.text} />
-      <TextInput
-        style={[
-          styles.textinput,
-          {borderColor: error ? appColor.primary : appColor.input},
-        ]}
-        value={value}
-        placeholder={placeholder}
-        onChangeText={onChangeText}
+      <TextComponent
+        text={text}
+        color={error ? appColor.primary : appColor.text}
       />
+      {mask ? (
+        <TextInputMask
+          type={'custom'}
+          options={{
+            mask: mask,
+          }}
+          value={value}
+          onChangeText={onChangeText}
+          style={[
+            styles.textinput,
+            {borderColor: error ? appColor.primary : appColor.input},
+          ]}
+        />
+      ) : (
+        <TextInput
+          style={[
+            styles.textinput,
+            {borderColor: error ? appColor.primary : appColor.input},
+          ]}
+          value={value}
+          placeholder={placeholder}
+          onChangeText={onChangeText}
+        />
+      )}
       {error && (
         <TextComponent
           text={error}
