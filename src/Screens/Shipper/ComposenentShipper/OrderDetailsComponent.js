@@ -96,7 +96,7 @@ const OrderDetailsComponent = ({
       console.error('Failed to clear message list:', error);
     }
   };
-  
+
   //khi hoàn thành đơn
   const complete = () => {
     clearMessageList();
@@ -241,10 +241,10 @@ const OrderDetailsComponent = ({
           />
           {/*thông tin bên phải các vòng tròn*/}
           <View style={styles.statusship}>
-            <TextComponent text={'Bạn đã đến nhà hàng'} />
-            <TextComponent text={'Bạn đã lấy món ăn'} />
-            <TextComponent text={'Bạn đã đến nơi giao'} />
-            <TextComponent text={'Bạn đã giao hàng'} />
+            <TextComponent text={'Bạn đã đến nhà hàng'} fontsize={15} />
+            <TextComponent text={'Bạn đã lấy món ăn'} fontsize={15} />
+            <TextComponent text={'Bạn đã đến nơi giao'} fontsize={15} />
+            <TextComponent text={'Bạn đã giao hàng'} fontsize={15} />
           </View>
           {/*các vòng tròn check gồm start(bắt đầu) và check(đã thực hiện hay chưa)*/}
           <View style={styles.check}>
@@ -395,7 +395,7 @@ export default OrderDetailsComponent;
 const styles = StyleSheet.create({
   info1: {
     width: '86%',
-    minHeight: 123,
+    minHeight: 100,
     maxHeight: 143,
     backgroundColor: appColor.white,
     elevation: 10,
@@ -415,7 +415,6 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '90%',
   },
-
   img: {
     width: 86,
     aspectRatio: 1,
@@ -438,6 +437,7 @@ const styles = StyleSheet.create({
   },
   info4: {
     margin: '6%',
+    gap: 5,
   },
   bodership: {
     width: '7.7%',
