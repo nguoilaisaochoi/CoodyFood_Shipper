@@ -7,9 +7,8 @@ import BtnComponent from './BtnComponent';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
 import {getSocket} from '../../../socket/socket';
 import {useSelector} from 'react-redux';
-import { formatCurrency } from '../../../utils/Validators';
+import {formatCurrency} from '../../../utils/Validators';
 import TextComponent from '../../../components/TextComponent';
-
 
 const ModalviewComponent = ({
   setModalVisible,
@@ -244,6 +243,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: '2%',
   },
   twobtn: {
     flexDirection: 'row',
