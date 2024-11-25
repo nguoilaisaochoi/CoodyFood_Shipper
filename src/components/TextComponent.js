@@ -10,8 +10,7 @@ const TextComponent = ({ text, color, fontsize, fontFamily, styles, textAlign, n
             fontSize: fontsize ?? 14,
             fontFamily: fontFamily ?? fontFamilies.medium,
             textAlign: textAlign ?? 'left',
-            width: width ?? 'auto'
-
+            width: width ?? 'auto',
         }, styles]}
             numberOfLines={numberOfLines}
             ellipsizeMode={ellipsizeMode}

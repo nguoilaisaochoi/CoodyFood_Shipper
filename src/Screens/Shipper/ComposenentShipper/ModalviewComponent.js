@@ -1,4 +1,4 @@
-import {View, Modal, StyleSheet, Image} from 'react-native';
+import {View, Modal, StyleSheet, Image, ToastAndroid} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 
 import {fontFamilies} from '../../../constants/fontFamilies';
@@ -36,6 +36,15 @@ const ModalviewComponent = ({
     ]);
   };
 
+  useEffect(() => {
+    const socketInstance = getSocket();
+    socketInstance.on('order_cancelled', data => {
+      if (Order._id == data.orderId) {
+        ToastAndroid.show('Đơn khách hàng đã huỷ đơn', ToastAndroid.SHORT);
+        setModalVisible(false);
+      }
+    });
+  }, []);
   if (!Order) {
     return null;
   }
@@ -76,6 +85,7 @@ const ModalviewComponent = ({
             <TextComponent
               text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
+              width={'100%'}
             />
             <Image
               style={styles.down}
@@ -89,6 +99,7 @@ const ModalviewComponent = ({
             <TextComponent
               text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
+              width={'100%'}
             />
           </View>
           <View style={styles.title2}>
