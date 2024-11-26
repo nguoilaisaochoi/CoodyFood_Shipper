@@ -22,14 +22,14 @@ import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import SelectImage from './ComposenentShipper/SelectImage';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
   const {updateStatus, getData} = useSelector(state => state.shipper);
   const [name, setName] = useState(getData.name ?? null);
   const [email, setEmail] = useState(getData.email ?? null);
   const [phone, setPhone] = useState(getData.phone ?? null);
   const [birthDate, setbirthDate] = useState(getData.birthDate ?? null);
-  const [gender, setGender] = useState(getData.gender == 'male' ? 'Nam' : 'Nữ');
+  const [gender, setGender] = useState(getData.gender);
   const [imagePath, setImagePath] = useState(null);
   const [avatar, setAvatar] = useState(getData.image[0] ?? null);
   const [vehicleBrand, setvehicleBrand] = useState(
@@ -52,7 +52,7 @@ const ProfileScreen = () => {
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không hợp lệ';
   };
-  
+
   //cập nhật shipper lên api
   const update = () => {
     const body = {
@@ -66,6 +66,7 @@ const ProfileScreen = () => {
       status: 'active',
       image: avatar,
     };
+    console.log(body);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
   //quản lí state correct
@@ -90,6 +91,9 @@ const ProfileScreen = () => {
       setIsLoading(false);
       dispath(GetShipper(user._id));
       setisClick(false);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 200);
     } else if (updateStatus == 'failed' && isclick) {
       ToastAndroid.show('Cập nhật thất bại', ToastAndroid.SHORT);
       setIsLoading(false);
@@ -177,8 +181,8 @@ const ProfileScreen = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={gender}
-          value={gender}
+          placeholder={gender == 'male' ? 'Nam' : 'Nữ'}
+          value={gender == 'male' ? 'Nam' : 'Nữ'}
           onChange={item => {
             setGender(item.value);
           }}

@@ -29,7 +29,6 @@ const HomeScreen = ({navigation}) => {
   const {getStatus, getData} = useSelector(state => state.shipper); //thông tin shipper
   const [modalVisible, setModalVisible] = useState(false); //modal nhận đơn hiện và tắt
   const [acceptorder, setAcceptOrder] = useState(false); //hiện thông tin(dưới dạng bottomsheet) sau khi nhấn "NHẬN ĐƠN"
-  const [verify, setverify] = useState(false); // xác nhận shipper đã điền đầy đủ thông tin
   const [order, setOrder] = useState(null); //order truyền vào các modal
   const [getjob, setGetjob] = useState(true); //quản lí nhận đơn
   const dispath = useDispatch();
@@ -135,34 +134,24 @@ const HomeScreen = ({navigation}) => {
     }
   }, [acceptorder, atRestaurant, customerLocation]);
 
-  //nếu chưa xác thực sẽ chuyển sang màn hình xác thực
-  useEffect(() => {
-    if (getStatus == 'succeeded' && !getData.vehicleBrand) {
-      navigation.replace('VerifyShipper');
-      setGetjob(false);
-    } else if (getData.vehicleBrand) {
-      setverify(true);
-    }
-  }, [getStatus]);
 
-  //sau khi thong tin shipper day du
   useEffect(() => {
     //lay thông tin shipper
     dispath(GetShipper(user._id));
-    if (verify) {
-      //kết nối socket từ file socket.js
-      connectSocket();
-    }
+
+    //kết nối socket từ file socket.js
+    connectSocket();
+
     // Ngắt kết nối socket khi component unmount
     return () => {
       disconnectSocket();
     };
-  }, [verify]);
+  }, []);
 
   //đợi đơn cho shipper đã xác thực
   useEffect(() => {
     const socketInstance = getSocket();
-    if (verify && getjob) {
+    if (getjob) {
       socketInstance.on('order_confirmed', dataGot => {
         setOrder(dataGot.order), setModalVisible(true);
       });
@@ -172,7 +161,7 @@ const HomeScreen = ({navigation}) => {
         socketInstance.off('order_confirmed');
       }
     };
-  }, [verify, getjob]);
+  }, [getjob]);
 
   return (
     <View style={{flex: 1}}>

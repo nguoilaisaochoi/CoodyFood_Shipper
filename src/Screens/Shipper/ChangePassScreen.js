@@ -9,14 +9,16 @@ import LoadingModal from '../../modal/LoadingModal';
 import {ChangePassword} from '../../Redux/Reducers/ShipperReducer';
 import PassInputComponent from './ComposenentShipper/PassInputComponent';
 import TextComponent from '../../components/TextComponent';
-
+import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 
 const ChangePassScreen = () => {
   const {user} = useSelector(state => state.login); //thông tin khi đăng nhập
   const {ChangePasswordStatus} = useSelector(state => state.shipper);
   const [oldpass, setOldpass] = useState(null);
   const [newpass, setNewpass] = useState(null);
+  const [repass, setRepass] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [correct, setcorrect] = useState(false);
   const dispatch = useDispatch();
   const changepass = () => {
     const body = {
@@ -37,6 +39,11 @@ const ChangePassScreen = () => {
       setIsLoading(false);
     }
   }, [ChangePasswordStatus]);
+  useEffect(() => {
+    oldpass && newpass && repass && repass == newpass
+      ? setcorrect(true)
+      : setcorrect(false);
+  }, [oldpass,newpass,repass]);
   return (
     <View style={styles.container}>
       <HeaderComponent isback={true} text={'Đổi mật khẩu'} />
@@ -53,6 +60,13 @@ const ChangePassScreen = () => {
           onChangeText={text => setNewpass(text)}
           isPassword={true}
         />
+        <PassInputComponent
+          text={'Xác nhận mật khẩu mới'}
+          value={repass}
+          onChangeText={text => setRepass(text)}
+          isPassword={true}
+          error={repass != newpass ? 'Mật khẩu không khớp' : null}
+        />
         <TextComponent text="* Đổi mật khẩu thành công, tài khoản sẽ đăng xuất" />
       </View>
 
@@ -61,11 +75,12 @@ const ChangePassScreen = () => {
         color={appColor.white}
         height={51}
         onPress={() => {
-          {
+          if (correct) {
             changepass();
             setIsLoading(true);
           }
         }}
+        styles={{opacity: correct ? 1 : 0.5}}
       />
       <LoadingModal visible={isLoading} />
     </View>

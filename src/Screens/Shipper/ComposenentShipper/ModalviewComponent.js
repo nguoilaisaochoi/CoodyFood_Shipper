@@ -105,7 +105,7 @@ const ModalviewComponent = ({
           <View style={styles.title2}>
             <TextComponent text={'Quảng đường ước tính:'} />
             <TextComponent
-              text={'?' + ' Km'}
+              text={Order.distance + ' Km'}
               fontsize={14}
               fontFamily={fontFamilies.bold}
             />
