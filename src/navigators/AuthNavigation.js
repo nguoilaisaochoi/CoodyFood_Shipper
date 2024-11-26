@@ -8,6 +8,7 @@ import VerifyScreen from '../Screens/Auth/VerifyScreen';
 import ResetPasswordScreen from '../Screens/Auth/ResetPasswordScreen';
 import AddPhoneScreen from '../Screens/Auth/AddPhoneScreen';
 import LoginScreen from '../Screens/Auth/LoginScreen';
+import MotorcycleInformation from '../Screens/Shipper/ComposenentShipper/MotorcycleInformation';
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,9 @@ const AuthNavigation = () => {
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="Verify" component={VerifyScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="AddPhone" component={AddPhoneScreen} />
+      <Stack.Screen name="MotoInfo" component={MotorcycleInformation} />
     </Stack.Navigator>
   );
 };

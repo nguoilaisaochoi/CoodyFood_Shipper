@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ContainerComponent from '../../components/ContainerComponent';
 import SpaceComponent from '../../components/SpaceComponent';
@@ -8,21 +15,23 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {appColor} from '../../constants/appColor';
 import InputComponent from '../../components/InputComponent';
 import ButtonComponent from '../../components/ButtonComponent';
-import {appInfor} from '../../constants/appInfor';
 import {globalStyle} from '../../styles/globalStyle';
 import {
   validateEmail,
-  validatePass,
   validatePhone,
 } from '../../utils/Validators';
 import AxiosInstance from '../../helpers/AxiosInstance';
 import LoadingModal from '../../modal/LoadingModal';
 
-const RegisterScreen = ({navigation}) => {
+const RegisterScreen = ({navigation, route}) => {
+  const {Brand, Plate} = route.params || {};
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [vehicleBrand, setvehicleBrand] = useState(null);
+  const [vehiclePlate, setvehiclePlate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [correct, setCorrect] = useState(false);
 
@@ -30,6 +39,7 @@ const RegisterScreen = ({navigation}) => {
     const emailcheck = validateEmail(email);
     const phonecheck = validatePhone(phone);
     const passcheck = checkpass(password);
+    !name ||
     !email ||
     !phone ||
     !rePassword ||
@@ -37,10 +47,23 @@ const RegisterScreen = ({navigation}) => {
     !password ||
     !emailcheck ||
     !phonecheck ||
+    !vehicleBrand ||
+    !vehiclePlate ||
     passcheck
       ? setCorrect(false)
       : setCorrect(true);
-  }, [email, password, phone, rePassword]);
+  }, [email, password, phone, rePassword, vehicleBrand, vehiclePlate, name]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (Brand || Plate) {
+        setvehicleBrand(Brand);
+        setvehiclePlate(Plate);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, Brand, Plate]);
+
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không đúng định dạng';
   };
@@ -60,12 +83,15 @@ const RegisterScreen = ({navigation}) => {
     setIsLoading(true);
     try {
       const response = await AxiosInstance().post('/shipper/add', {
+        name,
         email,
         password,
         phone,
         gender: 'male',
         status: 'inactive',
         birthDate: new Date('2000-01-01'),
+        vehicleBrand,
+        vehiclePlate,
       });
       if (response.status == true) {
         ToastAndroid.show('Thành công', ToastAndroid.SHORT);
@@ -105,7 +131,16 @@ const RegisterScreen = ({navigation}) => {
         fontFamily={fontFamilies.bold}
         color={appColor.subText}
       />
-      <SpaceComponent height={30} />
+      <SpaceComponent height={10} />
+
+      <InputComponent
+        label={'Họ tên'}
+        placeholder={'Nhập tên'}
+        value={name}
+        onChangeText={text => setName(text)}
+        error={name ? null : 'Thiếu thông tin!'}
+      />
+      <SpaceComponent height={10} />
       <InputComponent
         label={'Email'}
         placeholder={'Nhập email'}
@@ -113,7 +148,7 @@ const RegisterScreen = ({navigation}) => {
         onChangeText={text => setEmail(text)}
         error={email ? checkEmail(email) : 'Thiếu thông tin!'}
       />
-      <SpaceComponent height={20} />
+      <SpaceComponent height={10} />
       <InputComponent
         label={'Số điện thoại'}
         placeholder={'Nhập số điện thoại'}
@@ -121,7 +156,7 @@ const RegisterScreen = ({navigation}) => {
         onChangeText={text => setPhone(text)}
         error={phone ? checkPhone(phone) : 'Thiếu thông tin!'}
       />
-      <SpaceComponent height={20} />
+      <SpaceComponent height={10} />
       <InputComponent
         label={'Mật khẩu'}
         placeholder={'Nhập mật khẩu'}
@@ -130,7 +165,7 @@ const RegisterScreen = ({navigation}) => {
         error={password ? checkpass(password) : 'Thiếu thông tin!'}
         isPassword
       />
-      <SpaceComponent height={20} />
+      <SpaceComponent height={10} />
       <InputComponent
         label={'Xác nhận mật khẩu'}
         placeholder={'Nhập lại mật khẩu'}
@@ -142,6 +177,15 @@ const RegisterScreen = ({navigation}) => {
         isPassword
         isRePassword
       />
+      <SpaceComponent height={10} />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('MotoInfo');
+        }}
+        style={styles.input}>
+        <TextComponent text={'Hãng xe: ' + (vehicleBrand ?? 'Trống')} />
+        <TextComponent text={'Biển số xe: ' + (vehiclePlate ?? 'Trống')} />
+      </TouchableOpacity>
       <SpaceComponent height={30} />
       <ButtonComponent
         text={'Tạo tài khoản'}
@@ -166,5 +210,18 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   a: {
     paddingBottom: 50,
+  },
+  input: {
+    marginTop: 10,
+    backgroundColor: appColor.white,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius: 10,
+    padding: 18,
+    height: 58,
+    color: appColor.text,
+    borderColor: appColor.lightgray,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
