@@ -14,7 +14,7 @@ import AxiosInstance from '../../helpers/AxiosInstance'
 import LoadingModal from '../../modal/LoadingModal'
 
 const ForgotPassword = ({ navigation }) => {
-    const [email, setEmail] = useState('nguyenminhkhuong318@gmail.com')
+    const [email, setEmail] = useState(null)
     const [errorEmail, setErrorEmail] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const changeEmail = (text) => {

@@ -9,7 +9,7 @@ import LoadingModal from '../../modal/LoadingModal';
 import {ChangePassword} from '../../Redux/Reducers/ShipperReducer';
 import PassInputComponent from './ComposenentShipper/PassInputComponent';
 import TextComponent from '../../components/TextComponent';
-import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+
 
 const ChangePassScreen = () => {
   const {user} = useSelector(state => state.login); //thông tin khi đăng nhập

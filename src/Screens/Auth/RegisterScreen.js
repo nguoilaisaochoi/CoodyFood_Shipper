@@ -24,7 +24,7 @@ import AxiosInstance from '../../helpers/AxiosInstance';
 import LoadingModal from '../../modal/LoadingModal';
 
 const RegisterScreen = ({navigation, route}) => {
-  const {Brand, Plate} = route.params || {};
+  const {Brand, Plate,userInfo} = route.params || {};
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +34,9 @@ const RegisterScreen = ({navigation, route}) => {
   const [vehiclePlate, setvehiclePlate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [correct, setCorrect] = useState(false);
+  const [avatar,setAvatar]=useState(null)
 
+  console.log(userInfo)
   useEffect(() => {
     const emailcheck = validateEmail(email);
     const phonecheck = validatePhone(phone);
@@ -64,6 +66,13 @@ const RegisterScreen = ({navigation, route}) => {
     return unsubscribe;
   }, [navigation, Brand, Plate]);
 
+  useEffect(()=>{
+    if(userInfo){
+      setEmail(userInfo.email)
+      setName(userInfo.givenName)
+      setAvatar(userInfo.photo)
+    }
+  },[])
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không đúng định dạng';
   };

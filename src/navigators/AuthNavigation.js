@@ -22,6 +22,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="AddPhone" component={AddPhoneScreen} />
       <Stack.Screen name="MotoInfo" component={MotorcycleInformation} />
+      <Stack.Screen name="Verify" component={VerifyScreen} />
     </Stack.Navigator>
   );
 };

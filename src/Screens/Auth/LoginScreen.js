@@ -19,7 +19,7 @@ import AxiosInstance from '../../helpers/AxiosInstance';
 
 GoogleSignin.configure({
   webClientId:
-    '119981390944-barvektsvlrt5ikstm2lh5s6ik2712ko.apps.googleusercontent.com',
+    '579678214190-9acmo8gjkg01kl2epuv0a4bhfvmhgrk7.apps.googleusercontent.com',
 });
 Settings.setAppID('825915416410531');
 
@@ -81,14 +81,14 @@ const LoginScreen = ({navigation}) => {
       const usergg = await GoogleSignin.signIn();
       // console.log('usergg: ', usergg);
       const userInfo = usergg.data.user;
-      // console.log('userInfo: ', userInfo);
+      console.log('userInfo: ', userInfo);
       const response = await AxiosInstance().post('/users/check-user', {
         email: userInfo.email,
       });
       if (response.data == true) {
         dispatch(loginWithSocial({userInfo}));
       } else {
-        navigation.navigate('AddPhone', {userInfo});
+        navigation.navigate('Register', {userInfo});
       }
     } catch (error) {
       console.log(error);
