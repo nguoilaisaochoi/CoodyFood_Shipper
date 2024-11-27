@@ -20,12 +20,15 @@ const TextInputComponent = ({
   onChangeText,
   error,
   mask,
+  editable,
+  opacity,
 }) => {
   return (
     <View>
       <TextComponent
         text={text}
         color={error ? appColor.primary : appColor.text}
+        styles={{opacity:opacity??1}}
       />
       {mask ? (
         <TextInputMask
@@ -34,6 +37,7 @@ const TextInputComponent = ({
             mask: mask,
           }}
           value={value}
+          placeholder={placeholder}
           onChangeText={onChangeText}
           style={[
             styles.textinput,
@@ -44,11 +48,15 @@ const TextInputComponent = ({
         <TextInput
           style={[
             styles.textinput,
-            {borderColor: error ? appColor.primary : appColor.input},
+            {
+              borderColor: error ? appColor.primary : appColor.input,
+              opacity: opacity ?? 1,
+            },
           ]}
           value={value}
           placeholder={placeholder}
           onChangeText={onChangeText}
+          editable={editable}
         />
       )}
       {error && (

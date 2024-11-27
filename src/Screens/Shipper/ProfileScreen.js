@@ -21,6 +21,7 @@ import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import SelectImage from './ComposenentShipper/SelectImage';
+import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 
 const ProfileScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
@@ -161,8 +162,9 @@ const ProfileScreen = ({navigation}) => {
         <TextInputComponent
           text={'EMAIL'}
           value={email}
-          onChangeText={text => setEmail(text)}
           error={email ? checkEmail(email) : 'Đây là thông tin bắt buộc'}
+          editable={false}
+          opacity={0.6}
         />
         <TextInputComponent
           text={'SỐ ĐIỆN THOẠI'}

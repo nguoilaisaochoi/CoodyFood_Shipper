@@ -27,6 +27,7 @@ const MotorcycleInformation = ({navigation}) => {
         />
         <TextInputComponent
           text={'BIỂN SỐ XE'}
+          placeholder={'77-AA 999.99'}
           onChangeText={text => setvehiclePlate(text.toUpperCase())}
           value={vehiclePlate}
           mask={'99 - AA 999.99'}

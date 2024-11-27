@@ -61,7 +61,7 @@ const RevenueScreen = () => {
   const renderItem = ({item}) => {
     const {
       paymentMethod,
-      gap,
+      distance,
       shippingfee,
       orderDate,
       user,
@@ -105,7 +105,7 @@ const RevenueScreen = () => {
         <Info4txtComponent
           text={' Khoảng cách'}
           color1={appColor.subText}
-          price={gap + ' Km'}
+          price={distance + ' Km'}
           fontsize={14}
         />
         <Info4txtComponent

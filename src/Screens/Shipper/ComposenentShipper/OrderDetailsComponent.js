@@ -361,7 +361,6 @@ const OrderDetailsComponent = ({
             <View style={styles.callandmessboder}>
               <ZegoSendCallInvitationButton
                 invitees={[
-                  //{userID: Order.user.phone, userName: Order.user.name},
                   {userID: Order.user.phone, userName: Order.user.name},
                 ]}
                 width={45}

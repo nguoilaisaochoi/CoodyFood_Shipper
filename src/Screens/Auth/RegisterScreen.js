@@ -16,15 +16,16 @@ import {appColor} from '../../constants/appColor';
 import InputComponent from '../../components/InputComponent';
 import ButtonComponent from '../../components/ButtonComponent';
 import {globalStyle} from '../../styles/globalStyle';
-import {
-  validateEmail,
-  validatePhone,
-} from '../../utils/Validators';
+import {validateEmail, validatePhone} from '../../utils/Validators';
 import AxiosInstance from '../../helpers/AxiosInstance';
 import LoadingModal from '../../modal/LoadingModal';
+import {loginWithSocial} from '../../Redux/API/UserAPI';
+import {useDispatch, useSelector} from 'react-redux';
 
 const RegisterScreen = ({navigation, route}) => {
-  const {Brand, Plate,userInfo} = route.params || {};
+  const {Brand, Plate, userInfo} = route.params || {};
+  const {status, error} = useSelector(state => state.login);
+  const [regbtn, setregbtn] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,9 +35,8 @@ const RegisterScreen = ({navigation, route}) => {
   const [vehiclePlate, setvehiclePlate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [correct, setCorrect] = useState(false);
-  const [avatar,setAvatar]=useState(null)
-
-  console.log(userInfo)
+  const [socialinfo, setsocialinfo] = useState(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     const emailcheck = validateEmail(email);
     const phonecheck = validatePhone(phone);
@@ -66,13 +66,14 @@ const RegisterScreen = ({navigation, route}) => {
     return unsubscribe;
   }, [navigation, Brand, Plate]);
 
-  useEffect(()=>{
-    if(userInfo){
-      setEmail(userInfo.email)
-      setName(userInfo.givenName)
-      setAvatar(userInfo.photo)
+  console.log(socialinfo)
+  useEffect(() => {
+    if (userInfo) {
+      setEmail(userInfo.email);
+      setName(userInfo.givenName);
+      setsocialinfo(userInfo)
     }
-  },[])
+  }, []);
   const checkEmail = data => {
     return validateEmail(data) ? null : 'Email không đúng định dạng';
   };
@@ -88,6 +89,13 @@ const RegisterScreen = ({navigation, route}) => {
     return pass == repass ? null : 'Mật khẩu không khớp';
   };
 
+  //quản lí đăng nhập
+  useEffect(() => {
+    if (status == 'success' && regbtn == true) {
+    }
+    console.log(status);
+  }, [status]);
+
   const handleRegister = async () => {
     setIsLoading(true);
     try {
@@ -97,7 +105,6 @@ const RegisterScreen = ({navigation, route}) => {
         password,
         phone,
         gender: 'male',
-        status: 'inactive',
         birthDate: new Date('2000-01-01'),
         vehicleBrand,
         vehiclePlate,
@@ -105,7 +112,12 @@ const RegisterScreen = ({navigation, route}) => {
       if (response.status == true) {
         ToastAndroid.show('Thành công', ToastAndroid.SHORT);
         setIsLoading(false);
-        navigation.navigate('Login');
+
+        // Kiểm tra userInfo và thực hiện hành động tương ứng
+        socialinfo
+          ? dispatch(loginWithSocial({userInfo: socialinfo}))
+          : navigation.navigate('Login');
+
         return response.data;
       } else {
         console.log(error);

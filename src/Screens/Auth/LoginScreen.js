@@ -32,8 +32,7 @@ const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const {user, status, error} = useSelector(state => state.login);
   const [signbtn, setsignbtn] = useState(false);
-  // console.log('status', status);
-  // console.log('isLoading', isLoading);
+
 
   const changeEmail = data => {
     setEmail(data);
@@ -66,7 +65,7 @@ const LoginScreen = ({navigation}) => {
     ) {
       setIsLoading(false);
       setTimeout(() => {
-        Alert.alert('Thông báo', 'Bạn không phải là tài xế của chúng tôi');
+        Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
         setsignbtn(true);
       }, 200);
     }

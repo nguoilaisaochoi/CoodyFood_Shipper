@@ -21,6 +21,7 @@ const ModalviewComponent = ({
   const {getData} = useSelector(state => state.shipper); //thông tin shipper
   const refTimer = useRef();
   //socket
+
   const acceptorders = () => {
     const socketInstance = getSocket();
     socketInstance.emit('confirm_order_shipper_exists', {
@@ -64,7 +65,7 @@ const ModalviewComponent = ({
             />
             <CountDownTimer
               ref={refTimer}
-              timestamp={90}
+              timestamp={900}
               timerCallback={() => {
                 setModalVisible(false);
               }} //gọi funtion khi hết tg
@@ -86,6 +87,7 @@ const ModalviewComponent = ({
               text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
               width={'100%'}
+              styles={{textAlign: 'justify'}}
             />
             <Image
               style={styles.down}
@@ -100,6 +102,7 @@ const ModalviewComponent = ({
               text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
               width={'100%'}
+              styles={{textAlign: 'justify'}}
             />
           </View>
           <View style={styles.title2}>

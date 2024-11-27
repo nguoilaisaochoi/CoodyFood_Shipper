@@ -134,7 +134,6 @@ const HomeScreen = ({navigation}) => {
     }
   }, [acceptorder, atRestaurant, customerLocation]);
 
-
   useEffect(() => {
     //lay thông tin shipper
     dispath(GetShipper(user._id));
