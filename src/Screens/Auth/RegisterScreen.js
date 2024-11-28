@@ -66,7 +66,7 @@ const RegisterScreen = ({navigation, route}) => {
     return unsubscribe;
   }, [navigation, Brand, Plate]);
 
-  console.log(socialinfo)
+
   useEffect(() => {
     if (userInfo) {
       setEmail(userInfo.email);

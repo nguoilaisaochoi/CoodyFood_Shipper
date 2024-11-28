@@ -185,30 +185,23 @@ const HomeScreen = ({navigation}) => {
           />
         )}
 
-        {shopLocation != -999 && (
+        {shopLocation != -999 && shipperLocation != -999 && (
           <MapboxGL.PointAnnotation
-            id="restaurantLocation"
-            coordinate={shopLocation}
+            id={atRestaurant ? 'restaurantLocation' : 'customerLocation'}
+            coordinate={atRestaurant ? customerLocation : shopLocation}
             ref={ref => (this.markerRef = ref)}>
             <Image
-              source={require('../../assets/images/shipper/shop.png')}
+              source={
+                atRestaurant
+                  ? require('../../assets/images/tabBar/home.png')
+                  : require('../../assets/images/shipper/shop.png')
+              }
               style={{width: 30, height: 30}}
               onLoad={() => this.markerRef.refresh()}
             />
           </MapboxGL.PointAnnotation>
         )}
-        {customerLocation != -999 && (
-          <MapboxGL.PointAnnotation
-            id="customerLocation"
-            coordinate={customerLocation}
-            ref={ref => (this.markerRef = ref)}>
-            <Image
-              source={require('../../assets/images/tabBar/home.png')}
-              style={{width: 30, height: 30}}
-              onLoad={() => this.markerRef.refresh()}
-            />
-          </MapboxGL.PointAnnotation>
-        )}
+
         {routeToShop && !atRestaurant && (
           <MapboxGL.ShapeSource
             id="routeToRestaurantSource"
