@@ -162,7 +162,6 @@ const ProfileScreen = ({navigation}) => {
         <TextInputComponent
           text={'EMAIL'}
           value={email}
-          error={email ? checkEmail(email) : 'Đây là thông tin bắt buộc'}
           editable={false}
           opacity={0.6}
         />
@@ -189,7 +188,7 @@ const ProfileScreen = ({navigation}) => {
             setGender(item.value);
           }}
         />
-        <TextComponent text={'NGÀY SINH'} fontFamily={fontFamilies.bold} />
+        <TextComponent text={'NGÀY SINH'}/>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -217,7 +216,7 @@ const ProfileScreen = ({navigation}) => {
           )}
         </View>
         <TextInputComponent
-          text={'HÃNG XE'}
+          text={'MẪU XE'}
           onChangeText={text => setvehicleBrand(text)}
           value={vehicleBrand}
           error={vehicleBrand ? null : 'Đây là thông tin bắt buộc'}

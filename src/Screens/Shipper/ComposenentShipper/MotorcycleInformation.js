@@ -6,9 +6,10 @@ import HeaderComponent from '../../../components/HeaderComponent';
 import ButtonComponent from '../../../components/ButtonComponent';
 import {appColor} from '../../../constants/appColor';
 
-const MotorcycleInformation = ({navigation}) => {
-  const [vehicleBrand, setvehicleBrand] = useState(null);
-  const [vehiclePlate, setvehiclePlate] = useState(null);
+const MotorcycleInformation = ({navigation,route}) => {
+  const {Brand, Plate} = route.params || {};
+  const [vehicleBrand, setvehicleBrand] = useState(Brand??null);
+  const [vehiclePlate, setvehiclePlate] = useState(Plate??null);
   //
   const save = () => {
     navigation.navigate('Register', {
@@ -21,9 +22,10 @@ const MotorcycleInformation = ({navigation}) => {
       <HeaderComponent isback={true} text={'Thông tin xe'} />
       <View style={{flex: 1}}>
         <TextInputComponent
-          text={'HÃNG XE'}
+          text={'MẪU XE'}
           onChangeText={text => setvehicleBrand(text)}
           value={vehicleBrand}
+          placeholder={"Honda Wave"}
         />
         <TextInputComponent
           text={'BIỂN SỐ XE'}

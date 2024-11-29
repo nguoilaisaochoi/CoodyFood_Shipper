@@ -52,6 +52,7 @@ const RegisterScreen = ({navigation, route}) => {
     !phonecheck ||
     !vehicleBrand ||
     !vehiclePlate ||
+    vehiclePlate.length < 14 ||
     passcheck
       ? setCorrect(false)
       : setCorrect(true);
@@ -59,10 +60,8 @@ const RegisterScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (Brand || Plate) {
         setvehicleBrand(Brand);
         setvehiclePlate(Plate);
-      }
     });
     return unsubscribe;
   }, [navigation, Brand, Plate]);
@@ -120,11 +119,12 @@ const RegisterScreen = ({navigation, route}) => {
 
         return response.data;
       } else {
-        console.log(error);
+        ToastAndroid.show('Lỗi đăng ký', ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
+      console.log('Server Error:', error.response.data);
+      ToastAndroid.show(`${error.response.data.data}`, ToastAndroid.SHORT);
     }
   };
   return (
@@ -201,10 +201,13 @@ const RegisterScreen = ({navigation, route}) => {
         <SpaceComponent height={10} />
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('MotoInfo');
+            navigation.navigate('MotoInfo', {
+              Brand: vehicleBrand,
+              Plate: vehiclePlate,
+            });
           }}
           style={styles.input}>
-          <TextComponent text={'Hãng xe: ' + (vehicleBrand ?? 'Trống')} />
+          <TextComponent text={'Mẫu xe: ' + (vehicleBrand ?? 'Trống')} />
           <TextComponent text={'Biển số xe: ' + (vehiclePlate ?? 'Trống')} />
         </TouchableOpacity>
         <SpaceComponent height={30} />
