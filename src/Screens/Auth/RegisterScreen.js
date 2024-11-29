@@ -1,5 +1,6 @@
 import {
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -66,12 +67,11 @@ const RegisterScreen = ({navigation, route}) => {
     return unsubscribe;
   }, [navigation, Brand, Plate]);
 
-
   useEffect(() => {
     if (userInfo) {
       setEmail(userInfo.email);
       setName(userInfo.givenName);
-      setsocialinfo(userInfo)
+      setsocialinfo(userInfo);
     }
   }, []);
   const checkEmail = data => {
@@ -128,101 +128,102 @@ const RegisterScreen = ({navigation, route}) => {
     }
   };
   return (
-    <ContainerComponent isScroll={true} styles={globalStyle.container}>
-      <Image
-        source={require('../../assets/images/auth/login-regis/logo.png')}
-      />
-      <SpaceComponent height={30} />
-      <RowComponent>
-        <TextComponent
-          text={'Coody '}
-          fontsize={28}
-          fontFamily={fontFamilies.bold}
-          color={appColor.primary}
+    <View style={[globalStyle.container, {paddingBottom: '3%'}]}>
+      <ScrollView style={{flex: 1}}>
+        <Image
+          source={require('../../assets/images/auth/login-regis/logo.png')}
         />
+        <RowComponent>
+          <TextComponent
+            text={'Coody '}
+            fontsize={28}
+            fontFamily={fontFamilies.bold}
+            color={appColor.primary}
+          />
+          <TextComponent
+            text={'Xin Chào'}
+            fontsize={28}
+            fontFamily={fontFamilies.bold}
+          />
+        </RowComponent>
+        <SpaceComponent height={10} />
         <TextComponent
-          text={'Xin Chào'}
-          fontsize={28}
+          text={'Vui lòng nhập thông tin của bạn'}
           fontFamily={fontFamilies.bold}
+          color={appColor.subText}
         />
-      </RowComponent>
-      <SpaceComponent height={10} />
-      <TextComponent
-        text={'Vui lòng nhập thông tin của bạn'}
-        fontFamily={fontFamilies.bold}
-        color={appColor.subText}
-      />
-      <SpaceComponent height={10} />
+        <SpaceComponent height={10} />
 
-      <InputComponent
-        label={'Họ tên'}
-        placeholder={'Nhập tên'}
-        value={name}
-        onChangeText={text => setName(text)}
-        error={name ? null : 'Thiếu thông tin!'}
-      />
-      <SpaceComponent height={10} />
-      <InputComponent
-        label={'Email'}
-        placeholder={'Nhập email'}
-        value={email}
-        onChangeText={text => setEmail(text)}
-        error={email ? checkEmail(email) : 'Thiếu thông tin!'}
-      />
-      <SpaceComponent height={10} />
-      <InputComponent
-        label={'Số điện thoại'}
-        placeholder={'Nhập số điện thoại'}
-        value={phone}
-        onChangeText={text => setPhone(text)}
-        error={phone ? checkPhone(phone) : 'Thiếu thông tin!'}
-      />
-      <SpaceComponent height={10} />
-      <InputComponent
-        label={'Mật khẩu'}
-        placeholder={'Nhập mật khẩu'}
-        value={password}
-        onChangeText={text => setPassword(text)}
-        error={password ? checkpass(password) : 'Thiếu thông tin!'}
-        isPassword
-      />
-      <SpaceComponent height={10} />
-      <InputComponent
-        label={'Xác nhận mật khẩu'}
-        placeholder={'Nhập lại mật khẩu'}
-        value={rePassword}
-        onChangeText={text => setRePassword(text)}
-        error={
-          password ? checkrepass(password, rePassword) : 'Thiếu thông tin!'
-        }
-        isPassword
-        isRePassword
-      />
-      <SpaceComponent height={10} />
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('MotoInfo');
-        }}
-        style={styles.input}>
-        <TextComponent text={'Hãng xe: ' + (vehicleBrand ?? 'Trống')} />
-        <TextComponent text={'Biển số xe: ' + (vehiclePlate ?? 'Trống')} />
-      </TouchableOpacity>
-      <SpaceComponent height={30} />
-      <ButtonComponent
-        text={'Tạo tài khoản'}
-        color={appColor.white}
-        onPress={correct ? handleRegister : null}
-        styles={{opacity: correct ? 1 : 0.5}}
-      />
-      <SpaceComponent height={20} />
-      <ButtonComponent
-        text={'Trở về đăng nhập'}
-        color={appColor.primary}
-        backgroundColor={appColor.white}
-        onPress={() => navigation.navigate('Login')}
-      />
-      <LoadingModal visible={isLoading} />
-    </ContainerComponent>
+        <InputComponent
+          label={'Họ tên'}
+          placeholder={'Nhập tên'}
+          value={name}
+          onChangeText={text => setName(text)}
+          error={name ? null : 'Thiếu thông tin!'}
+        />
+        <SpaceComponent height={10} />
+        <InputComponent
+          label={'Email'}
+          placeholder={'Nhập email'}
+          value={email}
+          onChangeText={text => setEmail(text)}
+          error={email ? checkEmail(email) : 'Thiếu thông tin!'}
+        />
+        <SpaceComponent height={10} />
+        <InputComponent
+          label={'Số điện thoại'}
+          placeholder={'Nhập số điện thoại'}
+          value={phone}
+          onChangeText={text => setPhone(text)}
+          error={phone ? checkPhone(phone) : 'Thiếu thông tin!'}
+        />
+        <SpaceComponent height={10} />
+        <InputComponent
+          label={'Mật khẩu'}
+          placeholder={'Nhập mật khẩu'}
+          value={password}
+          onChangeText={text => setPassword(text)}
+          error={password ? checkpass(password) : 'Thiếu thông tin!'}
+          isPassword
+        />
+        <SpaceComponent height={10} />
+        <InputComponent
+          label={'Xác nhận mật khẩu'}
+          placeholder={'Nhập lại mật khẩu'}
+          value={rePassword}
+          onChangeText={text => setRePassword(text)}
+          error={
+            password ? checkrepass(password, rePassword) : 'Thiếu thông tin!'
+          }
+          isPassword
+          isRePassword
+        />
+        <SpaceComponent height={10} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('MotoInfo');
+          }}
+          style={styles.input}>
+          <TextComponent text={'Hãng xe: ' + (vehicleBrand ?? 'Trống')} />
+          <TextComponent text={'Biển số xe: ' + (vehiclePlate ?? 'Trống')} />
+        </TouchableOpacity>
+        <SpaceComponent height={30} />
+        <ButtonComponent
+          text={'Tạo tài khoản'}
+          color={appColor.white}
+          onPress={correct ? handleRegister : null}
+          styles={{opacity: correct ? 1 : 0.5}}
+        />
+        <SpaceComponent height={20} />
+        <ButtonComponent
+          text={'Trở về đăng nhập'}
+          color={appColor.primary}
+          backgroundColor={appColor.white}
+          onPress={() => navigation.navigate('Login')}
+        />
+        <LoadingModal visible={isLoading} />
+      </ScrollView>
+    </View>
   );
 };
 

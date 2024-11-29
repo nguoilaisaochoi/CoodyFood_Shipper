@@ -33,7 +33,7 @@ const ItemAccount = ({text, icon, screen}) => {
       <Image style={[styles.img, {flex: 0.2}]} source={getImageSource(icon)} />
       <TextComponent
         text={text}
-        fontsize={18}
+        fontsize={16}
         fontfamily={fontFamilies.semiBold}
         styles={{flex: 2, textAlign: 'center'}}
       />

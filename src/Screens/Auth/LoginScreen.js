@@ -129,7 +129,7 @@ const LoginScreen = ({navigation}) => {
       <Image
         source={require('../../assets/images/auth/login-regis/logo.png')}
       />
-      <SpaceComponent height={30} />
+
       <RowComponent>
         <TextComponent
           text={'Coody Shipper '}

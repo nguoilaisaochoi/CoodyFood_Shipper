@@ -53,7 +53,8 @@ const HomeScreen = ({navigation}) => {
   };
   //vi tri shipper
   const getUserLocation = () => {
-    Geolocation.getCurrentPosition(
+    //getCurrentPosition
+    Geolocation.watchPosition(
       position => {
         const {latitude, longitude} = position.coords;
         setShipperLocation([longitude, latitude]);
@@ -132,7 +133,7 @@ const HomeScreen = ({navigation}) => {
     if (acceptorder) {
       getDirections();
     }
-  }, [acceptorder, atRestaurant, customerLocation]);
+  }, [acceptorder, atRestaurant, customerLocation, shipperLocation]);
 
   useEffect(() => {
     //lay thông tin shipper
@@ -140,7 +141,6 @@ const HomeScreen = ({navigation}) => {
 
     //kết nối socket từ file socket.js
     connectSocket();
-
     // Ngắt kết nối socket khi component unmount
     return () => {
       disconnectSocket();
@@ -170,6 +170,7 @@ const HomeScreen = ({navigation}) => {
           setAcceptOrder={setAcceptOrder}
           setShopLocation={setShopLocation}
           setCustomerLocation={setCustomerLocation}
+          setGetjob={setGetjob}
           Order={order}
         />
       )}
