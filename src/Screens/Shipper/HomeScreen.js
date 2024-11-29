@@ -18,6 +18,7 @@ import Geolocation from 'react-native-geolocation-service';
 import MapAPI from '../../core/apiMap/MapAPI';
 import {appColor} from '../../constants/appColor';
 import LoadingModal from '../../modal/LoadingModal';
+import haversine from 'haversine';
 const polyline = require('@mapbox/polyline');
 
 MapboxGL.setAccessToken(
@@ -37,8 +38,9 @@ const HomeScreen = ({navigation}) => {
   const [customerLocation, setCustomerLocation] = useState([-999, -999]);
   const [routeToCustomer, setRouteToCustomer] = useState(null);
   const [routeToShop, setRouteToShop] = useState(null);
-  const [atRestaurant, setAtRestaurant] = useState(false);
+  const [atCus, setAtCus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [arrive, setArrive] = useState(false);
   const camera = useRef(null);
 
   //quyền
@@ -62,10 +64,11 @@ const HomeScreen = ({navigation}) => {
       error => {
         console.error(error);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: true, timeout: 0, maximumAge: 3000},
     );
   };
 
+  //chỉ đường
   const getDirections = async () => {
     const decodePolyline = encoded => {
       const decoded = polyline.decode(encoded);
@@ -77,7 +80,7 @@ const HomeScreen = ({navigation}) => {
     };
     try {
       setIsLoading(true);
-      if (!atRestaurant) {
+      if (!atCus) {
         // Lấy chỉ đường từ vị trí shipper đến nhà hàng
         const directionToRestaurant = await MapAPI.getDirections({
           vehicle: 'bike',
@@ -119,6 +122,22 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  //cho phép tắt/bật trạng thái hoàn thành
+  useEffect(() => {
+    if (shipperLocation) {
+      const start = {
+        latitude: shipperLocation[1],
+        longitude: shipperLocation[0],
+      };
+      const end = {
+        latitude: atCus ? customerLocation[1] : shopLocation[1],
+        longitude: atCus ? customerLocation[0] : shopLocation[0],
+      };
+      const distance = haversine(start, end);
+      setArrive(distance < 0.1 ? true : false);
+    }
+  }, [shipperLocation, atCus]);
+
   //check quyen
   useEffect(() => {
     requestLocationPermission().then(hasPermission => {
@@ -133,8 +152,9 @@ const HomeScreen = ({navigation}) => {
     if (acceptorder) {
       getDirections();
     }
-  }, [acceptorder, atRestaurant, customerLocation, shipperLocation]);
+  }, [acceptorder, atCus, customerLocation, shipperLocation]);
 
+  //khi mở component
   useEffect(() => {
     //lay thông tin shipper
     dispath(GetShipper(user._id));
@@ -188,12 +208,12 @@ const HomeScreen = ({navigation}) => {
 
         {shopLocation != -999 && shipperLocation != -999 && (
           <MapboxGL.PointAnnotation
-            id={atRestaurant ? 'restaurantLocation' : 'customerLocation'}
-            coordinate={atRestaurant ? customerLocation : shopLocation}
+            id={atCus ? 'restaurantLocation' : 'customerLocation'}
+            coordinate={atCus ? customerLocation : shopLocation}
             ref={ref => (this.markerRef = ref)}>
             <Image
               source={
-                atRestaurant
+                atCus
                   ? require('../../assets/images/tabBar/home.png')
                   : require('../../assets/images/shipper/shop.png')
               }
@@ -203,7 +223,7 @@ const HomeScreen = ({navigation}) => {
           </MapboxGL.PointAnnotation>
         )}
 
-        {routeToShop && !atRestaurant && (
+        {routeToShop && !atCus && (
           <MapboxGL.ShapeSource
             id="routeToRestaurantSource"
             shape={{
@@ -227,7 +247,7 @@ const HomeScreen = ({navigation}) => {
             />
           </MapboxGL.ShapeSource>
         )}
-        {routeToCustomer && atRestaurant && (
+        {routeToCustomer && atCus && (
           <MapboxGL.ShapeSource
             id="routeToCustomerSource"
             shape={{
@@ -280,10 +300,11 @@ const HomeScreen = ({navigation}) => {
           Order={order}
           setAcceptOrder={setAcceptOrder}
           setGetjob={setGetjob}
-          setAtRestaurant={setAtRestaurant}
+          setAtCus={setAtCus}
           setShopLocation={setShopLocation}
           setCustomerLocation={setCustomerLocation}
           setRouteToCustomer={setRouteToCustomer}
+          arrive={arrive}
         />
       )}
       <LoadingModal visible={isLoading} />

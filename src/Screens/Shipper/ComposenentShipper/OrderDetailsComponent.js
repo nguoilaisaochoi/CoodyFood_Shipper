@@ -28,10 +28,12 @@ const OrderDetailsComponent = ({
   Order,
   setAcceptOrder,
   setGetjob,
-  setAtRestaurant,
+  setAtCus,
   setShopLocation,
   setCustomerLocation,
   setRouteToCustomer,
+  arrive,
+  setArrive,
 }) => {
   const navigation = useNavigation();
   const [imagePath, setImagePath] = useState();
@@ -46,9 +48,21 @@ const OrderDetailsComponent = ({
   const [title, setTitle] = useState('Đã Đến Nhà Hàng');
   const {getData} = useSelector(state => state.shipper);
   const {user} = useSelector(state => state.login);
+  const [isarrive, setIsArrive] = useState(false);
   const dispath = useDispatch();
 
   //const [phoneNumber] = useState('0123456');
+  
+  //cho phép shipper kéo trạng thái
+  useEffect(() => {
+    if (status.item2) {
+      setTimeout(() => {
+        setIsArrive(arrive);
+      }, 500);
+    } else {
+      setIsArrive(arrive);
+    }
+  }, [arrive]);
 
   //chuyển sdt qua cuộc gọi sim
   const call = () => {
@@ -63,7 +77,7 @@ const OrderDetailsComponent = ({
     const socketInstance = getSocket();
     //unactive shipper
     setGetjob(false);
-    setAtRestaurant(false);
+    setAtCus(false);
     // Tham gia room
     socketInstance.emit('join_room', Order._id);
     // Lắng nghe socket
@@ -119,7 +133,7 @@ const OrderDetailsComponent = ({
       if (imagePath) {
         setStatus({...status, item2: true});
         setTitle('Đã đến nơi giao');
-        setAtRestaurant(true);
+        setAtCus(true);
       } else {
         Alert.alert('Thông báo', 'Bạn cần phải chụp hình');
       }
@@ -170,6 +184,8 @@ const OrderDetailsComponent = ({
       </View>
     );
   };
+
+  console.log(arrive);
 
   //gọi doanh thu sau khi xong đơn
   const Revenue = () => {
@@ -299,6 +315,7 @@ const OrderDetailsComponent = ({
             onReachedToEnd={handleReachedToEnd}
             autoReset={true}
             borderRadius={10}
+            disabled={!isarrive}
             title={title}
             titleStyle={{fontsize: 20, fontFamily: fontFamilies.bold}}
             containerStyle={{
