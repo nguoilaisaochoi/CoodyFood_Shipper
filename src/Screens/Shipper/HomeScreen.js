@@ -56,15 +56,26 @@ const HomeScreen = ({navigation}) => {
   //vi tri shipper
   const getUserLocation = () => {
     //getCurrentPosition
-    Geolocation.watchPosition(
+    Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
         setShipperLocation([longitude, latitude]);
+        // Sau khi có vị trí hiện tại, bắt đầu theo dõi vị trí
+        Geolocation.watchPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            setShipperLocation([longitude, latitude]);
+          },
+          error => {
+            console.error(error);
+          },
+          {enableHighAccuracy: true, timeout: 0, maximumAge: 3000},
+        );
       },
       error => {
         console.error(error);
       },
-      {enableHighAccuracy: true, timeout: 0, maximumAge: 3000},
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 3000 } 
     );
   };
 

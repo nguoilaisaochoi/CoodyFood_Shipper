@@ -116,7 +116,7 @@ const LoginScreen = ({navigation}) => {
           if (response.data == true) {
             dispatch(loginWithSocial({userInfo}));
           } else {
-            navigation.navigate('AddPhone', {userInfo});
+            navigation.navigate('Register', {userInfo});
           }
         }
       }
