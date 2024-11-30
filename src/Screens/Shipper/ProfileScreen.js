@@ -22,6 +22,7 @@ import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import SelectImage from './ComposenentShipper/SelectImage';
 import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+import { uploadImageToCloudinary } from './ComposenentShipper/UploadImage';
 
 const ProfileScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
@@ -55,7 +56,7 @@ const ProfileScreen = ({navigation}) => {
   };
 
   //cập nhật shipper lên api
-  const update = () => {
+  const update =  async() => {
     const body = {
       name: name,
       phone: phone,
@@ -65,9 +66,8 @@ const ProfileScreen = ({navigation}) => {
       vehiclePlate: vehiclePlate,
       gender: gender,
       status: 'active',
-      image: avatar,
+      image: await uploadImageToCloudinary(imagePath),
     };
-    console.log(body);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
   //quản lí state correct
