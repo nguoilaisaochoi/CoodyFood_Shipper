@@ -70,6 +70,7 @@ const ProfileScreen = ({navigation}) => {
     };
     dispath(UpdateShipper({id: user._id, data: body}));
   };
+  
   //quản lí state correct
   useEffect(() => {
     const checkphone = checkPhone(phone);

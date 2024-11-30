@@ -52,7 +52,7 @@ const OrderDetailsComponent = ({
   const dispath = useDispatch();
 
   //const [phoneNumber] = useState('0123456');
-  
+
   //cho phép shipper kéo trạng thái
   useEffect(() => {
     if (status.item2) {
@@ -69,6 +69,15 @@ const OrderDetailsComponent = ({
     RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
   };
 
+  //cap nhat trang thai don hang
+  const updatestatus = status => {
+    const socketInstance = getSocket();
+    socketInstance.emit('update_order_status', {
+      orderId: Order._id,
+      status: status,
+    });
+  };
+
   //tham gia chat
   useEffect(() => {
     //bật nghe cuộc gọi
@@ -77,6 +86,8 @@ const OrderDetailsComponent = ({
     const socketInstance = getSocket();
     //unactive shipper
     setGetjob(false);
+    //cap nhat trang thai shipper
+    updatestatus('Đang đến nhà hàng');
     setAtCus(false);
     // Tham gia room
     socketInstance.emit('join_room', Order._id);
@@ -128,18 +139,21 @@ const OrderDetailsComponent = ({
   const handleReachedToEnd = () => {
     if (!status.item1) {
       setStatus({...status, item1: true});
+      updatestatus('Tài xế đã đến nhà hàng');
       setTitle('Đã lấy món ăn');
     } else if (!status.item2) {
       if (imagePath) {
         setStatus({...status, item2: true});
         setTitle('Đã đến nơi giao');
         setAtCus(true);
+        updatestatus('Đang giao hàng');
       } else {
         Alert.alert('Thông báo', 'Bạn cần phải chụp hình');
       }
     } else if (!status.item3) {
       setStatus({...status, item3: true});
       setTitle('Hoàn tất đơn hàng');
+      updatestatus('Shipper đã đến điểm giao hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
       setShopLocation([-999, -999]);
@@ -184,8 +198,6 @@ const OrderDetailsComponent = ({
       </View>
     );
   };
-
-  console.log(arrive);
 
   //gọi doanh thu sau khi xong đơn
   const Revenue = () => {
@@ -288,10 +300,6 @@ const OrderDetailsComponent = ({
             color={appColor.primary}
           />
           <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} />
-          <Info4txt
-            text={'Giá tiền lấy đồ'}
-            price={formatCurrency(Order.totalPrice)}
-          />
           <Info4txt
             text={'Phí giao hàng'}
             price={formatCurrency(Order.shippingfee)}
