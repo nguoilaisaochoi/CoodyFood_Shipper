@@ -16,6 +16,7 @@ import {appColor} from '../../constants/appColor';
 import ButtonComponent from '../../components/ButtonComponent';
 import LoadingModal from '../../modal/LoadingModal';
 import AxiosInstance from '../../helpers/AxiosInstance';
+import {uploadImageToCloudinary} from '../Shipper/ComposenentShipper/UploadImage';
 
 const Authentic = ({navigation, route}) => {
   const [ImagePath, setImagePath] = useState(null);
@@ -25,7 +26,9 @@ const Authentic = ({navigation, route}) => {
     setIsLoading(true);
     const updatedBody = {
       ...body,
-      birthDate: new Date('2000-01-01'), // Hoặc lấy giá trị từ một nguồn khác nếu cần
+      birthDate: new Date('2000-01-01'),
+      verified:false,
+      imageVerified: await uploadImageToCloudinary(ImagePath), 
     };
     try {
       console.log(updatedBody);
@@ -39,7 +42,7 @@ const Authentic = ({navigation, route}) => {
           [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('Login'), 
+              onPress: () => navigation.navigate('Login'),
             },
           ],
           {cancelable: false}, // Không cho phép hủy bỏ alert

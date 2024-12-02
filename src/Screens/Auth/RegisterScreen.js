@@ -100,7 +100,6 @@ const RegisterScreen = ({navigation, route}) => {
       password,
       phone,
       gender: 'male',
-      //birthDate: new Date('2000-01-01'),
       vehicleBrand,
       vehiclePlate,
     };
