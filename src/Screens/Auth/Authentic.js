@@ -18,6 +18,7 @@ import LoadingModal from '../../modal/LoadingModal';
 import AxiosInstance from '../../helpers/AxiosInstance';
 import {uploadImageToCloudinary} from '../Shipper/ComposenentShipper/UploadImage';
 
+
 const Authentic = ({navigation, route}) => {
   const [ImagePath, setImagePath] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +28,8 @@ const Authentic = ({navigation, route}) => {
     const updatedBody = {
       ...body,
       birthDate: new Date('2000-01-01'),
-      verified:false,
-      imageVerified: await uploadImageToCloudinary(ImagePath), 
+      verified: false,
+      imageVerified: await uploadImageToCloudinary(ImagePath),
     };
     try {
       console.log(updatedBody);
@@ -91,14 +92,16 @@ const Authentic = ({navigation, route}) => {
           </>
         )}
       </TouchableOpacity>
-      <ButtonComponent
-        text={'Gửi'}
-        styles={styles.bottom}
-        color={appColor.white}
-        onPress={() => {
-          handleRegister();
-        }}
-      />
+      {ImagePath && (
+        <ButtonComponent
+          text={'Gửi'}
+          styles={styles.bottom}
+          color={appColor.white}
+          onPress={() => {
+            handleRegister();
+          }}
+        />
+      )}
       <LoadingModal visible={isLoading} />
     </View>
   );
