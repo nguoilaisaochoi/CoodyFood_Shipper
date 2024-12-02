@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -24,6 +25,8 @@ import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {CallConfig} from '../../Call/Callconfig';
 import {formatCurrency} from '../../../utils/Validators';
+import ButtonComponent from '../../../components/ButtonComponent';
+import ConfirmComponent from './ConfirmComponent';
 const OrderDetailsComponent = ({
   Order,
   setAcceptOrder,
@@ -33,10 +36,9 @@ const OrderDetailsComponent = ({
   setCustomerLocation,
   setRouteToCustomer,
   arrive,
-  setArrive,
 }) => {
   const navigation = useNavigation();
-  const [imagePath, setImagePath] = useState();
+  const [imagePath, setImagePath] = useState(null);
   const sheetRef = useRef();
   const snapPoints = ['20%', '90%'];
   const [status, setStatus] = useState({
@@ -49,6 +51,7 @@ const OrderDetailsComponent = ({
   const {getData} = useSelector(state => state.shipper);
   const {user} = useSelector(state => state.login);
   const [isarrive, setIsArrive] = useState(false);
+  const [cancel, setcancel] = useState(false);
   const dispath = useDispatch();
 
   //const [phoneNumber] = useState('0123456');
@@ -124,6 +127,7 @@ const OrderDetailsComponent = ({
 
   //khi hoàn thành đơn
   const complete = () => {
+    setImagePath(null);
     clearMessageList();
     const socketInstance = getSocket();
     socketInstance.emit('confirm_order_by_shipper_id', {
@@ -133,6 +137,30 @@ const OrderDetailsComponent = ({
     Revenue();
     socketInstance.off('confirm_order_by_shipper_id');
     socketInstance.off('receive_message');
+  };
+
+  const cancelorder = () => {
+    const socketInstance = getSocket();
+    socketInstance.off('confirm_order_by_shipper_id');
+    socketInstance.off('receive_message');
+    setShopLocation([-999, -999]);
+    setCustomerLocation([-999, -999]);
+    setRouteToCustomer(null);
+    clearMessageList();
+    setImagePath(null);
+    updatestatus('Shipper đã hủy đơn');
+    Revenue();
+    //dong bottom sheet
+    setTimeout(() => {
+      sheetRef.current.close();
+    }, 1000);
+    //khi bottom sheet đóng lại
+    setTimeout(() => {
+      setAcceptOrder(false);
+      setGetjob(true);
+      setStatus({item1: false, item2: false, item3: false, item4: false});
+      ToastAndroid.show('Bạn đã huỷ đơn', ToastAndroid.SHORT);
+    }, 1200);
   };
 
   //theo dõi các status khi đang ship
@@ -194,6 +222,7 @@ const OrderDetailsComponent = ({
             fontsize={13}
             color={appColor.subText}
           />
+          <TextComponent text={note} fontsize={13} color={appColor.subText} />
         </View>
       </View>
     );
@@ -234,7 +263,7 @@ const OrderDetailsComponent = ({
             />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextComponent
-                text={'Đánh giá: ' + Order.shopOwner.rating + ' '}
+                text={'Đánh giá: ' + Order.shopOwner.rating.toFixed(1) + ' '}
                 fontsize={13}
               />
               <Image
@@ -299,13 +328,17 @@ const OrderDetailsComponent = ({
             fontFamily={fontFamilies.bold}
             color={appColor.primary}
           />
-          <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} />
+          {/* <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} /> */}
           <Info4txt
-            text={'Phí giao hàng'}
-            price={formatCurrency(Order.shippingfee)}
+            text={'Giá đơn hàng:'}
+            price={
+              Order.paymentMethod == 'Tiền mặt'
+                ? formatCurrency(Order.totalPrice - Order.shippingfee)
+                : 0
+            }
           />
           <Info4txt
-            text={'Thu tiền khách hàng'}
+            text={'Thu tiền khách hàng: '}
             price={
               Order.paymentMethod == 'Tiền mặt'
                 ? formatCurrency(Order.totalPrice)
@@ -313,11 +346,11 @@ const OrderDetailsComponent = ({
             }
           />
           <Info4txt
-            text={'Thu nhập'}
+            text={'Thu nhập đơn này: '}
             price={formatCurrency(Order.shippingfee)}
           />
         </View>
-        <View style={[styles.info4, {marginTop: '4%', gap: 22}]}>
+        <View style={[styles.info4, {marginTop: '2%', gap: 10}]}>
           {/*nút kéo từ trái sang phải*/}
           <SlideButton
             onReachedToEnd={handleReachedToEnd}
@@ -340,6 +373,16 @@ const OrderDetailsComponent = ({
             }
             thumbStyle={{borderRadius: 25}}
           />
+          {status.item3 && (
+            <ButtonComponent
+              text={'Tôi muốn huỷ đơn'}
+              color={appColor.white}
+              textStyle={{fontFamily: fontFamilies.bold}}
+              onPress={() => {
+                setcancel(true);
+              }}
+            />
+          )}
           {/*nút chụp ảnh chỉ hiện khi ở `shiper đẫ lấy món ăn`*/}
           {status.item1 && !status.item2 && (
             <TouchableOpacity
@@ -350,7 +393,7 @@ const OrderDetailsComponent = ({
               <TextComponent
                 text={'Chụp ảnh'}
                 color={appColor.white}
-                fontsize={20}
+                fontsize={16}
                 fontFamily={fontFamilies.bold}
               />
             </TouchableOpacity>
@@ -393,7 +436,7 @@ const OrderDetailsComponent = ({
                 backgroundColor={'#EF2E2E'}
                 icon={require('../../../assets/images/shipper/callicon.png')}
                 borderRadius={10}
-                isVideoCall={true}
+                isVideoCall={false}
                 resourceID={'zego_data'}
               />
               <TouchableOpacity
@@ -411,6 +454,21 @@ const OrderDetailsComponent = ({
           </View>
         </View>
       </BottomSheetScrollView>
+      {cancel && (
+        <ConfirmComponent
+          titile={'Bạn muốn huỷ đơn này'}
+          setModalVisible={setcancel}
+          Presscancel={() => {
+            setcancel(false);
+          }}
+          Pressok={() => {
+            {
+              setcancel(false);
+              cancelorder();
+            }
+          }}
+        />
+      )}
     </BottomSheet>
   );
 };
@@ -460,7 +518,8 @@ const styles = StyleSheet.create({
     borderColor: '#D9D9D9',
   },
   info4: {
-    margin: '6%',
+    margin: '5%',
+    marginBottom: '2%',
     gap: 5,
   },
   bodership: {
@@ -526,6 +585,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: appColor.gray,
+    marginBottom: '3%',
   },
   namecustomer: {
     width: '60%',

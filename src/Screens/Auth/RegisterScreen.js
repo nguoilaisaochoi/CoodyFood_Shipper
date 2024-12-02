@@ -34,9 +34,7 @@ const RegisterScreen = ({navigation, route}) => {
   const [phone, setPhone] = useState('');
   const [vehicleBrand, setvehicleBrand] = useState(null);
   const [vehiclePlate, setvehiclePlate] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [correct, setCorrect] = useState(false);
-  const [socialinfo, setsocialinfo] = useState(null);
   const dispatch = useDispatch();
   useEffect(() => {
     const emailcheck = validateEmail(email);
@@ -60,8 +58,8 @@ const RegisterScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-        setvehicleBrand(Brand);
-        setvehiclePlate(Plate);
+      setvehicleBrand(Brand);
+      setvehiclePlate(Plate);
     });
     return unsubscribe;
   }, [navigation, Brand, Plate]);
@@ -70,7 +68,7 @@ const RegisterScreen = ({navigation, route}) => {
     if (userInfo) {
       setEmail(userInfo.email);
       setName(userInfo.givenName);
-      setsocialinfo(userInfo);
+      //setsocialinfo(userInfo);
     }
   }, []);
   const checkEmail = data => {
@@ -95,36 +93,19 @@ const RegisterScreen = ({navigation, route}) => {
     console.log(status);
   }, [status]);
 
-  const handleRegister = async () => {
-    setIsLoading(true);
-    try {
-      const response = await AxiosInstance().post('/shipper/add', {
-        name,
-        email,
-        password,
-        phone,
-        gender: 'male',
-        birthDate: new Date('2000-01-01'),
-        vehicleBrand,
-        vehiclePlate,
-      });
-      if (response.status == true) {
-        ToastAndroid.show('Thành công', ToastAndroid.SHORT);
-        setIsLoading(false);
-
-        // Kiểm tra userInfo và thực hiện hành động tương ứng
-        socialinfo
-          ? dispatch(loginWithSocial({userInfo: socialinfo}))
-          : navigation.navigate('Login');
-
-        return response.data;
-      } else {
-        ToastAndroid.show('Lỗi đăng ký', ToastAndroid.SHORT);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.log('Server Error:', error.response.data);
-      ToastAndroid.show(`${error.response.data.data}`, ToastAndroid.SHORT);
+  const gotoAuthentic = () => {
+    const body = {
+      name,
+      email,
+      password,
+      phone,
+      gender: 'male',
+      //birthDate: new Date('2000-01-01'),
+      vehicleBrand,
+      vehiclePlate,
+    };
+    if (body) {
+      navigation.navigate('Authentic', {body});
     }
   };
   return (
@@ -214,7 +195,9 @@ const RegisterScreen = ({navigation, route}) => {
         <ButtonComponent
           text={'Tạo tài khoản'}
           color={appColor.white}
-          onPress={correct ? handleRegister : null}
+          onPress={() => {
+            correct ? gotoAuthentic() : null;
+          }}
           styles={{opacity: correct ? 1 : 0.5}}
         />
         <SpaceComponent height={20} />
@@ -224,7 +207,6 @@ const RegisterScreen = ({navigation, route}) => {
           backgroundColor={appColor.white}
           onPress={() => navigation.navigate('Login')}
         />
-        <LoadingModal visible={isLoading} />
       </ScrollView>
     </View>
   );

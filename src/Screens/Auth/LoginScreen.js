@@ -33,7 +33,6 @@ const LoginScreen = ({navigation}) => {
   const {user, status, error} = useSelector(state => state.login);
   const [signbtn, setsignbtn] = useState(false);
 
-
   const changeEmail = data => {
     setEmail(data);
     setErrorEmail('');
@@ -52,22 +51,30 @@ const LoginScreen = ({navigation}) => {
 
   //quản lí đăng nhập
   useEffect(() => {
-    if (status == 'failed' && signbtn == true) {
-      setIsLoading(false);
-      setTimeout(() => {
-        Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
-        setsignbtn(true);
-      }, 200);
-    } else if (
-      status == 'success' &&
-      signbtn == true &&
-      user?.role != 'shipper'
-    ) {
-      setIsLoading(false);
-      setTimeout(() => {
-        Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
-        setsignbtn(true);
-      }, 200);
+    if (signbtn) {
+      if (status == 'failed') {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
+          setsignbtn(true);
+        }, 200);
+      } else if (status == 'success' && user?.role != 'shipper') {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Tài khoản đã có quyền khác ở Coody');
+          setsignbtn(true);
+        }, 200);
+      } else if (
+        status == 'success' &&
+        user?.role == 'shipper' &&
+        !user?.verified 
+      ) {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Tài khoản này chưa được xác thực');
+          setsignbtn(true);
+        }, 200);
+      }
     }
   }, [status]);
 
@@ -78,13 +85,16 @@ const LoginScreen = ({navigation}) => {
     try {
       await GoogleSignin.hasPlayServices();
       const usergg = await GoogleSignin.signIn();
-      // console.log('usergg: ', usergg);
       const userInfo = usergg.data.user;
       console.log('userInfo: ', userInfo);
       const response = await AxiosInstance().post('/users/check-user', {
         email: userInfo.email,
       });
       if (response.data == true) {
+        if (!user.verified) {
+          Alert.alert('Thông báo', 'Tài khoản này chưa được xác thực');
+          return; // Dừng lại nếu tài khoản chưa được xác thực
+        }
         dispatch(loginWithSocial({userInfo}));
       } else {
         navigation.navigate('Register', {userInfo});
@@ -217,7 +227,7 @@ const LoginScreen = ({navigation}) => {
       <SpaceComponent height={30} />
       <RowComponent justifyContent="space-between">
         <ButtonComponent
-          width={appInfor.sizes.width * 0.37}
+          width={'100%'}
           height={51}
           icon={
             <Image
@@ -229,7 +239,7 @@ const LoginScreen = ({navigation}) => {
           borderColor={appColor.subText}
           onPress={handleLoginWithGG}
         />
-        <ButtonComponent
+        {/*        <ButtonComponent
           width={appInfor.sizes.width * 0.37}
           height={51}
           icon={
@@ -241,7 +251,7 @@ const LoginScreen = ({navigation}) => {
           backgroundColor={appColor.white}
           borderColor={appColor.subText}
           onPress={handleLoginWithFB}
-        />
+        /> */}
       </RowComponent>
       {/* <ButtonComponent text={'Clear'} onPress={() => dispatch(logout())} type={'link'} /> */}
       <LoadingModal visible={isLoading} />
