@@ -67,7 +67,7 @@ const LoginScreen = ({navigation}) => {
       } else if (
         status == 'success' &&
         user?.role == 'shipper' &&
-        !user?.verified 
+        !user?.verified
       ) {
         setIsLoading(false);
         setTimeout(() => {
@@ -91,11 +91,9 @@ const LoginScreen = ({navigation}) => {
         email: userInfo.email,
       });
       if (response.data == true) {
-        if (!user.verified) {
-          Alert.alert('Thông báo', 'Tài khoản này chưa được xác thực');
-          return; // Dừng lại nếu tài khoản chưa được xác thực
-        }
         dispatch(loginWithSocial({userInfo}));
+        setsignbtn(true);
+        setIsLoading(true);
       } else {
         navigation.navigate('Register', {userInfo});
       }
