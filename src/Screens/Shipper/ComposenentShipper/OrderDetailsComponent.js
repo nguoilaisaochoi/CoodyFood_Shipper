@@ -83,8 +83,8 @@ const OrderDetailsComponent = ({
 
   //tham gia chat
   useEffect(() => {
-    //bật nghe cuộc gọi
-    CallConfig(getData.phone, getData.name, Order.user.image);
+    //bật nghe cuộc gọi  Order.user.image
+    CallConfig(getData.phone, getData.name,Order.user.image);
     // Kết nối socket
     const socketInstance = getSocket();
     //unactive shipper
@@ -239,6 +239,7 @@ const OrderDetailsComponent = ({
     dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
+  console.log(Order.user.image)
   return (
     <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
       <BottomSheetScrollView style={{paddingTop: '2%', zIndex: 8}}>
@@ -417,7 +418,7 @@ const OrderDetailsComponent = ({
                 style={{flex: 1}}
                 source={{
                   uri:
-                    Order.user.images ??
+                    Order.user.image ??
                     'https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png',
                 }}
               />

@@ -4,7 +4,7 @@ import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
 
 //cấu hình cuộc gọi
-export const CallConfig = async (userID, userName,image) => {
+export const CallConfig = async (userID, userName, image) => {
   try {
     await ZegoUIKitPrebuiltCallService.init(
       1749442627, //AppID
@@ -35,9 +35,9 @@ export const CallConfig = async (userID, userName,image) => {
                 style={{width: '100%', height: '100%'}}
                 resizeMode="cover"
                 source={{
-                  uri: image
-                    ? image
-                    : `https://res.cloudinary.com/djywo5wza/image/upload/v1729757743/clone_viiphm.png`,
+                  uri:
+                    image ??
+                    `https://static.vecteezy.com/system/resources/previews/005/005/788/non_2x/user-icon-in-trendy-flat-style-isolated-on-grey-background-user-symbol-for-your-web-site-design-logo-app-ui-illustration-eps10-free-vector.jpg`,
                 }}
               />
             </View>
