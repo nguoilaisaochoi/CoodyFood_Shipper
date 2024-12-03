@@ -70,7 +70,7 @@ const Account = () => {
           screen={() => {
             gotoScreen('Profile');
           }}
-          text={'Thông tin cá nhân của bạn'}
+          text={'Thông tin cá nhân'}
           icon={'user'}
         />
         <ItemAccount

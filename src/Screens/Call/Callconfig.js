@@ -7,16 +7,16 @@ import * as ZPNs from 'zego-zpns-react-native';
 export const CallConfig = async (userID, userName,image) => {
   try {
     await ZegoUIKitPrebuiltCallService.init(
-      1174464780, //AppID
-      'a13abce8327d63610fdcc01effb642e7cc6bf0e9817aa0843b74c69a1e5dd59a', //AppSign
+      1749442627, //AppID
+      'bf27fd038a353193aa1de595443eb8c4bc78676b60d73a02c4dd99d546ab91bc', //AppSign
       userID,
       userName,
       [ZIM, ZPNs],
       {
         innerText: {
-          incomingVideoCallDialogTitle: '%0',
-          incomingVideoCallDialogMessage: 'Đang gọi đến bạn',
-          outgoingVideoCallPageMessage: 'Đang gọi...',
+          incomingVoiceCallDialogTitle: '%0',
+          incomingVoiceCallDialogMessage: 'Đang gọi đến bạn',
+          outgoingVoiceCallPageMessage: 'Đang gọi...',
           incomingCallPageDeclineButton: 'Từ chối',
           incomingCallPageAcceptButton: 'Trả lời',
         },

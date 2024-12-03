@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useState } from 'react'
 import ContainerComponent from '../../components/ContainerComponent'
 import SpaceComponent from '../../components/SpaceComponent'
@@ -14,7 +14,7 @@ import AxiosInstance from '../../helpers/AxiosInstance'
 import LoadingModal from '../../modal/LoadingModal'
 
 const ForgotPassword = ({ navigation }) => {
-    const [email, setEmail] = useState('nguyenminhkhuong318@gmail.com')
+    const [email, setEmail] = useState(null)
     const [errorEmail, setErrorEmail] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const changeEmail = (text) => {
@@ -39,7 +39,8 @@ const ForgotPassword = ({ navigation }) => {
             }
         } catch (error) {
             setIsLoading(false)
-            console.log(error);
+            console.log(error.response.data);
+            ToastAndroid.show(`${error.response.data.message}`, ToastAndroid.SHORT);
         }
 
     }

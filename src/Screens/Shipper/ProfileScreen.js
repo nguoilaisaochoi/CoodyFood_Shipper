@@ -21,6 +21,8 @@ import {validateEmail, validatePhone} from '../../utils/Validators';
 import {GetShipper, UpdateShipper} from '../../Redux/Reducers/ShipperReducer';
 import LoadingModal from '../../modal/LoadingModal';
 import SelectImage from './ComposenentShipper/SelectImage';
+import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+import { uploadImageToCloudinary } from './ComposenentShipper/UploadImage';
 
 const ProfileScreen = ({navigation}) => {
   const {user} = useSelector(state => state.login);
@@ -54,7 +56,7 @@ const ProfileScreen = ({navigation}) => {
   };
 
   //cập nhật shipper lên api
-  const update = () => {
+  const update =  async() => {
     const body = {
       name: name,
       phone: phone,
@@ -64,11 +66,11 @@ const ProfileScreen = ({navigation}) => {
       vehiclePlate: vehiclePlate,
       gender: gender,
       status: 'active',
-      image: avatar,
+      image: await uploadImageToCloudinary(imagePath),
     };
-    console.log(body);
     dispath(UpdateShipper({id: user._id, data: body}));
   };
+  
   //quản lí state correct
   useEffect(() => {
     const checkphone = checkPhone(phone);
@@ -161,8 +163,8 @@ const ProfileScreen = ({navigation}) => {
         <TextInputComponent
           text={'EMAIL'}
           value={email}
-          onChangeText={text => setEmail(text)}
-          error={email ? checkEmail(email) : 'Đây là thông tin bắt buộc'}
+          editable={false}
+          opacity={0.6}
         />
         <TextInputComponent
           text={'SỐ ĐIỆN THOẠI'}
@@ -187,7 +189,7 @@ const ProfileScreen = ({navigation}) => {
             setGender(item.value);
           }}
         />
-        <TextComponent text={'NGÀY SINH'} fontFamily={fontFamilies.bold} />
+        <TextComponent text={'NGÀY SINH'}/>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -215,7 +217,7 @@ const ProfileScreen = ({navigation}) => {
           )}
         </View>
         <TextInputComponent
-          text={'HÃNG XE'}
+          text={'MẪU XE'}
           onChangeText={text => setvehicleBrand(text)}
           value={vehicleBrand}
           error={vehicleBrand ? null : 'Đây là thông tin bắt buộc'}

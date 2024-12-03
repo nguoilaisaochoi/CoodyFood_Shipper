@@ -16,11 +16,14 @@ const ModalviewComponent = ({
   Order,
   setShopLocation,
   setCustomerLocation,
+  setGetjob,
 }) => {
+  const {user} = useSelector(state => state.login); //thông tin khi đăng nhập
   const [cancelVisible, setCancelVisible] = useState(false); //quản lí modal xác nhận huỷ
   const {getData} = useSelector(state => state.shipper); //thông tin shipper
   const refTimer = useRef();
   //socket
+
   const acceptorders = () => {
     const socketInstance = getSocket();
     socketInstance.emit('confirm_order_shipper_exists', {
@@ -37,18 +40,32 @@ const ModalviewComponent = ({
   };
 
   useEffect(() => {
+    setGetjob(false);
     const socketInstance = getSocket();
     socketInstance.on('order_cancelled', data => {
       if (Order._id == data.orderId) {
         ToastAndroid.show('Đơn khách hàng đã huỷ đơn', ToastAndroid.SHORT);
         setModalVisible(false);
+        setTimeout(() => {
+          setGetjob(true);
+        }, 200);
+      }
+    });
+    socketInstance.on('order_assigned', data => {
+      console.log(data.status);
+      if (data.orderId == Order._id && data.shipperId != user._id) {
+        ToastAndroid.show('Đã có tài xế khác nhận đơn', ToastAndroid.SHORT);
+        setModalVisible(false);
+        setTimeout(() => {
+          setGetjob(true);
+        }, 200);
       }
     });
   }, []);
+
   if (!Order) {
     return null;
   }
-
   return (
     <View style={[styles.bg, {zIndex: 6}]}>
       {/*làm tối bg khi modal xác nhận huỷ xuất hiện */}
@@ -64,7 +81,7 @@ const ModalviewComponent = ({
             />
             <CountDownTimer
               ref={refTimer}
-              timestamp={90}
+              timestamp={900}
               timerCallback={() => {
                 setModalVisible(false);
               }} //gọi funtion khi hết tg
@@ -86,6 +103,7 @@ const ModalviewComponent = ({
               text={'Địa chỉ: ' + Order.shopOwner.address}
               fontsize={16}
               width={'100%'}
+              styles={{textAlign: 'justify'}}
             />
             <Image
               style={styles.down}
@@ -100,12 +118,13 @@ const ModalviewComponent = ({
               text={'Địa chỉ: ' + Order.shippingAddress.address}
               fontsize={16}
               width={'100%'}
+              styles={{textAlign: 'justify'}}
             />
           </View>
           <View style={styles.title2}>
             <TextComponent text={'Quảng đường ước tính:'} />
             <TextComponent
-              text={Order.distance + ' Km'}
+              text={Order.distance.toFixed(2) + ' Km'}
               fontsize={14}
               fontFamily={fontFamilies.bold}
             />
@@ -128,6 +147,7 @@ const ModalviewComponent = ({
               fontFamily={fontFamilies.bold}
               onPress={() => {
                 setCancelVisible(true);
+                setGetjob(true);
               }}
             />
             <BtnComponent

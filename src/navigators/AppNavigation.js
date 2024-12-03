@@ -21,7 +21,7 @@ const AppNavigation = () => {
       <ZegoCallInvitationDialog />
       {isShowSplash ? (
         <SplashScreen />
-      ) : user?.role == 'shipper' ? (
+      ) : user?.role == 'shipper' && user?.verified==true ? (
         <MainNavigation />
       ) : (
         <AuthNavigation />

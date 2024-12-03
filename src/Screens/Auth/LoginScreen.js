@@ -19,7 +19,7 @@ import AxiosInstance from '../../helpers/AxiosInstance';
 
 GoogleSignin.configure({
   webClientId:
-    '119981390944-barvektsvlrt5ikstm2lh5s6ik2712ko.apps.googleusercontent.com',
+    '579678214190-9acmo8gjkg01kl2epuv0a4bhfvmhgrk7.apps.googleusercontent.com',
 });
 Settings.setAppID('825915416410531');
 
@@ -32,8 +32,6 @@ const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const {user, status, error} = useSelector(state => state.login);
   const [signbtn, setsignbtn] = useState(false);
-  // console.log('status', status);
-  // console.log('isLoading', isLoading);
 
   const changeEmail = data => {
     setEmail(data);
@@ -53,22 +51,30 @@ const LoginScreen = ({navigation}) => {
 
   //quản lí đăng nhập
   useEffect(() => {
-    if (status == 'failed' && signbtn == true) {
-      setIsLoading(false);
-      setTimeout(() => {
-        Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
-        setsignbtn(true);
-      }, 200);
-    } else if (
-      status == 'success' &&
-      signbtn == true &&
-      user?.role != 'shipper'
-    ) {
-      setIsLoading(false);
-      setTimeout(() => {
-        Alert.alert('Thông báo', 'Bạn không phải là tài xế của chúng tôi');
-        setsignbtn(true);
-      }, 200);
+    if (signbtn) {
+      if (status == 'failed') {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Thông tin đăng nhập không đúng');
+          setsignbtn(true);
+        }, 200);
+      } else if (status == 'success' && user?.role != 'shipper') {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Tài khoản đã có quyền khác ở Coody');
+          setsignbtn(true);
+        }, 200);
+      } else if (
+        status == 'success' &&
+        user?.role == 'shipper' &&
+        !user?.verified
+      ) {
+        setIsLoading(false);
+        setTimeout(() => {
+          Alert.alert('Thông báo', 'Tài khoản này chưa được xác thực');
+          setsignbtn(true);
+        }, 200);
+      }
     }
   }, [status]);
 
@@ -79,16 +85,17 @@ const LoginScreen = ({navigation}) => {
     try {
       await GoogleSignin.hasPlayServices();
       const usergg = await GoogleSignin.signIn();
-      // console.log('usergg: ', usergg);
       const userInfo = usergg.data.user;
-      // console.log('userInfo: ', userInfo);
+      console.log('userInfo: ', userInfo);
       const response = await AxiosInstance().post('/users/check-user', {
         email: userInfo.email,
       });
       if (response.data == true) {
         dispatch(loginWithSocial({userInfo}));
+        setsignbtn(true);
+        setIsLoading(true);
       } else {
-        navigation.navigate('AddPhone', {userInfo});
+        navigation.navigate('Register', {userInfo});
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +124,7 @@ const LoginScreen = ({navigation}) => {
           if (response.data == true) {
             dispatch(loginWithSocial({userInfo}));
           } else {
-            navigation.navigate('AddPhone', {userInfo});
+            navigation.navigate('Register', {userInfo});
           }
         }
       }
@@ -130,7 +137,7 @@ const LoginScreen = ({navigation}) => {
       <Image
         source={require('../../assets/images/auth/login-regis/logo.png')}
       />
-      <SpaceComponent height={30} />
+
       <RowComponent>
         <TextComponent
           text={'Coody Shipper '}
@@ -218,7 +225,7 @@ const LoginScreen = ({navigation}) => {
       <SpaceComponent height={30} />
       <RowComponent justifyContent="space-between">
         <ButtonComponent
-          width={appInfor.sizes.width * 0.37}
+          width={'100%'}
           height={51}
           icon={
             <Image
@@ -230,7 +237,7 @@ const LoginScreen = ({navigation}) => {
           borderColor={appColor.subText}
           onPress={handleLoginWithGG}
         />
-        <ButtonComponent
+        {/*        <ButtonComponent
           width={appInfor.sizes.width * 0.37}
           height={51}
           icon={
@@ -242,7 +249,7 @@ const LoginScreen = ({navigation}) => {
           backgroundColor={appColor.white}
           borderColor={appColor.subText}
           onPress={handleLoginWithFB}
-        />
+        /> */}
       </RowComponent>
       {/* <ButtonComponent text={'Clear'} onPress={() => dispatch(logout())} type={'link'} /> */}
       <LoadingModal visible={isLoading} />

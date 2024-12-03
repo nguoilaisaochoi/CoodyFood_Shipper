@@ -19,6 +19,7 @@ export const uploadImageToCloudinary = async file => {
     });
     if (response.ok) {
       const data = await response.json();
+      console.info('\x1b[35m[UploadImage___Cloudinary]\x1b[0m', JSON.stringify(data.url, null, 2));
       return data.url;
     } else {
       return null;
