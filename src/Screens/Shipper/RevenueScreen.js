@@ -8,35 +8,47 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import TextComponent from '../../components/TextComponent';
 import Info4txtComponent from './ComposenentShipper/Info4txtComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetRevenue} from '../../Redux/Reducers/ShipperReducer';
+import {
+  GetCustomRevenue,
+  GetRevenue,
+} from '../../Redux/Reducers/ShipperReducer';
 import {formatCurrency} from '../../utils/Validators';
+import Customday from './ComposenentShipper/Customday';
 
 const RevenueScreen = () => {
   const {user} = useSelector(state => state.login);
-  const {getRevenueStatus, getRevenueData} = useSelector(
-    state => state.shipper,
-  );
+  const {
+    getRevenueStatus,
+    getRevenueData,
+    GetCustomRevenueStatus,
+    GetCustomRevenueData,
+  } = useSelector(state => state.shipper);
   const [value, setValue] = useState(date[0].value);
   const [Data, setData] = useState(data);
   const dispath = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); //modal huỷ
+  const [fromday, setfromday] = useState(null);
+  const [today, settoday] = useState(null);
 
   //call api
   const fetchRevenue = () => {
     setRefreshing(true);
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1);
-    const day = String(currentDate.getDate());
-    const formattedDate = `${year}/${month}/${day}`;
-    dispath(GetRevenue({id: user._id, data: formattedDate, date: value}));
+    dispath(
+      GetRevenue({id: user._id, data: formattedDay(new Date()), date: value}),
+    );
   };
 
+  //co phai chon customday k?
   useEffect(() => {
-    fetchRevenue();
+    if (value != 'custom_day') {
+      fetchRevenue();
+    } else {
+      setModalVisible(true);
+    }
   }, [value]);
 
-  //status get rev
+  //lay doanh thu
   useEffect(() => {
     if (getRevenueStatus === 'succeeded') {
       setData(getRevenueData);
@@ -45,6 +57,26 @@ const RevenueScreen = () => {
       setRefreshing(false); // Kết thúc làm mới
     }
   }, [getRevenueStatus]);
+
+  //status lay doanh thu tuy chinh
+  useEffect(() => {
+    if (GetCustomRevenueStatus === 'succeeded') {
+      setData(GetCustomRevenueData);
+      console.log('done');
+    }
+    if (refreshing) {
+      setRefreshing(false); // Kết thúc làm mới
+    }
+  }, [GetCustomRevenueStatus]);
+
+  //chuyen ngay sang y/m/d
+  const formattedDay = date => {
+    const currentDate = new Date(date);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1);
+    const day = String(currentDate.getDate());
+    return `${year}/${month}/${day}`;
+  };
 
   //ngay : (gio)
   const formattedDate = orderDate => {
@@ -56,6 +88,23 @@ const RevenueScreen = () => {
     });
     const dateString = date.toLocaleDateString();
     return `${dateString}, (${timeString}) `;
+  };
+  //canncellayout
+  const canncellayout = () => {
+    setModalVisible(false);
+    setValue('day');
+  };
+
+  //tim ngay tuy chon
+  const customdaycall = () => {
+    setModalVisible(false);
+    dispath(
+      GetCustomRevenue({
+        id: user._id,
+        startDate: formattedDay(fromday),
+        endDate: formattedDay(today),
+      }),
+    );
   };
   //
   const renderItem = ({item}) => {
@@ -151,13 +200,20 @@ const RevenueScreen = () => {
               source={require('../../assets/images/shipper/wallet.png')}
             />
             <TextComponent
-              text={new Date(Data.startDate).toLocaleDateString('vi-VN')}
+              text={new Date(Data.startDate).toLocaleDateString('vi-VN', {
+                timeZone: 'UTC',
+              })}
               fontsize={value != 'day' ? 16 : 18}
               fontFamily={fontFamilies.bold}
             />
             {value != 'day' && (
               <TextComponent
-                text={'-' + new Date(Data.endDate).toLocaleDateString('vi-VN')}
+                text={
+                  '-' +
+                  new Date(Data.endDate).toLocaleDateString('vi-VN', {
+                    timeZone: 'UTC',
+                  })
+                }
                 fontsize={16}
                 fontFamily={fontFamilies.bold}
               />
@@ -225,6 +281,20 @@ const RevenueScreen = () => {
           />
         </View>
       )}
+      {modalVisible && (
+        <Customday
+          Presscancel={() => {
+            canncellayout();
+          }}
+          Pressok={() => {
+            customdaycall();
+          }}
+          fromday={fromday}
+          today={today}
+          setfromday={setfromday}
+          settoday={settoday}
+        />
+      )}
     </ContainerComponent>
   );
 };
@@ -235,7 +305,7 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: appColor.primary,
     padding: 13,
-    width: '42%',
+    width: '46%',
     borderRadius: 10,
   },
   placeholder: {
@@ -294,6 +364,7 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     alignItems: 'center',
     gap: 20,
+    justifyContent: 'center',
   },
   delivery: {
     flex: 0.3,
@@ -338,4 +409,5 @@ const date = [
   {label: 'Theo ngày', value: 'day'},
   {label: 'Theo tuần', value: 'week'},
   {label: 'Theo tháng', value: 'month'},
+  {label: 'Tùy chỉnh ngày', value: 'custom_day'},
 ];

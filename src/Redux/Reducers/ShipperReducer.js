@@ -21,6 +21,17 @@ export const GetRevenue = createAsyncThunk(
   },
 );
 
+//lấy doanh thu tuỳ chỉnh
+export const GetCustomRevenue = createAsyncThunk(
+  'GetCustomRevenue',
+  async ({id, startDate, endDate}) => {
+    const response = await AxiosInstance().get(
+      `shipper/${id}/revenue/custom-range?startDate=${startDate}&endDate=${endDate}`,
+    );
+    return response.data;
+  },
+);
+
 export const ChangePassword = createAsyncThunk(
   'changePassword',
   async ({data}) => {
@@ -45,6 +56,8 @@ export const ShipperSlice = createSlice({
     ActiveStatus: 'idle',
     ChangePasswordData: {},
     ChangePasswordStatus: 'ide',
+    GetCustomRevenueData: {},
+    GetCustomRevenueStatus: 'ide',
   },
   reducers: {},
   extraReducers: builder => {
@@ -96,6 +109,18 @@ export const ShipperSlice = createSlice({
       .addCase(ChangePassword.rejected, (state, action) => {
         state.ChangePasswordStatus = 'failed';
         console.error('Lỗi doi mk: ' + action.error.message);
+      })
+      //tuy chinh doanh thu
+      .addCase(GetCustomRevenue.pending, (state, action) => {
+        state.GetCustomRevenueStatus = 'loading';
+      })
+      .addCase(GetCustomRevenue.fulfilled, (state, action) => {
+        state.GetCustomRevenueStatus = 'succeeded';
+        state.GetCustomRevenueData = action.payload;
+      })
+      .addCase(GetCustomRevenue.rejected, (state, action) => {
+        state.GetCustomRevenueStatus = 'failed';
+        console.error('Lỗi tuy chinh doanh thu: ' + action.error.message);
       });
   },
 });
