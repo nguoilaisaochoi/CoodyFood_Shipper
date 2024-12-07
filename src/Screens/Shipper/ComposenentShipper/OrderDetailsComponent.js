@@ -148,7 +148,7 @@ const OrderDetailsComponent = ({
     setRouteToCustomer(null);
     clearMessageList();
     setImagePath(null);
-    updatestatus('Shipper đã hủy đơn');
+    updatestatus('Tài xế hủy đơn');
     Revenue();
     //dong bottom sheet
     setTimeout(() => {
@@ -181,7 +181,7 @@ const OrderDetailsComponent = ({
     } else if (!status.item3) {
       setStatus({...status, item3: true});
       setTitle('Hoàn tất đơn hàng');
-      updatestatus('Shipper đã đến điểm giao hàng');
+      updatestatus('Đã đến điểm giao');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
       setShopLocation([-999, -999]);

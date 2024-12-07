@@ -6,6 +6,7 @@ import {
   Button,
   Platform,
   PermissionsAndroid,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import ModalviewComponent from './ComposenentShipper/ModalviewComponent';
@@ -19,6 +20,8 @@ import MapAPI from '../../core/apiMap/MapAPI';
 import {appColor} from '../../constants/appColor';
 import LoadingModal from '../../modal/LoadingModal';
 import haversine from 'haversine';
+import TextComponent from '../../components/TextComponent';
+import {fontFamilies} from '../../constants/fontFamilies';
 const polyline = require('@mapbox/polyline');
 
 MapboxGL.setAccessToken(
@@ -75,7 +78,7 @@ const HomeScreen = ({navigation}) => {
       error => {
         console.error(error);
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 3000 } 
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000},
     );
   };
 
@@ -296,13 +299,20 @@ const HomeScreen = ({navigation}) => {
       </MapboxGL.MapView>
       {!acceptorder && (
         <View style={styles.buttonContainer}>
-          <Button
-            title={'Nhận đơn: ' + (getjob ? 'Bật' : 'Tắt')}
-            backgroundColor={'red'}
-            onPress={() => {
-              setGetjob(!getjob);
-            }}
-          />
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {backgroundColor: getjob ? appColor.primary : 'rgba(128, 128, 128, 0.4)'}, // Đổi màu theo trạng thái
+            ]}
+            activeOpacity={0.5}
+            onPress={() => setGetjob(!getjob)}>
+            <TextComponent
+              text={'Nhận đơn'}
+              color={appColor.white}
+              textAlign={'center'}
+              fontFamily={fontFamilies.bold}
+            />
+          </TouchableOpacity>
         </View>
       )}
       {/*modal sau khi chấp nhận đơn */}
@@ -358,5 +368,10 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     flexDirection: 'row',
     gap: 25,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
   },
 });
