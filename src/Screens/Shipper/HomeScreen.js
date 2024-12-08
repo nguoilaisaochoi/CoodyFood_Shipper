@@ -22,6 +22,7 @@ import LoadingModal from '../../modal/LoadingModal';
 import haversine from 'haversine';
 import TextComponent from '../../components/TextComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {showNotification} from './ComposenentShipper/Notification';
 const polyline = require('@mapbox/polyline');
 
 MapboxGL.setAccessToken(
@@ -172,7 +173,6 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     //lay thông tin shipper
     dispath(GetShipper(user._id));
-
     //kết nối socket từ file socket.js
     connectSocket();
     // Ngắt kết nối socket khi component unmount
@@ -195,6 +195,7 @@ const HomeScreen = ({navigation}) => {
       }
     };
   }, [getjob]);
+
 
   return (
     <View style={{flex: 1}}>
@@ -302,7 +303,11 @@ const HomeScreen = ({navigation}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              {backgroundColor: getjob ? appColor.primary : 'rgba(128, 128, 128, 0.4)'}, // Đổi màu theo trạng thái
+              {
+                backgroundColor: getjob
+                  ? appColor.primary
+                  : 'rgba(128, 128, 128, 0.4)',
+              }, // Đổi màu theo trạng thái
             ]}
             activeOpacity={0.5}
             onPress={() => setGetjob(!getjob)}>

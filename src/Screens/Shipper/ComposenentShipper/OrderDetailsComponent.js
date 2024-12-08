@@ -90,7 +90,7 @@ const OrderDetailsComponent = ({
     //unactive shipper
     setGetjob(false);
     //cap nhat trang thai shipper
-    updatestatus('Đang đến nhà hàng');
+    updatestatus('Tài xế đang đến nhà hàng');
     setAtCus(false);
     // Tham gia room
     socketInstance.emit('join_room', Order._id);
@@ -148,7 +148,7 @@ const OrderDetailsComponent = ({
     setRouteToCustomer(null);
     clearMessageList();
     setImagePath(null);
-    updatestatus('Tài xế hủy đơn');
+    updatestatus('Shipper đã hủy đơn');
     Revenue();
     //dong bottom sheet
     setTimeout(() => {
@@ -181,7 +181,7 @@ const OrderDetailsComponent = ({
     } else if (!status.item3) {
       setStatus({...status, item3: true});
       setTitle('Hoàn tất đơn hàng');
-      updatestatus('Đã đến điểm giao');
+      updatestatus('Shipper đã đến điểm giao hàng');
     } else if (!status.item4) {
       setStatus({...status, item4: true});
       setShopLocation([-999, -999]);

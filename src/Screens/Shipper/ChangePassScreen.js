@@ -35,7 +35,6 @@ const ChangePassScreen = () => {
       dispatch(logout());
       setIsLoading(false);
     } else if (ChangePasswordStatus == 'failed' && isLoading) {
-      ToastAndroid.show('Đổi mật khẩu thất bại', ToastAndroid.SHORT);
       setIsLoading(false);
     }
   }, [ChangePasswordStatus]);
