@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import AxiosInstance from '../../helpers/AxiosInstance';
+import {ToastAndroid} from 'react-native';
 
 export const UpdateShipper = createAsyncThunk('update', async ({id, data}) => {
   const response = await AxiosInstance().put(`shipper/update/${id}`, data);
@@ -108,7 +109,11 @@ export const ShipperSlice = createSlice({
       })
       .addCase(ChangePassword.rejected, (state, action) => {
         state.ChangePasswordStatus = 'failed';
-        console.error('Lỗi doi mk: ' + action.error.message);
+        if (action.error.message == 'Request failed with status code 401') {
+          ToastAndroid.show('Mật khẩu cũ không chính xác', ToastAndroid.SHORT);
+        } else {
+          ToastAndroid.show('Lỗi đổi mật khẩu', ToastAndroid.SHORT);
+        }
       })
       //tuy chinh doanh thu
       .addCase(GetCustomRevenue.pending, (state, action) => {
