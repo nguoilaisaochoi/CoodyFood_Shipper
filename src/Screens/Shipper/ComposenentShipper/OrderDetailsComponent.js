@@ -27,6 +27,7 @@ import {CallConfig} from '../../Call/Callconfig';
 import {formatCurrency} from '../../../utils/Validators';
 import ButtonComponent from '../../../components/ButtonComponent';
 import ConfirmComponent from './ConfirmComponent';
+import {showNotification} from './Notification';
 const OrderDetailsComponent = ({
   Order,
   setAcceptOrder,
@@ -52,6 +53,7 @@ const OrderDetailsComponent = ({
   const {user} = useSelector(state => state.login);
   const [isarrive, setIsArrive] = useState(false);
   const [cancel, setcancel] = useState(false);
+  const isInMessageScreenRef = useRef(false);
   const dispath = useDispatch();
 
   //const [phoneNumber] = useState('0123456');
@@ -81,10 +83,19 @@ const OrderDetailsComponent = ({
     });
   };
 
+  //khi tu man hinh khac tro ve
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      isInMessageScreenRef.current = false;
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   //tham gia chat
   useEffect(() => {
     //bật nghe cuộc gọi  Order.user.image
-    CallConfig(getData.phone, getData.name,Order.user.image);
+    CallConfig(getData.phone, getData.name, Order.user.image);
     // Kết nối socket
     const socketInstance = getSocket();
     //unactive shipper
@@ -100,7 +111,10 @@ const OrderDetailsComponent = ({
         // Lấy tin nhắn hiện tại từ AsyncStorage
         const storedMessages = await AsyncStorage.getItem('messageList');
         const messageList = storedMessages ? JSON.parse(storedMessages) : [];
-
+        //hiển thị thông báo
+        if (user.name != data.name && !isInMessageScreenRef.current) {
+          showNotification();
+        }
         // Thêm tin nhắn mới vào danh sách
         const newMessageList = [...messageList, data];
 
@@ -239,7 +253,7 @@ const OrderDetailsComponent = ({
     dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
-  console.log(Order.user.image)
+
   return (
     <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
       <BottomSheetScrollView style={{paddingTop: '2%', zIndex: 8}}>
@@ -444,7 +458,11 @@ const OrderDetailsComponent = ({
                 style={styles.callandmess}
                 activeOpacity={0.7}
                 onPress={() => {
-                  navigation.navigate('Message', {item: Order});
+                  navigation.navigate(
+                    'Message',
+                    {item: Order},
+                    (isInMessageScreenRef.current = true),
+                  );
                 }}>
                 <Image
                   style={{width: '100%', height: '100%'}}
