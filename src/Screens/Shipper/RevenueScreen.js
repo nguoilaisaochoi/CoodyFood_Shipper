@@ -166,7 +166,7 @@ const RevenueScreen = () => {
       </View>
     );
   };
-
+console.log(Data)
   return (
     <ContainerComponent styles={globalStyle.container}>
       <Dropdown
@@ -258,7 +258,7 @@ const RevenueScreen = () => {
         />
       </View>
       {/*danh sách đơn hàng và hiển thị thông  không có đơn hàng khi trống*/}
-      {Data ? (
+      {Data?.orders.length>=1 ? (
         <FlatList
           data={Data.orders}
           renderItem={renderItem}
@@ -364,7 +364,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     alignItems: 'center',
     gap: 20,
-    justifyContent: 'center',
   },
   delivery: {
     flex: 0.3,
