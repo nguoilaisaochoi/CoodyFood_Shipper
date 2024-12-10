@@ -258,7 +258,7 @@ console.log(Data)
         />
       </View>
       {/*danh sách đơn hàng và hiển thị thông  không có đơn hàng khi trống*/}
-      {Data?.orders.length>=1 ? (
+      {Data?.orders?.length>=1 ? (
         <FlatList
           data={Data.orders}
           renderItem={renderItem}
