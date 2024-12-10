@@ -52,6 +52,8 @@ const Account = () => {
             fontsize={23}
             color={appColor.white}
             fontFamily={fontFamilies.bold}
+            numberOfLines={2}
+            width={"90%"}
           />
         </View>
         <View style={styles.imgitem}>
@@ -99,9 +101,9 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
   },
   header: {
-    flex: 0.4,
+    minHeight:"15%",
     backgroundColor: appColor.primary,
-    padding: '2%',
+    padding: '5%',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',

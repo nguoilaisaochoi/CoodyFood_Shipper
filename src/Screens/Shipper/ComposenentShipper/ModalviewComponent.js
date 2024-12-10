@@ -147,7 +147,6 @@ const ModalviewComponent = ({
               fontFamily={fontFamilies.bold}
               onPress={() => {
                 setCancelVisible(true);
-                setGetjob(true);
               }}
             />
             <BtnComponent
@@ -192,6 +191,7 @@ const ModalviewComponent = ({
                   onPress={() => {
                     setModalVisible(false);
                     setCancelVisible(false);
+                    setGetjob(true);
                   }}
                 />
               </View>
