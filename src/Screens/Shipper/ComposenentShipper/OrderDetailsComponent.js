@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
-import {CallConfig} from '../../Call/Callconfig';
+import {CallConfig, UnmountCall} from '../../Call/Callconfig';
 import {formatCurrency} from '../../../utils/Validators';
 import ButtonComponent from '../../../components/ButtonComponent';
 import ConfirmComponent from './ConfirmComponent';
@@ -94,6 +94,8 @@ const OrderDetailsComponent = ({
 
   //tham gia chat
   useEffect(() => {
+    //logout truoc do
+    UnmountCall()
     //bật nghe cuộc gọi  Order.user.image
     CallConfig(getData.phone, getData.name, Order.user.image);
     // Kết nối socket

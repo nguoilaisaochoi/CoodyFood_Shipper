@@ -49,3 +49,7 @@ export const CallConfig = async (userID, userName, image) => {
     console.error('Keepcall không thành công: ' + error.message);
   }
 };
+//logoutcall
+export const UnmountCall = async()=>{
+  await ZegoUIKitPrebuiltCallService.uninit()
+}

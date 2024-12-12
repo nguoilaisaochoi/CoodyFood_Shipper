@@ -9,7 +9,7 @@ import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 
 import {fontFamilies} from '../../constants/fontFamilies';
 import TextComponent from '../../components/TextComponent';
-
+import {CallConfig, UnmountCall} from '../Call/Callconfig';
 
 const Account = () => {
   const navigation = useNavigation();
@@ -53,7 +53,7 @@ const Account = () => {
             color={appColor.white}
             fontFamily={fontFamilies.bold}
             numberOfLines={2}
-            width={"90%"}
+            width={'90%'}
           />
         </View>
         <View style={styles.imgitem}>
@@ -86,6 +86,7 @@ const Account = () => {
           text={'Đăng xuất'}
           screen={() => {
             dispatch(logout());
+            UnmountCall();
           }}
         />
       </View>
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
   },
   header: {
-    minHeight:"15%",
+    minHeight: '15%',
     backgroundColor: appColor.primary,
     padding: '5%',
     alignItems: 'center',
