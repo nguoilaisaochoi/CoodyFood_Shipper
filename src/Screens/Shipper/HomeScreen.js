@@ -23,6 +23,7 @@ import haversine from 'haversine';
 import TextComponent from '../../components/TextComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {showNotification} from './ComposenentShipper/Notification';
+import {CallConfig} from '../Call/Callconfig';
 const polyline = require('@mapbox/polyline');
 
 MapboxGL.setAccessToken(
@@ -171,6 +172,9 @@ const HomeScreen = ({navigation}) => {
 
   //khi mở component
   useEffect(() => {
+    //mo cuoc goi
+    //bật nghe cuộc gọi  Order.user.image
+    CallConfig(getData.phone, getData.name);
     //lay thông tin shipper
     dispath(GetShipper(user._id));
     //kết nối socket từ file socket.js
@@ -195,7 +199,6 @@ const HomeScreen = ({navigation}) => {
       }
     };
   }, [getjob]);
-
 
   return (
     <View style={{flex: 1}}>
