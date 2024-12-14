@@ -134,14 +134,14 @@ const RevenueScreen = () => {
         <Info4txtComponent
           text={' Khách hàng'}
           price={user.name}
-          fontsize={20}
+          fontsize={19}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
         />
         <Info4txtComponent
           text={' Nhà hàng'}
           price={shopOwner?.name ?? 'Không'}
-          fontsize={20}
+          fontsize={19}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
         />

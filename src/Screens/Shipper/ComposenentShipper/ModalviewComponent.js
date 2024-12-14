@@ -101,7 +101,7 @@ const ModalviewComponent = ({
             />
             <TextComponent
               text={'Địa chỉ: ' + Order.shopOwner.address}
-              fontsize={16}
+              fontsize={15}
               width={'100%'}
               styles={{textAlign: 'justify'}}
             />
@@ -116,7 +116,7 @@ const ModalviewComponent = ({
             />
             <TextComponent
               text={'Địa chỉ: ' + Order.shippingAddress.address}
-              fontsize={16}
+              fontsize={15}
               width={'100%'}
               styles={{textAlign: 'justify'}}
             />
