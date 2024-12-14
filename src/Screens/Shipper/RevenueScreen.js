@@ -252,7 +252,7 @@ console.log(Data)
           source={require('../../assets/images/shipper/time.png')}
         />
         <TextComponent
-          text={'Lịch sử đơn hàng'}
+          text={'Lịch sử giao hàng'}
           fontFamily={fontFamilies.semiBold}
           fontsize={20}
         />

@@ -440,7 +440,7 @@ const OrderDetailsComponent = ({
               />
             </View>
             <View style={styles.namecustomer}>
-              <TextComponent text={Order.user.name} />
+              <TextComponent text={Order.shippingAddress.recipientName} />
               <TextComponent text={'Khách hàng'} />
             </View>
             <View style={styles.callandmessboder}>
