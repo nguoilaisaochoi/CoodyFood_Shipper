@@ -14,7 +14,10 @@ import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import MapboxGL from '@rnmapbox/maps';
 import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
-import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import {
+  GetShipper,
+  setOrderDetailsActive,
+} from '../../Redux/Reducers/ShipperReducer';
 import Geolocation from 'react-native-geolocation-service';
 import MapAPI from '../../core/apiMap/MapAPI';
 import {appColor} from '../../constants/appColor';
@@ -172,7 +175,7 @@ const HomeScreen = ({navigation}) => {
 
   //khi mở component
   useEffect(() => {
-    //mo cuoc goi
+    dispath(setOrderDetailsActive(false));
     //bật nghe cuộc gọi  Order.user.image
     CallConfig(getData.phone, getData.name);
     //lay thông tin shipper

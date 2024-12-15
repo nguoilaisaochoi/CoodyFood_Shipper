@@ -59,8 +59,13 @@ export const ShipperSlice = createSlice({
     ChangePasswordStatus: 'ide',
     GetCustomRevenueData: {},
     GetCustomRevenueStatus: 'ide',
+    isOrderDetailsActive: false,
   },
-  reducers: {},
+  reducers: {
+    setOrderDetailsActive(state, action) {
+      state.isOrderDetailsActive = action.payload; 
+    },
+  },
   extraReducers: builder => {
     builder
       //cập nhật shipper**
@@ -129,4 +134,5 @@ export const ShipperSlice = createSlice({
       });
   },
 });
+export const { setOrderDetailsActive } = ShipperSlice.actions;
 export default ShipperSlice.reducer;
