@@ -21,7 +21,10 @@ import {onOpenCamera} from './ImagePicker';
 import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetRevenue, setOrderDetailsActive} from '../../../Redux/Reducers/ShipperReducer';
+import {
+  GetRevenue,
+  setOrderDetailsActive,
+} from '../../../Redux/Reducers/ShipperReducer';
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {CallConfig, UnmountCall} from '../../Call/Callconfig';
 import {formatCurrency} from '../../../utils/Validators';
@@ -96,7 +99,7 @@ const OrderDetailsComponent = ({
   useEffect(() => {
     dispath(setOrderDetailsActive(true));
     //logout truoc do
-    UnmountCall()
+    UnmountCall();
     //bật nghe cuộc gọi  Order.user.image
     CallConfig(getData.phone, getData.name, Order.user.image);
     // Kết nối socket
@@ -257,7 +260,6 @@ const OrderDetailsComponent = ({
     dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
-
   return (
     <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
       <BottomSheetScrollView style={{paddingTop: '2%', zIndex: 8}}>
@@ -350,18 +352,14 @@ const OrderDetailsComponent = ({
           {/* <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} /> */}
           <Info4txt
             text={'Giá đơn hàng:'}
-            price={
-              Order.paymentMethod == 'Tiền mặt'
-                ? formatCurrency(Order.totalPrice - Order.shippingfee)
-                : 0
-            }
+            price={formatCurrency(Order.totalPrice - Order.shippingfee)}
           />
           <Info4txt
             text={'Thu tiền khách hàng: '}
             price={
               Order.paymentMethod == 'Tiền mặt'
                 ? formatCurrency(Order.totalPrice)
-                : 0
+                : formatCurrency(0)
             }
           />
           <Info4txt

@@ -25,8 +25,8 @@ const Customday = ({
       } else {
         settoday(selectedTime);
       }
-      setshowPicker(false);
     }
+    setshowPicker(false);
   };
   useEffect(() => {
     if (fromday && today) {
@@ -50,7 +50,8 @@ const Customday = ({
               setTimeType('fromday');
             }}>
             <TextComponent
-              text={fromday ? fromday.toLocaleDateString() : 'Trống'}
+              text={fromday ? fromday.toLocaleDateString() : 'Chọn ngày'}
+              color={fromday ? appColor.text:appColor.subText}
             />
           </TouchableOpacity>
           <TextComponent text={'Đến ngày'} fontFamily={fontFamilies.semiBold} />
@@ -61,7 +62,8 @@ const Customday = ({
               setTimeType('today');
             }}>
             <TextComponent
-              text={today ? today.toLocaleDateString() : 'Trống'}
+              text={today ? today.toLocaleDateString() : 'Chọn ngày'}
+              color={today ? appColor.text:appColor.subText}
             />
           </TouchableOpacity>
           <View style={styles.viewbutton}>
