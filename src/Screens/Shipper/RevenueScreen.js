@@ -116,6 +116,7 @@ const RevenueScreen = () => {
       user,
       shopOwner,
       status,
+      shippingAddress,
     } = item;
     return (
       <View style={[styles.boxed, {justifyContent: 'center', margin: '3.7%'}]}>
@@ -133,7 +134,7 @@ const RevenueScreen = () => {
         </View>
         <Info4txtComponent
           text={' Khách hàng'}
-          price={user.name}
+          price={shippingAddress.recipientName}
           fontsize={19}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
