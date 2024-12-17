@@ -153,7 +153,7 @@ const HomeScreen = ({navigation}) => {
         longitude: atCus ? customerLocation[0] : shopLocation[0],
       };
       const distance = haversine(start, end);
-      setArrive(distance < 0.1 ? true : false);
+      setArrive(distance < 0.5 ? true : false);
     }
   }, [shipperLocation, atCus]);
 
