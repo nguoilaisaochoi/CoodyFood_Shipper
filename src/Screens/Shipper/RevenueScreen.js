@@ -116,6 +116,7 @@ const RevenueScreen = () => {
       user,
       shopOwner,
       status,
+      shippingAddress,
     } = item;
     return (
       <View style={[styles.boxed, {justifyContent: 'center', margin: '3.7%'}]}>
@@ -133,15 +134,15 @@ const RevenueScreen = () => {
         </View>
         <Info4txtComponent
           text={' Khách hàng'}
-          price={user.name}
-          fontsize={20}
+          price={shippingAddress.recipientName}
+          fontsize={19}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
         />
         <Info4txtComponent
           text={' Nhà hàng'}
           price={shopOwner?.name ?? 'Không'}
-          fontsize={20}
+          fontsize={19}
           fontFamily1={fontFamilies.semiBold}
           fontFamily2={fontFamilies.semiBold}
         />
@@ -166,7 +167,7 @@ const RevenueScreen = () => {
       </View>
     );
   };
-
+console.log(Data)
   return (
     <ContainerComponent styles={globalStyle.container}>
       <Dropdown
@@ -252,13 +253,13 @@ const RevenueScreen = () => {
           source={require('../../assets/images/shipper/time.png')}
         />
         <TextComponent
-          text={'Lịch sử đơn hàng'}
+          text={'Lịch sử giao hàng'}
           fontFamily={fontFamilies.semiBold}
           fontsize={20}
         />
       </View>
       {/*danh sách đơn hàng và hiển thị thông  không có đơn hàng khi trống*/}
-      {Data ? (
+      {Data?.orders?.length>=1 ? (
         <FlatList
           data={Data.orders}
           renderItem={renderItem}
@@ -364,7 +365,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     alignItems: 'center',
     gap: 20,
-    justifyContent: 'center',
   },
   delivery: {
     flex: 0.3,

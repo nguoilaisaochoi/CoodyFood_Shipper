@@ -101,7 +101,7 @@ const ModalviewComponent = ({
             />
             <TextComponent
               text={'Địa chỉ: ' + Order.shopOwner.address}
-              fontsize={16}
+              fontsize={15}
               width={'100%'}
               styles={{textAlign: 'justify'}}
             />
@@ -116,7 +116,7 @@ const ModalviewComponent = ({
             />
             <TextComponent
               text={'Địa chỉ: ' + Order.shippingAddress.address}
-              fontsize={16}
+              fontsize={15}
               width={'100%'}
               styles={{textAlign: 'justify'}}
             />
@@ -147,7 +147,6 @@ const ModalviewComponent = ({
               fontFamily={fontFamilies.bold}
               onPress={() => {
                 setCancelVisible(true);
-                setGetjob(true);
               }}
             />
             <BtnComponent
@@ -192,6 +191,7 @@ const ModalviewComponent = ({
                   onPress={() => {
                     setModalVisible(false);
                     setCancelVisible(false);
+                    setGetjob(true);
                   }}
                 />
               </View>

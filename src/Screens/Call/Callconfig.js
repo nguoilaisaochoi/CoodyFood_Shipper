@@ -2,6 +2,7 @@ import ZegoUIKitPrebuiltCallService from '@zegocloud/zego-uikit-prebuilt-call-rn
 import {Image, View} from 'react-native';
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
+import {ZegoLayoutMode, ZegoViewPosition} from '@zegocloud/zego-uikit-rn';
 
 //cấu hình cuộc gọi
 export const CallConfig = async (userID, userName, image) => {
@@ -43,9 +44,23 @@ export const CallConfig = async (userID, userName, image) => {
             </View>
           );
         },
+        requireConfig: () => {
+          return {
+            layout: {
+              mode: ZegoLayoutMode.pictureInPicture,
+              config: {
+                smallViewSize: {width: 0, height: 0},
+              },
+            },
+          };
+        },
       },
     );
   } catch (error) {
     console.error('Keepcall không thành công: ' + error.message);
   }
+};
+//logoutcall
+export const UnmountCall = async () => {
+  await ZegoUIKitPrebuiltCallService.uninit();
 };

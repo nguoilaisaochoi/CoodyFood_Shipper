@@ -21,9 +21,12 @@ import {onOpenCamera} from './ImagePicker';
 import {getSocket} from '../../../socket/socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetRevenue} from '../../../Redux/Reducers/ShipperReducer';
+import {
+  GetRevenue,
+  setOrderDetailsActive,
+} from '../../../Redux/Reducers/ShipperReducer';
 import {ZegoSendCallInvitationButton} from '@zegocloud/zego-uikit-prebuilt-call-rn';
-import {CallConfig} from '../../Call/Callconfig';
+import {CallConfig, UnmountCall} from '../../Call/Callconfig';
 import {formatCurrency} from '../../../utils/Validators';
 import ButtonComponent from '../../../components/ButtonComponent';
 import ConfirmComponent from './ConfirmComponent';
@@ -94,6 +97,9 @@ const OrderDetailsComponent = ({
 
   //tham gia chat
   useEffect(() => {
+    dispath(setOrderDetailsActive(true));
+    //logout truoc do
+    UnmountCall();
     //bật nghe cuộc gọi  Order.user.image
     CallConfig(getData.phone, getData.name, Order.user.image);
     // Kết nối socket
@@ -112,7 +118,7 @@ const OrderDetailsComponent = ({
         const storedMessages = await AsyncStorage.getItem('messageList');
         const messageList = storedMessages ? JSON.parse(storedMessages) : [];
         //hiển thị thông báo
-        if (user.name != data.name && !isInMessageScreenRef.current) {
+        if (getData.name != data.name && !isInMessageScreenRef.current) {
           showNotification();
         }
         // Thêm tin nhắn mới vào danh sách
@@ -133,6 +139,7 @@ const OrderDetailsComponent = ({
   const clearMessageList = async () => {
     try {
       await AsyncStorage.removeItem('messageList');
+      dispath(setOrderDetailsActive(false));
       console.log('Message list cleared successfully.');
     } catch (error) {
       console.error('Failed to clear message list:', error);
@@ -253,7 +260,6 @@ const OrderDetailsComponent = ({
     dispath(GetRevenue({id: user._id, data: formattedDate, date: 'day'}));
   };
 
-
   return (
     <BottomSheet ref={sheetRef} snapPoints={snapPoints} index={0}>
       <BottomSheetScrollView style={{paddingTop: '2%', zIndex: 8}}>
@@ -346,18 +352,14 @@ const OrderDetailsComponent = ({
           {/* <Info4txt text={'Mã đơn hàng'} price={Order._id.slice(-3)} /> */}
           <Info4txt
             text={'Giá đơn hàng:'}
-            price={
-              Order.paymentMethod == 'Tiền mặt'
-                ? formatCurrency(Order.totalPrice - Order.shippingfee)
-                : 0
-            }
+            price={formatCurrency(Order.totalPrice - Order.shippingfee)}
           />
           <Info4txt
             text={'Thu tiền khách hàng: '}
             price={
               Order.paymentMethod == 'Tiền mặt'
                 ? formatCurrency(Order.totalPrice)
-                : 0
+                : formatCurrency(0)
             }
           />
           <Info4txt
@@ -438,7 +440,7 @@ const OrderDetailsComponent = ({
               />
             </View>
             <View style={styles.namecustomer}>
-              <TextComponent text={Order.user.name} />
+              <TextComponent text={Order.shippingAddress.recipientName} />
               <TextComponent text={'Khách hàng'} />
             </View>
             <View style={styles.callandmessboder}>

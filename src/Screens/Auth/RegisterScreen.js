@@ -101,6 +101,7 @@ const RegisterScreen = ({navigation, route}) => {
       phone,
       gender: 'male',
       vehicleBrand,
+      image:"https://res.cloudinary.com/djywo5wza/image/upload/v1734013751/shipper_prxtoi.jpg",
       vehiclePlate,
     };
     if (body) {

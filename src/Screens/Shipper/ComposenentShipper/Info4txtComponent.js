@@ -30,6 +30,7 @@ const Info4txtComponent = ({
         ellipsizeMode={'tail'}
         textAlign={'right'}
         width={'50%'}
+        styles={{paddingLeft: '1%'}}
       />
     </View>
   );

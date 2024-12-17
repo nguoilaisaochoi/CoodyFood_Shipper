@@ -10,7 +10,6 @@ import {ChangePassword} from '../../Redux/Reducers/ShipperReducer';
 import PassInputComponent from './ComposenentShipper/PassInputComponent';
 import TextComponent from '../../components/TextComponent';
 
-
 const ChangePassScreen = () => {
   const {user} = useSelector(state => state.login); //thông tin khi đăng nhập
   const {ChangePasswordStatus} = useSelector(state => state.shipper);
@@ -39,28 +38,31 @@ const ChangePassScreen = () => {
     }
   }, [ChangePasswordStatus]);
   useEffect(() => {
-    oldpass && newpass && repass && repass == newpass
+    oldpass && newpass && repass && repass == newpass && newpass.length >= 6
       ? setcorrect(true)
       : setcorrect(false);
-  }, [oldpass,newpass,repass]);
+  }, [oldpass, newpass, repass]);
   return (
     <View style={styles.container}>
       <HeaderComponent isback={true} text={'Đổi mật khẩu'} />
       <ScrollView style={{flex: 1}}>
         <PassInputComponent
           text={'Mật khẩu cũ'}
+          placeholder={'Nhập mật khẩu'}
           value={oldpass}
           onChangeText={text => setOldpass(text)}
           isPassword={true}
         />
         <PassInputComponent
           text={'Mật khẩu mới'}
+          placeholder={'Tối thiểu 6 ký tự'}
           value={newpass}
           onChangeText={text => setNewpass(text)}
           isPassword={true}
         />
         <PassInputComponent
           text={'Xác nhận mật khẩu mới'}
+          placeholder={'Xác nhận mật khẩu mới'}
           value={repass}
           onChangeText={text => setRepass(text)}
           isPassword={true}

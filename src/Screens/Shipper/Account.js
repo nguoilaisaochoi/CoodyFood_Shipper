@@ -1,4 +1,4 @@
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, ToastAndroid} from 'react-native';
 import React, {useEffect} from 'react';
 import {appColor} from '../../constants/appColor';
 import ItemAccount from './ComposenentShipper/ItemAccount';
@@ -9,11 +9,14 @@ import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
 
 import {fontFamilies} from '../../constants/fontFamilies';
 import TextComponent from '../../components/TextComponent';
-
+import {CallConfig, UnmountCall} from '../Call/Callconfig';
 
 const Account = () => {
   const navigation = useNavigation();
   const {user} = useSelector(state => state.login);
+  const isOrderDetailsActive = useSelector(
+    state => state.shipper.isOrderDetailsActive,
+  );
   const {getData, getStatus} = useSelector(state => state.shipper);
   const dispatch = useDispatch();
 
@@ -52,6 +55,8 @@ const Account = () => {
             fontsize={23}
             color={appColor.white}
             fontFamily={fontFamilies.bold}
+            numberOfLines={2}
+            width={'90%'}
           />
         </View>
         <View style={styles.imgitem}>
@@ -68,7 +73,14 @@ const Account = () => {
       <View style={styles.body}>
         <ItemAccount
           screen={() => {
-            gotoScreen('Profile');
+            if (isOrderDetailsActive) {
+              ToastAndroid.show(
+                'Không để thực hiện khi đang giao hàng',
+                ToastAndroid.SHORT,
+              );
+            } else {
+              gotoScreen('Profile');
+            }
           }}
           text={'Thông tin cá nhân'}
           icon={'user'}
@@ -77,13 +89,28 @@ const Account = () => {
           text={'Đổi mật khẩu'}
           icon={'padlock'}
           screen={() => {
-            gotoScreen('ChangePass');
+            if (isOrderDetailsActive) {
+              ToastAndroid.show(
+                'Không để thực hiện khi đang giao hàng',
+                ToastAndroid.SHORT,
+              );
+            } else {
+              gotoScreen('ChangePass');
+            }
           }}
         />
         <ItemAccount
           text={'Đăng xuất'}
           screen={() => {
-            dispatch(logout());
+            if (isOrderDetailsActive) {
+              ToastAndroid.show(
+                'Không để thực hiện khi đang giao hàng',
+                ToastAndroid.SHORT,
+              );
+            } else {
+              dispatch(logout());
+              UnmountCall();
+            }
           }}
         />
       </View>
@@ -99,9 +126,9 @@ const styles = StyleSheet.create({
     backgroundColor: appColor.white,
   },
   header: {
-    flex: 0.4,
+    minHeight: '15%',
     backgroundColor: appColor.primary,
-    padding: '2%',
+    padding: '5%',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',

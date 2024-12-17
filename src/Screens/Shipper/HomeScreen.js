@@ -14,7 +14,10 @@ import OrderDetailsComponent from './ComposenentShipper/OrderDetailsComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import MapboxGL from '@rnmapbox/maps';
 import {connectSocket, disconnectSocket, getSocket} from '../../socket/socket';
-import {GetShipper} from '../../Redux/Reducers/ShipperReducer';
+import {
+  GetShipper,
+  setOrderDetailsActive,
+} from '../../Redux/Reducers/ShipperReducer';
 import Geolocation from 'react-native-geolocation-service';
 import MapAPI from '../../core/apiMap/MapAPI';
 import {appColor} from '../../constants/appColor';
@@ -23,6 +26,7 @@ import haversine from 'haversine';
 import TextComponent from '../../components/TextComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {showNotification} from './ComposenentShipper/Notification';
+import {CallConfig} from '../Call/Callconfig';
 const polyline = require('@mapbox/polyline');
 
 MapboxGL.setAccessToken(
@@ -149,7 +153,7 @@ const HomeScreen = ({navigation}) => {
         longitude: atCus ? customerLocation[0] : shopLocation[0],
       };
       const distance = haversine(start, end);
-      setArrive(distance < 0.1 ? true : false);
+      setArrive(distance < 0.5 ? true : false);
     }
   }, [shipperLocation, atCus]);
 
@@ -171,6 +175,9 @@ const HomeScreen = ({navigation}) => {
 
   //khi mở component
   useEffect(() => {
+    dispath(setOrderDetailsActive(false));
+    //bật nghe cuộc gọi  Order.user.image
+    CallConfig(getData.phone, getData.name);
     //lay thông tin shipper
     dispath(GetShipper(user._id));
     //kết nối socket từ file socket.js
@@ -195,7 +202,6 @@ const HomeScreen = ({navigation}) => {
       }
     };
   }, [getjob]);
-
 
   return (
     <View style={{flex: 1}}>
