@@ -107,7 +107,7 @@ const OrderDetailsComponent = ({
     //unactive shipper
     setGetjob(false);
     //cap nhat trang thai shipper
-    updatestatus('Tài xế đang đến nhà hàng');
+    //updatestatus('Tài xế đang đến nhà hàng');
     setAtCus(false);
     // Tham gia room
     socketInstance.emit('join_room', Order._id);
