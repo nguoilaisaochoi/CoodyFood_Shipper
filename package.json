@@ -36,6 +36,7 @@
     "react-native": "0.75.2",
     "react-native-countdown-timer-hooks": "^1.0.5",
     "react-native-device-info": "^11.1.0",
+    "react-native-dotenv": "^3.4.11",
     "react-native-draggable": "^3.3.0",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-encrypted-storage": "^4.0.3",

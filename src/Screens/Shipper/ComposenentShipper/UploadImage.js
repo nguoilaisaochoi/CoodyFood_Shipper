@@ -1,7 +1,7 @@
+import { APICloudinary,APIkey } from '@env';
 export const uploadImageToCloudinary = async file => {
   try {
-    const url = `https://api.cloudinary.com/v1_1/djywo5wza/image/upload`;
-
+    const url = APICloudinary;
     const formData = new FormData();
     formData.append('file', {
       uri: file.uri,
@@ -9,7 +9,7 @@ export const uploadImageToCloudinary = async file => {
       name: file.fileName,
     });
     formData.append('timestamp', Date.now() / 1000);
-    formData.append('api_key', 587196265671728);
+    formData.append('api_key', APIkey);
     formData.append('folder', 'coodyfood');
     formData.append('upload_preset', 'woedj14o');
 

@@ -3,13 +3,14 @@ import {Image, View} from 'react-native';
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
 import {ZegoLayoutMode, ZegoViewPosition} from '@zegocloud/zego-uikit-rn';
+import {AppSign } from '@env';
 
 //cấu hình cuộc gọi
 export const CallConfig = async (userID, userName, image) => {
   try {
     await ZegoUIKitPrebuiltCallService.init(
-      1749442627, //AppID
-      'bf27fd038a353193aa1de595443eb8c4bc78676b60d73a02c4dd99d546ab91bc', //AppSign
+      1749442627,//AppID
+      AppSign, //AppSign
       userID,
       userName,
       [ZIM, ZPNs],
